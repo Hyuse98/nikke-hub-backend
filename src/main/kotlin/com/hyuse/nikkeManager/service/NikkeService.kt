@@ -11,29 +11,23 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class NikkeService(val nikkeRepository: NikkeRepository, val dollRepository: DollRepository) {
 
-        fun createNikke(nikkeDTO: NikkeDTO): Nikke {
+    fun createNikke(nikkeDTO: NikkeDTO): Nikke {
         val nikkeExist = nikkeRepository.findByName(nikkeDTO.name)
-        if(nikkeExist.isPresent){
+        if (nikkeExist.isPresent) {
             throw IllegalStateException("Nikke Already Registered")
         }
         return nikkeRepository.save(nikkeDTO.toModel())
     }
-//    fun createNikke(nikkeDTO: NikkeDTO): Nikke {
-//        val nikkeExist = nikkeRepository.findByName(nikkeDTO.name)
-//        val dollExist = dollRepository.findById(nikkeDTO.dollId)
-//
-//        if(nikkeExist.isPresent){
-//            throw IllegalStateException("ja tem")
-//        }
-//
-//        if(dollExist.isPresent) {
-//            return nikkeRepository.save(nikkeDTO.toModel())
-//        }
-//
-//
-//
-//        return nikkeDTO.toModel()
-//    }
+
+    fun updateNikke(nikkeDTO: NikkeDTO, name: String): Nikke {
+        val nikkeExist = nikkeRepository.findByName(name)
+        if (nikkeExist.isPresent) {
+            val existingNikke = nikkeExist.get()
+            val updatedNikke = nikkeDTO.copy(id = existingNikke.id).toModel()
+            return nikkeRepository.save(updatedNikke)
+        }
+        throw IllegalStateException("Nikke not found")
+    }
 
     fun updateNikke(nikkeDTO: NikkeDTO, id: Int): Nikke {
         val nikkeExist = nikkeRepository.findById(id)
@@ -41,8 +35,14 @@ class NikkeService(val nikkeRepository: NikkeRepository, val dollRepository: Dol
             val nikke: Nikke = nikkeDTO.copy(id = id).toModel()
             return nikkeRepository.save(nikke)
         }
-        return throw IllegalStateException("fds")
+        throw IllegalStateException("Nikke not found")
     }
 
-//TODO
+    fun deleteNikke(name: String) {
+        return nikkeRepository.deleteByName(name)
+    }
+
+    fun deleteNikke(id: Int) {
+        return nikkeRepository.deleteById(id)
+    }
 }

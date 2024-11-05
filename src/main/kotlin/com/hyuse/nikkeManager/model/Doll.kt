@@ -7,12 +7,12 @@ import jakarta.persistence.*
 class Doll (
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
 
     @Enumerated(EnumType.STRING)
-    val rarity: Rarity,
+    val rarity: Rarity?,
 
-    val level: Int
+    val level: Int?
 ){
 }

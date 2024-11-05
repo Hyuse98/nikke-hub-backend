@@ -7,5 +7,7 @@ import java.util.*
 
 @Repository
 interface NikkeRepository : JpaRepository<Nikke, Int>{
+
     fun findByName(name:String): Optional<Nikke>
+    fun deleteByName(name:String)
 }
