@@ -7,6 +7,7 @@ import com.hyuse.nikkeManager.service.DollService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -15,6 +16,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/doll")
 class DollController(val dollRepository: DollRepository, val dollService: DollService) {
+
+    @GetMapping
+    fun listDolls(): List<Doll>{
+        return dollRepository.findAll();
+    }
 
     @PostMapping
     fun createDoll(@RequestBody @Valid dollDTO: DollDTO): ResponseEntity<Doll> {

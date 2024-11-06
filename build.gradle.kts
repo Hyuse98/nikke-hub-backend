@@ -35,6 +35,12 @@ dependencies {
 	//runtimeOnly("com.h2database:h2")
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 	implementation("org.postgresql:postgresql:42.7.4")
+	//implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+	compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
+
+
+
 
 }
 
