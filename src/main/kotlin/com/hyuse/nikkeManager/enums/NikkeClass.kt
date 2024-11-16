@@ -1,6 +1,6 @@
 package com.hyuse.nikkeManager.enums
 
-enum class Role {
+enum class NikkeClass {
     ATTACKER,
     DEFENDER,
     SUPPORTER

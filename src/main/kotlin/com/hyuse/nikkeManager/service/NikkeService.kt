@@ -1,9 +1,11 @@
 package com.hyuse.nikkeManager.service
 
 import com.hyuse.nikkeManager.DTO.NikkeDTO
+import com.hyuse.nikkeManager.enums.*
 import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.DollRepository
 import com.hyuse.nikkeManager.repository.NikkeRepository
+import com.hyuse.nikkeManager.repository.specifications.NikkeSpecifications
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -44,5 +46,19 @@ class NikkeService(val nikkeRepository: NikkeRepository, val dollRepository: Dol
 
     fun deleteNikke(id: Int) {
         return nikkeRepository.deleteById(id)
+    }
+
+    fun listAllNikke(
+        rarity: Rarity?,
+        ownedStatus: OwnedStatus?,
+        burstType: BurstType?,
+        company: Company?,
+        code: Code?,
+        weapon: Weapon?,
+        nikkeClass: NikkeClass?,
+        cube: Cubes?
+    ): List<Nikke> {
+        val specification = NikkeSpecifications.byFilters(rarity, ownedStatus, burstType, company, code, weapon, nikkeClass, cube)
+        return nikkeRepository.findAll(specification)
     }
 }

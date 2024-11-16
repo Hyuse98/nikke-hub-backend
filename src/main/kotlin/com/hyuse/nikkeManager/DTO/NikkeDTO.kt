@@ -14,11 +14,11 @@ data class NikkeDTO(
     val rarity: Rarity,
     val ownedStatus: OwnedStatus,
     val burstType: BurstType,
-    val manufacturer: Manufacturer,
+    val company: Company,
     val code: Code,
     val weapon: Weapon,
-    val role: Role,
-    val cube: Cubes,
+    val nikkeClass: NikkeClass,
+    val cube: Cubes?,
     val doll: Doll?
 ) {
     fun toModel(): Nikke {
@@ -33,13 +33,12 @@ data class NikkeDTO(
             rarity = this.rarity,
             ownedStatus = this.ownedStatus,
             burstType = this.burstType,
-            manufacturer = this.manufacturer,
+            company = this.company,
             code = this.code,
             weapon = this.weapon,
-            role = this.role,
+            nikkeClass = this.nikkeClass,
             cube = this.cube,
             doll = this.doll,
-
         )
         return nikke
     }

@@ -4,6 +4,9 @@ import com.hyuse.nikkeManager.DTO.DollDTO
 import com.hyuse.nikkeManager.model.Doll
 import com.hyuse.nikkeManager.repository.DollRepository
 import com.hyuse.nikkeManager.service.DollService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -22,6 +25,25 @@ class DollController(val dollRepository: DollRepository, val dollService: DollSe
         return dollRepository.findAll();
     }
 
+    @Operation(
+        method = "POST",
+        summary = "Cria uma Doll",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Created doll object",
+            required = true,
+            content = [Content(
+                schema = Schema(
+                    example = """{
+                    "doll": {
+                        "id": 0,
+                        "rarity": SR,
+                        "level": 0
+                    }
+                }"""
+                )
+            )]
+        )
+    )
     @PostMapping
     fun createDoll(@RequestBody @Valid dollDTO: DollDTO): ResponseEntity<Doll> {
         return ResponseEntity.status(HttpStatus.CREATED).body(dollService.addDoll(dollDTO))

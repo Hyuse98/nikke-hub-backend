@@ -1,6 +1,6 @@
 package com.hyuse.nikkeManager.enums
 
-enum class Manufacturer {
+enum class Company {
     ELYSION,
     MISSILIS,
     TETRA,
