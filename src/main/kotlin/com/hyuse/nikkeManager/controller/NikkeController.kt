@@ -61,7 +61,6 @@ class NikkeController(val nikkeService: NikkeService, val nikkeRepository: Nikke
             description = "Created user object", required = true, content = [Content(
                 schema = Schema(
                     example = """{
-                    "name": "string",
                     "core": 0,
                     "attraction": 0,
                     "skill1Level": 0,
