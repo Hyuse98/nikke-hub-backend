@@ -95,3 +95,9 @@ VALUES (128, 'Zwei', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'I', 'ELYSION', 'ELECTRIC', 
 
 INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
 VALUES (135, 'Phantom', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'III', 'ELYSION', 'WATER', 'AR', 'ATTACKER', null, null);
+
+INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
+VALUES (140, 'Maiden: Ice Rose', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'III', 'ELYSION', 'ELECTRIC', 'RL', 'DEFENDER', null, null);
+
+INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
+VALUES (141, 'Guillotine: Winter Slayer', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'III', 'ELYSION', 'WATER', 'AR', 'ATTACKER', null, null);

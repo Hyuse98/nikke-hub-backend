@@ -91,3 +91,6 @@ VALUES (127, 'Ein', 0, 1, 1, 1, 1, 'SSR', 'NOT_OWNED', 'III', 'MISSILIS', 'ELECT
 
 INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
 VALUES (134, 'Quency Escape Queen', 0, 1, 1, 1, 1, 'SSR', 'NOT_OWNED', 'III', 'MISSILIS', 'WATER', 'SMG', 'ATTACKER', null, null);
+
+INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
+VALUES (139, 'Flora', 0, 1, 1, 1, 1, 'SSR', 'NOT_OWNED', 'II', 'MISSILIS', 'ELECTRIC', 'MG', 'SUPPORTER', null, null);
