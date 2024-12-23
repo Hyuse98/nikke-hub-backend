@@ -1,9 +1,0 @@
-services:
-  postgres:
-    image: 'postgres:latest'
-    environment:
-      - 'POSTGRES_DB=outpost'
-      - 'POSTGRES_USER=a'
-      - 'POSTGRES_PASSWORD=b'
-    ports:
-      - '5432:5432'

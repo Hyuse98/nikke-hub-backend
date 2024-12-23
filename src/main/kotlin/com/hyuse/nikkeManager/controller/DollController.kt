@@ -1,6 +1,6 @@
 package com.hyuse.nikkeManager.controller
 
-import com.hyuse.nikkeManager.DTO.DollDTO
+import com.hyuse.nikkeManager.dto.DollDTO
 import com.hyuse.nikkeManager.model.Doll
 import com.hyuse.nikkeManager.repository.DollRepository
 import com.hyuse.nikkeManager.service.DollService

@@ -1,6 +1,6 @@
 package com.hyuse.nikkeManager.service
 
-import com.hyuse.nikkeManager.DTO.NikkeDTO
+import com.hyuse.nikkeManager.dto.NikkeDTO
 import com.hyuse.nikkeManager.enums.*
 import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.DollRepository

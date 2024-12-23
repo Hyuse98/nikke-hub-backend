@@ -30,7 +30,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+	implementation("org.springframework.boot:spring-boot-docker-compose")
 	implementation("org.postgresql:postgresql:42.7.4")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
 	compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
@@ -46,3 +46,4 @@ kotlin {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+

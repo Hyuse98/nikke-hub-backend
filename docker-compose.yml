@@ -1,0 +1,41 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/outpost
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=pass
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - db
+    volumes:
+      - ./build/libs:/app/libs
+    command: >
+      sh -c "while ! nc -z db 5432; do
+             echo 'Waiting for db...';
+             sleep 5;
+           done &&
+           java -jar /app/nikkeManager-0.0.1-SNAPSHOT.jar"
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: outpost
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d outpost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

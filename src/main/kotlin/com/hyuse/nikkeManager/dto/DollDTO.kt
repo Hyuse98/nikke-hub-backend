@@ -1,4 +1,4 @@
-package com.hyuse.nikkeManager.DTO
+package com.hyuse.nikkeManager.dto
 
 import com.hyuse.nikkeManager.enums.Rarity
 import com.hyuse.nikkeManager.model.Doll
