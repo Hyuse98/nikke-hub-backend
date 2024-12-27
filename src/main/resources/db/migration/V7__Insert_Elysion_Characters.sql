@@ -1,42 +1,43 @@
--- Chainsaw Man
+-- SR
 INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
-VALUES (77, 'Himeno', 0, 1, 1, 1, 1, 'SR', 'NOT_OWNED', 'II', 'ABNORMAL', 'WIND', 'SR', 'SUPPORTER', null, null);
+VALUES (93, 'Anchor', 0,1,1,1,1, 'SR', 'NOT_OWNED', 'I', 'ELYSION', 'WIND', 'RL', 'SUPPORTER', null, null);
+
+-- SSR
+INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
+VALUES (64, 'Helm', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'III', 'ELYSION', 'WATER', 'SR', 'ATTACKER', null, null);
 
 INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
-VALUES (78, 'Makima', 0, 1, 1, 1, 1, 'SSR', 'NOT_OWNED', 'II', 'ABNORMAL', 'WATER', 'SMG', 'DEFENDER', null, null);
+VALUES (83, 'D', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'III', 'ELYSION', 'WIND', 'SMG', 'ATTACKER', null, null);
 
 INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
-VALUES (79, 'Power', 0, 1, 1, 1, 1, 'SSR', 'NOT_OWNED', 'III', 'ABNORMAL', 'FIRE', 'RL', 'ATTACKER', null, null);
-
--- Nier Automata
-INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
-VALUES (97, 'Pascal', 0, 1, 1, 1, 1, 'SR', 'NOT_OWNED', 'I', 'ABNORMAL', 'IRON', 'RL', 'SUPPORTER', null, null);
+VALUES (91, 'Neon: Blue Ocean', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'III', 'ELYSION', 'WATER', 'MG', 'ATTACKER', null, null);
 
 INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
-VALUES (96, '2B', 0, 1, 1, 1, 1, 'SSR', 'NOT_OWNED', 'III', 'ABNORMAL', 'FIRE', 'AR', 'DEFENDER', null, null);
+VALUES (92, 'Mast', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'II', 'ELYSION', 'ELECTRIC', 'SMG', 'SUPPORTER', null, null);
 
 INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
-VALUES (98, 'A2', 0, 1, 1, 1, 1, 'SSR', 'NOT_OWNED', 'III', 'ABNORMAL', 'FIRE', 'RL', 'ATTACKER', null, null);
-
--- Re:Zero
-INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
-VALUES (117, 'Rem', 0, 1, 1, 1, 1, 'SR', 'NOT_OWNED', 'II', 'ABNORMAL', 'WATER', 'MG', 'SUPPORTER', null, null);
+VALUES (95, 'Helm: Aquamarine', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'II', 'ELYSION', 'IRON', 'AR', 'ATTACKER', null, null);
 
 INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
-VALUES (115, 'Emilia', 0, 1, 1, 1, 1, 'SSR', 'NOT_OWNED', 'III', 'ABNORMAL', 'WATER', 'RL', 'ATTACKER', null, null);
+VALUES (99, 'Marciana', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'II', 'ELYSION', 'IRON', 'SG', 'SUPPORTER', null, null);
 
 INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
-VALUES (116, 'Ram', 0, 1, 1, 1, 1, 'SSR', 'NOT_OWNED', 'I', 'ABNORMAL', 'WIND', 'SR', 'DEFENDER', null, null);
-
--- Evagelion
-INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
-VALUES (130, 'Misato', 0, 1, 1, 1, 1, 'SR', 'NOT_OWNED', 'I', 'ABNORMAL', 'IRON', 'SMG', 'SUPPORTER', null, null);
+VALUES (102, 'Quiry', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'III', 'ELYSION', 'WIND', 'RL', 'SUPPORTER', null, null);
 
 INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
-VALUES (129, 'Asuka', 0, 1, 1, 1, 1, 'SSR', 'NOT_OWNED', 'III', 'ABNORMAL', 'FIRE', 'AR', 'ATTACKER', null, null);
+VALUES (111, 'Privaty: Unkind Maid', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'III', 'ELYSION', 'ELECTRIC', 'SG', 'ATTACKER', null, null);
 
 INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
-VALUES (131, 'Rei', 0, 1, 1, 1, 1, 'SSR', 'NOT_OWNED', 'III', 'ABNORMAL', 'FIRE', 'MG', 'ATTACKER', null, null);
+VALUES (114, 'D: Killer Wife', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'I', 'ELYSION', 'FIRE', 'SR', 'SUPPORTER', null, null);
 
 INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
-VALUES (132, 'Mary', 0, 1, 1, 1, 1, 'SSR', 'NOT_OWNED', 'II', 'ABNORMAL', 'ELECTRIC', 'SR', 'SUPPORTER', null, null);
+VALUES (128, 'Zwei', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'I', 'ELYSION', 'ELECTRIC', 'SG', 'SUPPORTER', null, null);
+
+INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
+VALUES (135, 'Phantom', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'III', 'ELYSION', 'WATER', 'AR', 'ATTACKER', null, null);
+
+INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
+VALUES (140, 'Maiden: Ice Rose', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'III', 'ELYSION', 'ELECTRIC', 'RL', 'DEFENDER', null, null);
+
+INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
+VALUES (141, 'Guillotine: Winter Slayer', 0,1,1,1,1, 'SSR', 'NOT_OWNED', 'III', 'ELYSION', 'WATER', 'AR', 'ATTACKER', null, null);

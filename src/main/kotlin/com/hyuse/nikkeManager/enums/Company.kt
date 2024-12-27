@@ -5,5 +5,6 @@ enum class Company {
     MISSILIS,
     TETRA,
     PILGRIM,
-    ABNORMAL
+    ABNORMAL,
+    ELYSION_OVERSPEC
 }

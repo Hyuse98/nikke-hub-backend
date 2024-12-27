@@ -34,6 +34,8 @@ dependencies {
 	implementation("org.postgresql:postgresql:42.7.4")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
 	compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
+	implementation("org.flywaydb:flyway-database-postgresql")
+    implementation("org.flywaydb:flyway-core")
 
 }
 
