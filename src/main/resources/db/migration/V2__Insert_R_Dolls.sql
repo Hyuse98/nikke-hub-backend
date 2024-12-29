@@ -1,0 +1,16 @@
+INSERT INTO doll (id, rarity, level) VALUES (1 ,'R' , 0);
+INSERT INTO doll (id, rarity, level) VALUES (2 ,'R' , 1);
+INSERT INTO doll (id, rarity, level) VALUES (3 ,'R' , 2);
+INSERT INTO doll (id, rarity, level) VALUES (4 ,'R' , 3);
+INSERT INTO doll (id, rarity, level) VALUES (5 ,'R' , 4);
+INSERT INTO doll (id, rarity, level) VALUES (6 ,'R' , 5);
+INSERT INTO doll (id, rarity, level) VALUES (7 ,'R' , 6);
+INSERT INTO doll (id, rarity, level) VALUES (8 ,'R' , 7);
+INSERT INTO doll (id, rarity, level) VALUES (9,'R' , 8);
+INSERT INTO doll (id, rarity, level) VALUES (10 ,'R' , 9);
+INSERT INTO doll (id, rarity, level) VALUES (11 ,'R' , 10);
+INSERT INTO doll (id, rarity, level) VALUES (12 ,'R' , 11);
+INSERT INTO doll (id, rarity, level) VALUES (13 ,'R' , 12);
+INSERT INTO doll (id, rarity, level) VALUES (14 ,'R' , 13);
+INSERT INTO doll (id, rarity, level) VALUES (15 ,'R' , 14);
+INSERT INTO doll (id, rarity, level) VALUES (16 ,'R' , 15);
