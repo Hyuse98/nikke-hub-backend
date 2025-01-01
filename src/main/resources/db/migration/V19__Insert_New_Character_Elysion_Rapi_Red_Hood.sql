@@ -1,0 +1,2 @@
+INSERT INTO nikke (id, name, core, attraction, skill1Level, skill2Level, burst_level, rarity, owned_status, burst_type, company, code, weapon, nikke_class, cube, doll_id)
+VALUES (142, 'Rapi: Red Hood', 0, 1, 1, 1, 1, 'SSR', 'NOT_OWNED', 'III', 'ELYSION_OVERSPEC', 'FIRE', 'MG', 'ATTACKER', null, null);
