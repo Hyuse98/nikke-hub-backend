@@ -15,7 +15,7 @@ class NikkeService(val nikkeRepository: NikkeRepository, val dollRepository: Dol
 
     fun createNikke(nikkeDTO: NikkeDTO): Nikke {
         val nikkeExist = nikkeRepository.findByName(nikkeDTO.name)
-        if (nikkeExist.isPresent) {
+        if (nikkeExist != null) {
             throw IllegalStateException("Nikke Already Registered")
         }
         return nikkeRepository.save(nikkeDTO.toModel())
@@ -23,12 +23,10 @@ class NikkeService(val nikkeRepository: NikkeRepository, val dollRepository: Dol
 
     fun updateNikke(nikkeDTO: NikkeDTO, name: String): Nikke {
         val nikkeExist = nikkeRepository.findByName(name)
-        if (nikkeExist.isPresent) {
-            val existingNikke = nikkeExist.get()
-            val updatedNikke = nikkeDTO.copy(id = existingNikke.id).toModel()
-            return nikkeRepository.save(updatedNikke)
-        }
-        throw IllegalStateException("Nikke not found")
+            ?: throw IllegalStateException("Nikke not found")
+
+        val updatedNikke = nikkeDTO.copy(id = nikkeExist.id).toModel()
+        return nikkeRepository.save(updatedNikke)
     }
 
     fun updateNikke(nikkeDTO: NikkeDTO, id: Int): Nikke {

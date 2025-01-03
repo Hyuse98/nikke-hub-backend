@@ -9,17 +9,11 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/outpost
       - SPRING_DATASOURCE_USERNAME=user
       - SPRING_DATASOURCE_PASSWORD=pass
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
     depends_on:
       - db
     volumes:
-      - ./build/libs:/app/libs
-    command: >
-      sh -c "while ! nc -z db 5432; do
-             echo 'Waiting for db...';
-             sleep 5;
-           done &&
-           java -jar /app/nikkeManager-0.0.1-SNAPSHOT.jar"
+      - ./build/libs/nikkeManager-0.0.1-SNAPSHOT.jar:/app/app.jar
 
   db:
     image: postgres:latest

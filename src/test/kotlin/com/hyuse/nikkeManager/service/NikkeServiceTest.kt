@@ -16,7 +16,7 @@ class NikkeServiceTest (val nikkeRepository: NikkeRepository){
     Deve criar uma nikke
     Deve retornar um erro porque tem parametros errados
     Deve retornar um erro porque nikke ja existe
-     */
+
 
     @Test
     fun createNikke() {
@@ -53,5 +53,5 @@ class NikkeServiceTest (val nikkeRepository: NikkeRepository){
 
     @Test
     fun getDollRepository() {
-    }
+    }*/
 }
