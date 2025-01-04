@@ -52,4 +52,16 @@ class NikkeRepositoryTest(
         assertThat(result).isNotNull
         assertThat(result?.name).isEqualTo(name)
     }
+
+    @Test
+    @DisplayName("Should not find a user by name")
+    fun findByNameFail() {
+
+        nikkeRepository.deleteAll()
+
+        val name = "Test"
+        val result = nikkeRepository.findByName(name)
+
+        assertThat(result).isNull()
+    }
 }
