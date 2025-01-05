@@ -3,7 +3,6 @@ package com.hyuse.nikkeManager.service
 import com.hyuse.nikkeManager.dto.NikkeDTO
 import com.hyuse.nikkeManager.enums.*
 import com.hyuse.nikkeManager.model.Nikke
-import com.hyuse.nikkeManager.repository.DollRepository
 import com.hyuse.nikkeManager.repository.NikkeRepository
 import com.hyuse.nikkeManager.repository.specifications.NikkeSpecifications
 import org.springframework.stereotype.Service
@@ -11,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
-class NikkeService(val nikkeRepository: NikkeRepository, val dollRepository: DollRepository) {
+class NikkeService(val nikkeRepository: NikkeRepository) {
 
     fun createNikke(nikkeDTO: NikkeDTO): Nikke {
         val nikkeExist = nikkeRepository.findByName(nikkeDTO.name)

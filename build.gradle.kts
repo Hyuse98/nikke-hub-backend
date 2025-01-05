@@ -39,7 +39,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("com.h2database:h2:2.3.232")
-
+	testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
 	//testImplementation("io.mockk:mockk:1.13.7")
 }
 
