@@ -15,7 +15,7 @@ class NikkeService(val nikkeRepository: NikkeRepository) {
     fun createNikke(nikkeDTO: NikkeDTO): Nikke {
         val nikkeExist = nikkeRepository.findByName(nikkeDTO.name)
         if (nikkeExist != null) {
-            throw IllegalStateException("Nikke Already Registered")
+            throw IllegalStateException("Nikke Already Exist")
         }
         return nikkeRepository.save(nikkeDTO.toModel())
     }

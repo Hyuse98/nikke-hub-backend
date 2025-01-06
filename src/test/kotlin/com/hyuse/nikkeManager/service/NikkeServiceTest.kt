@@ -5,8 +5,10 @@ import com.hyuse.nikkeManager.enums.*
 import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.NikkeRepository
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.kotlin.isA
@@ -20,13 +22,16 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles("test")
 class NikkeServiceTest() {
 
-    //@Autowired
     @InjectMocks
     lateinit var nikkeService: NikkeService
 
-    //@Autowired
     @Mock
     lateinit var nikkeRepository: NikkeRepository
+
+    @BeforeEach
+    fun setup() {
+
+    }
 
     @Test
     @DisplayName("Should create a nikke with success")
@@ -62,6 +67,59 @@ class NikkeServiceTest() {
         assertThat(result).isNotNull
         assertThat(result.name).isEqualTo(nikkeDTO.name)
 
+    }
+
+    @Test
+    @DisplayName("Should not create a nikke due to a nikke already existing")
+    fun createNikkeCase2() {
+
+        val nikkeDTO = NikkeDTO(
+            id = null,
+            name = "Test",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        val nikke = Nikke(
+            id = null,
+            name = "Test",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        whenever(nikkeRepository.findByName("Test")).thenReturn(nikke)
+
+        val exception = assertThrows<IllegalStateException> {
+            nikkeService.createNikke(nikkeDTO)
+        }
+        assertThat(exception.message).isEqualTo("Nikke Already Exist")
+
+        verify(nikkeRepository, times(1)).findByName("Test")
+        verify(nikkeRepository, times(0)).save(isA<Nikke>())
     }
 
 }
