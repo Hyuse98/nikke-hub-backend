@@ -4,15 +4,17 @@ import com.hyuse.nikkeManager.enums.Rarity
 import jakarta.persistence.*
 
 @Entity
-class Doll (
+class Doll(
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     val id: Int? = null,
 
     @Enumerated(EnumType.STRING)
-    val rarity: Rarity?,
+    @Column(nullable = false)
+    val rarity: Rarity,
 
-    val level: Int?
-){
+    @Column(nullable = false)
+    val level: Int
+) {
 }
