@@ -176,4 +176,39 @@ class NikkeServiceTest() {
         verify(nikkeRepository, times(1)).save(isA<Nikke>())
     }
 
+    @Test
+    @DisplayName("Should not update a nikke due to lack of a nikke with the same name passed as parameter")
+    fun updateNikkeCase2(){
+
+        val nikkeDTO = NikkeDTO(
+            id = null,
+            name = "Test2",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        whenever(nikkeRepository.findByName("Test")).thenReturn(null)
+        whenever(nikkeRepository.save(isA<Nikke>())).thenReturn(nikkeDTO.toModel())
+
+        val exception = assertThrows<IllegalStateException> {
+            nikkeService.updateNikke(nikkeDTO, "Test")
+        }
+        assertThat(exception.message).isEqualTo("Nikke not found")
+
+        verify(nikkeRepository, times(1)).findByName("Test")
+        verify(nikkeRepository, times(0)).save(isA<Nikke>())
+    }
+
 }
