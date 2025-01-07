@@ -10,15 +10,16 @@ data class DollDTO(
 
     val id: Int?,
 
-    @NotNull(message = "Rarity is required")
+    @field:NotNull(message = "Rarity is required")
     val rarity: Rarity,
 
-    @Min(value = 0, message = "Core value must be at least 1")
-    @Max(value = 15, message = "Cant be more than 15")
+    @field:Min(0, message = "level value must be at least 0")
+    @field:Max(15, message = "Cant be more than 15")
     val level: Int
 ) {
     fun toModel(): Doll {
         val doll = Doll(
+            id = this.id,
             rarity = this.rarity,
             level = this.level
         )

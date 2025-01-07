@@ -10,36 +10,36 @@ import jakarta.validation.constraints.NotNull
 data class NikkeDTO(
 
     val id: Int?,
-    @NotNull(message = "Rarity is required")
+    @field:NotNull(message = "Rarity is required")
     val name: String,
-    @Min(value = 1, message = "Core value must be at least 1")
-    @Max(value = 10, message = "Cant be more than 10")
+    @field:Min(value = 1, message = "Core value must be at least 1")
+    @field:Max(value = 10, message = "Cant be more than 10")
     val core: Int,
-    @Min(value = 1, message = "Core value must be at least 1")
-    @Max(value = 10, message = "Cant be more than 10")
+    @field:Min(value = 1, message = "Core value must be at least 1")
+    @field:Max(value = 10, message = "Cant be more than 10")
     val attraction: Int,
-    @Min(value = 1, message = "Core value must be at least 1")
-    @Max(value = 10, message = "Cant be more than 10")
+    @field:Min(value = 1, message = "Core value must be at least 1")
+    @field:Max(value = 10, message = "Cant be more than 10")
     val skill1Level: Int,
-    @Min(value = 1, message = "Core value must be at least 1")
-    @Max(value = 10, message = "Cant be more than 10")
+    @field:Min(value = 1, message = "Core value must be at least 1")
+    @field:Max(value = 10, message = "Cant be more than 10")
     val skill2Level: Int,
-    @Min(value = 1, message = "Core value must be at least 1")
-    @Max(value = 10, message = "Cant be more than 10")
+    @field:Min(value = 1, message = "Core value must be at least 1")
+    @field:Max(value = 10, message = "Cant be more than 10")
     val burstLevel: Int,
-    @NotNull(message = "Rarity is required")
+    @field:NotNull(message = "Rarity is required")
     val rarity: Rarity,
-    @NotNull(message = "Rarity is required")
+    @field:NotNull(message = "Rarity is required")
     val ownedStatus: OwnedStatus,
-    @NotNull(message = "Rarity is required")
+    @field:NotNull(message = "Rarity is required")
     val burstType: BurstType,
-    @NotNull(message = "Rarity is required")
+    @field:NotNull(message = "Rarity is required")
     val company: Company,
-    @NotNull(message = "Rarity is required")
+    @field:NotNull(message = "Rarity is required")
     val code: Code,
-    @NotNull(message = "Rarity is required")
+    @field:NotNull(message = "Rarity is required")
     val weapon: Weapon,
-    @NotNull(message = "Rarity is required")
+    @field:NotNull(message = "Rarity is required")
     val nikkeClass: NikkeClass,
 
     val cube: Cubes?,
