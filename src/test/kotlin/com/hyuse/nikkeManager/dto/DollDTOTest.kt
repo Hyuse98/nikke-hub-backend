@@ -1,6 +1,6 @@
 package com.hyuse.nikkeManager.dto
 
-import com.hyuse.nikkeManager.enums.Rarity
+import com.hyuse.nikkeManager.enums.*
 import jakarta.validation.Validation
 import jakarta.validation.Validator
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -30,19 +30,33 @@ class DollDTOTest {
     @Test
     @DisplayName("Should fail validation when level is above 15")
     fun invalidDollDTOCase1() {
-        // Given
+
         val dollDTO = DollDTO(
             id = 1,
             rarity = Rarity.SSR,
             level = 16
         )
 
-        // When
         val violations = validator.validate(dollDTO)
 
-        // Then
         assertFalse(violations.isEmpty())
         assertTrue(violations.any { it.message == "Cant be more than 15" })
+    }
+
+    @Test
+    @DisplayName("Should fail validation when level is bellow 0")
+    fun invalidDollDTOCase2() {
+
+        val dollDTO = DollDTO(
+            id = 1,
+            rarity = Rarity.SSR,
+            level = -1
+        )
+
+        val violations = validator.validate(dollDTO)
+
+        assertFalse(violations.isEmpty())
+        assertTrue(violations.any { it.message == "level value must be at least 0" })
     }
 
 }
