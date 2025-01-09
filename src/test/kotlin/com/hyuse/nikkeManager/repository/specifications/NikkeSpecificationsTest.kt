@@ -160,4 +160,24 @@ class NikkeSpecificationsTest {
 
         assertThat(result).hasSize(3)
     }
+
+    @Test
+    @DisplayName("should return empty list when no matches found")
+    fun noMatchsFilterTest() {
+
+        val result = nikkeRepository.findAll(
+            NikkeSpecifications.byFilters(
+                rarity = Rarity.R,
+                ownedStatus = null,
+                burstType = null,
+                company = null,
+                code = null,
+                weapon = null,
+                nikkeClass = null,
+                cube = null
+            )
+        )
+
+        assertThat(result).isEmpty()
+    }
 }
