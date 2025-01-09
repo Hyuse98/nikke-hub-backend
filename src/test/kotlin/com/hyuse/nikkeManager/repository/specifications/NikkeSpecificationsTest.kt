@@ -95,6 +95,7 @@ class NikkeSpecificationsTest {
     @Test
     @DisplayName("should filter by single criterion - rarity")
     fun filterSingleTest() {
+
         val result = nikkeRepository.findAll(
             NikkeSpecifications.byFilters(
                 rarity = Rarity.SSR,
@@ -111,5 +112,31 @@ class NikkeSpecificationsTest {
         assertThat(result).hasSize(2)
         assertThat(result).extracting("rarity")
             .containsOnly(Rarity.SSR)
+    }
+
+
+    @Test
+    @DisplayName("should filter by multiple criteria")
+    fun filterMultiTest() {
+
+        val result = nikkeRepository.findAll(
+            NikkeSpecifications.byFilters(
+                rarity = Rarity.SSR,
+                ownedStatus = OwnedStatus.OWNED,
+                burstType = null,
+                company = Company.PILGRIM,
+                code = Code.WIND,
+                weapon = null,
+                nikkeClass = null,
+                cube = null
+            )
+        )
+
+        assertThat(result).hasSize(1)
+        val nikke = result.first()
+        assertThat(nikke.rarity).isEqualTo(Rarity.SSR)
+        assertThat(nikke.ownedStatus).isEqualTo(OwnedStatus.OWNED)
+        assertThat(nikke.company).isEqualTo(Company.PILGRIM)
+        assertThat(nikke.code).isEqualTo(Code.WIND)
     }
 }
