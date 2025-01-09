@@ -42,9 +42,9 @@ class NikkeSpecificationsTest {
             burstType = BurstType.III,
             company = Company.PILGRIM,
             code = Code.ELECTRIC,
-            weapon = Weapon.SR,
+            weapon = Weapon.AR,
             nikkeClass = NikkeClass.ATTACKER,
-            cube = null,
+            cube = Cubes.ASSAULT,
             doll = null
         )
 
@@ -57,10 +57,10 @@ class NikkeSpecificationsTest {
             skill2Level = 1,
             burstLevel = 1,
             rarity = Rarity.SSR,
-            ownedStatus = OwnedStatus.NOT_OWNED,
+            ownedStatus = OwnedStatus.OWNED,
             burstType = BurstType.III,
             company = Company.PILGRIM,
-            code = Code.ELECTRIC,
+            code = Code.WIND,
             weapon = Weapon.SR,
             nikkeClass = NikkeClass.ATTACKER,
             cube = null,
@@ -140,6 +140,34 @@ class NikkeSpecificationsTest {
         assertThat(nikke.code).isEqualTo(Code.WIND)
     }
 
+    @Test
+    @DisplayName("should filter by multiple criteria")
+    fun allFilterTest() {
+
+        val result = nikkeRepository.findAll(
+            NikkeSpecifications.byFilters(
+                rarity = Rarity.SSR,
+                ownedStatus = OwnedStatus.NOT_OWNED,
+                burstType = BurstType.III,
+                company = Company.PILGRIM,
+                code = Code.ELECTRIC,
+                weapon = Weapon.AR,
+                nikkeClass = NikkeClass.ATTACKER,
+                cube = Cubes.ASSAULT
+            )
+        )
+
+        assertThat(result).hasSize(1)
+        val nikke = result.first()
+        assertThat(nikke.rarity).isEqualTo(Rarity.SSR)
+        assertThat(nikke.ownedStatus).isEqualTo(OwnedStatus.NOT_OWNED)
+        assertThat(nikke.burstType).isEqualTo(BurstType.III)
+        assertThat(nikke.company).isEqualTo(Company.PILGRIM)
+        assertThat(nikke.code).isEqualTo(Code.ELECTRIC)
+        assertThat(nikke.weapon).isEqualTo(Weapon.AR)
+        assertThat(nikke.nikkeClass).isEqualTo(NikkeClass.ATTACKER)
+        assertThat(nikke.cube).isEqualTo(Cubes.ASSAULT)
+    }
 
     @Test
     @DisplayName("should return all when no filters applied")
@@ -180,4 +208,6 @@ class NikkeSpecificationsTest {
 
         assertThat(result).isEmpty()
     }
+
+
 }
