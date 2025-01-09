@@ -139,4 +139,25 @@ class NikkeSpecificationsTest {
         assertThat(nikke.company).isEqualTo(Company.PILGRIM)
         assertThat(nikke.code).isEqualTo(Code.WIND)
     }
+
+
+    @Test
+    @DisplayName("should return all when no filters applied")
+    fun noFilterTest() {
+
+        val result = nikkeRepository.findAll(
+            NikkeSpecifications.byFilters(
+                rarity = null,
+                ownedStatus = null,
+                burstType = null,
+                company = null,
+                code = null,
+                weapon = null,
+                nikkeClass = null,
+                cube = null
+            )
+        )
+
+        assertThat(result).hasSize(3)
+    }
 }
