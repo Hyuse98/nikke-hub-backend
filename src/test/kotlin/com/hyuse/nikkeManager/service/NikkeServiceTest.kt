@@ -265,4 +265,38 @@ class NikkeServiceTest() {
         verify(nikkeRepository, times(1)).save(isA<Nikke>())
     }
 
+    @Test
+    @DisplayName("Should not uptade a nikke by id")
+    fun updateNikkeIdCase2(){
+
+        val nikkeDTO = NikkeDTO(
+            id = null,
+            name = "Test2",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        whenever(nikkeRepository.findNikkeById(1)).thenReturn(null)
+        whenever(nikkeRepository.save(isA<Nikke>())).thenReturn(nikkeDTO.toModel())
+
+        val exception = assertThrows<IllegalStateException> {
+            nikkeService.updateNikke(nikkeDTO, 1)
+        }
+        assertThat(exception.message).isEqualTo("Nikke not found")
+
+        verify(nikkeRepository, times(1)).findNikkeById(1)
+    }
+
 }
