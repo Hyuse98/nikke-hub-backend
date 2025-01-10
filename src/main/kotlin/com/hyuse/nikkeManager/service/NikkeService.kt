@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 class NikkeService(val nikkeRepository: NikkeRepository) {
 
     fun createNikke(nikkeDTO: NikkeDTO): Nikke {
-        val nikkeExist = nikkeRepository.findByName(nikkeDTO.name)
+        val nikkeExist = nikkeRepository.findNikkeByName(nikkeDTO.name)
         if (nikkeExist != null) {
             throw IllegalStateException("Nikke Already Exist")
         }
@@ -21,7 +21,7 @@ class NikkeService(val nikkeRepository: NikkeRepository) {
     }
 
     fun updateNikke(nikkeDTO: NikkeDTO, name: String): Nikke {
-        val nikkeExist = nikkeRepository.findByName(name)
+        val nikkeExist = nikkeRepository.findNikkeByName(name)
             ?: throw IllegalStateException("Nikke not found")
 
         val updatedNikke = nikkeDTO.copy(id = nikkeExist.id).toModel()
@@ -29,12 +29,11 @@ class NikkeService(val nikkeRepository: NikkeRepository) {
     }
 
     fun updateNikke(nikkeDTO: NikkeDTO, id: Int): Nikke {
-        val nikkeExist = nikkeRepository.findById(id)
-        if (nikkeExist.isPresent) {
-            val nikke: Nikke = nikkeDTO.copy(id = id).toModel()
-            return nikkeRepository.save(nikke)
-        }
-        throw IllegalStateException("Nikke not found")
+        val nikkeExist = nikkeRepository.findNikkeById(id)
+            ?: throw IllegalStateException("Nikke not found")
+
+        val nikke: Nikke = nikkeDTO.copy(id = id).toModel()
+        return nikkeRepository.save(nikke)
     }
 
     fun deleteNikke(name: String) {
@@ -55,7 +54,8 @@ class NikkeService(val nikkeRepository: NikkeRepository) {
         nikkeClass: NikkeClass?,
         cube: Cubes?
     ): List<Nikke> {
-        val specification = NikkeSpecifications.byFilters(rarity, ownedStatus, burstType, company, code, weapon, nikkeClass, cube)
+        val specification =
+            NikkeSpecifications.byFilters(rarity, ownedStatus, burstType, company, code, weapon, nikkeClass, cube)
         return nikkeRepository.findAll(specification)
     }
 }

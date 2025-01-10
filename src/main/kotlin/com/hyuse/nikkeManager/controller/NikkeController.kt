@@ -134,7 +134,7 @@ class NikkeController(val nikkeService: NikkeService, val nikkeRepository: Nikke
     )
     @GetMapping("/{name}")
     fun getNikke(@Parameter(description = "Name of nikke to be search") @PathVariable name: String): Nikke? {
-        val nikke = nikkeRepository.findByName(name);
+        val nikke = nikkeRepository.findNikkeByName(name);
         return nikke
     }
 }

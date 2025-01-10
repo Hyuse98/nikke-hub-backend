@@ -25,7 +25,7 @@ class NikkeRepositoryTest(
     //Find
     @Test
     @DisplayName("Should find a nikke by name")
-    fun findByNameSuccess() {
+    fun findNikkeByNameSuccess() {
 
         val nikke = Nikke(
             id = null,
@@ -49,7 +49,7 @@ class NikkeRepositoryTest(
         entityManager.flush()
 
         val name = "Test"
-        val result = nikkeRepository.findByName(name)
+        val result = nikkeRepository.findNikkeByName(name)
 
         assertThat(result).isNotNull
         assertThat(result?.name).isEqualTo(name)
@@ -57,12 +57,12 @@ class NikkeRepositoryTest(
 
     @Test
     @DisplayName("Should not find a nikke by name")
-    fun findByNameFail() {
+    fun findNikkeByNameFail() {
 
         nikkeRepository.deleteAll()
 
         val name = "Test"
-        val result = nikkeRepository.findByName(name)
+        val result = nikkeRepository.findNikkeByName(name)
 
         assertThat(result).isNull()
     }
@@ -97,7 +97,7 @@ class NikkeRepositoryTest(
 
         nikkeRepository.deleteByName(name)
 
-        val result = nikkeRepository.findByName(name)
+        val result = nikkeRepository.findNikkeByName(name)
         assertThat(result).isNull()
     }
 

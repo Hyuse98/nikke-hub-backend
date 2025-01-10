@@ -56,12 +56,12 @@ class NikkeServiceTest() {
             doll = null
         )
 
-        whenever(nikkeRepository.findByName("Test")).thenReturn(null)
+        whenever(nikkeRepository.findNikkeByName("Test")).thenReturn(null)
         whenever(nikkeRepository.save(isA<Nikke>())).thenReturn(nikkeDTO.toModel())
 
         val result = nikkeService.createNikke(nikkeDTO)
 
-        verify(nikkeRepository, times(1)).findByName("Test")
+        verify(nikkeRepository, times(1)).findNikkeByName("Test")
         verify(nikkeRepository, times(1)).save(isA<Nikke>())
 
         assertThat(result).isNotNull
@@ -111,14 +111,14 @@ class NikkeServiceTest() {
             doll = null
         )
 
-        whenever(nikkeRepository.findByName("Test")).thenReturn(nikke)
+        whenever(nikkeRepository.findNikkeByName("Test")).thenReturn(nikke)
 
         val exception = assertThrows<IllegalStateException> {
             nikkeService.createNikke(nikkeDTO)
         }
         assertThat(exception.message).isEqualTo("Nikke Already Exist")
 
-        verify(nikkeRepository, times(1)).findByName("Test")
+        verify(nikkeRepository, times(1)).findNikkeByName("Test")
         verify(nikkeRepository, times(0)).save(isA<Nikke>())
     }
 
@@ -164,7 +164,7 @@ class NikkeServiceTest() {
             doll = null
         )
 
-        whenever(nikkeRepository.findByName("Test")).thenReturn(nikke)
+        whenever(nikkeRepository.findNikkeByName("Test")).thenReturn(nikke)
         whenever(nikkeRepository.save(isA<Nikke>())).thenReturn(nikkeDTO.toModel())
 
         val result: Nikke = nikkeService.updateNikke(nikkeDTO, nikke.name)
@@ -172,7 +172,7 @@ class NikkeServiceTest() {
         assertThat(result).isNotNull
         assertThat(result.name).isEqualTo(nikkeDTO.name)
 
-        verify(nikkeRepository, times(1)).findByName("Test")
+        verify(nikkeRepository, times(1)).findNikkeByName("Test")
         verify(nikkeRepository, times(1)).save(isA<Nikke>())
     }
 
@@ -199,7 +199,7 @@ class NikkeServiceTest() {
             doll = null
         )
 
-        whenever(nikkeRepository.findByName("Test")).thenReturn(null)
+        whenever(nikkeRepository.findNikkeByName("Test")).thenReturn(null)
         whenever(nikkeRepository.save(isA<Nikke>())).thenReturn(nikkeDTO.toModel())
 
         val exception = assertThrows<IllegalStateException> {
@@ -207,8 +207,62 @@ class NikkeServiceTest() {
         }
         assertThat(exception.message).isEqualTo("Nikke not found")
 
-        verify(nikkeRepository, times(1)).findByName("Test")
+        verify(nikkeRepository, times(1)).findNikkeByName("Test")
         verify(nikkeRepository, times(0)).save(isA<Nikke>())
+    }
+
+    @Test
+    @DisplayName("Should uptade a nikke by id")
+    fun updateNikkeIdCase1(){
+
+        val nikke = Nikke(
+            id = 1,
+            name = "Test",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        val nikkeDTO = NikkeDTO(
+            id = null,
+            name = "Test2",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        whenever(nikkeRepository.findNikkeById(1)).thenReturn(nikke)
+        whenever(nikkeRepository.save(isA<Nikke>())).thenReturn(nikkeDTO.toModel())
+
+        val result: Nikke = nikkeService.updateNikke(nikkeDTO, nikke.id!!)
+
+        assertThat(result).isNotNull
+        assertThat(result.name).isEqualTo(nikkeDTO.name)
+
+        verify(nikkeRepository, times(1)).findNikkeById(1)
+        verify(nikkeRepository, times(1)).save(isA<Nikke>())
     }
 
 }
