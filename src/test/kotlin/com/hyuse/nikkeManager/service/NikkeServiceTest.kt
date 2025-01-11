@@ -20,7 +20,7 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
 @ActiveProfiles("test")
-class NikkeServiceTest() {
+class NikkeServiceTest {
 
     @InjectMocks
     lateinit var nikkeService: NikkeService
@@ -123,8 +123,8 @@ class NikkeServiceTest() {
     }
 
     @Test
-    @DisplayName("Should uptade a nikke")
-    fun updateNikkeCase1(){
+    @DisplayName("Should update a nikke")
+    fun updateNikkeCase1() {
 
         val nikke = Nikke(
             id = null,
@@ -178,7 +178,7 @@ class NikkeServiceTest() {
 
     @Test
     @DisplayName("Should not update a nikke due to lack of a nikke with the same name passed as parameter")
-    fun updateNikkeCase2(){
+    fun updateNikkeCase2() {
 
         val nikkeDTO = NikkeDTO(
             id = null,
@@ -212,8 +212,8 @@ class NikkeServiceTest() {
     }
 
     @Test
-    @DisplayName("Should uptade a nikke by id")
-    fun updateNikkeIdCase1(){
+    @DisplayName("Should update a nikke by id")
+    fun updateNikkeIdCase1() {
 
         val nikke = Nikke(
             id = 1,
@@ -266,8 +266,8 @@ class NikkeServiceTest() {
     }
 
     @Test
-    @DisplayName("Should not uptade a nikke by id")
-    fun updateNikkeIdCase2(){
+    @DisplayName("Should not update a nikke by id")
+    fun updateNikkeIdCase2() {
 
         val nikkeDTO = NikkeDTO(
             id = null,
@@ -297,6 +297,36 @@ class NikkeServiceTest() {
         assertThat(exception.message).isEqualTo("Nikke not found")
 
         verify(nikkeRepository, times(1)).findNikkeById(1)
+    }
+
+    @Test
+    @DisplayName("")
+    fun deleteNikkeCase1() {
+
+        val nikke = Nikke(
+            id = 1,
+            name = "Test",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        whenever(nikkeRepository.findNikkeByName("Test")).thenReturn(nikke)
+
+        nikkeService.deleteNikke("Test")
+
+        verify(nikkeRepository, times(1)).deleteByName("Test")
     }
 
 }

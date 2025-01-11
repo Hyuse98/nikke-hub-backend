@@ -32,15 +32,20 @@ class NikkeService(val nikkeRepository: NikkeRepository) {
         val nikkeExist = nikkeRepository.findNikkeById(id)
             ?: throw IllegalStateException("Nikke not found")
 
-        val nikke: Nikke = nikkeDTO.copy(id = id).toModel()
+        val nikke: Nikke = nikkeDTO.copy(id = nikkeExist.id).toModel()
         return nikkeRepository.save(nikke)
     }
 
     fun deleteNikke(name: String) {
+        val nikkeExist = nikkeRepository.findNikkeByName(name)
+            ?: throw IllegalStateException("Nikke not found")
         return nikkeRepository.deleteByName(name)
     }
 
     fun deleteNikke(id: Int) {
+        val nikkeExist = nikkeRepository.findNikkeById(id)
+            ?: throw IllegalStateException("Nikke not found")
+
         return nikkeRepository.deleteById(id)
     }
 
