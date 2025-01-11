@@ -329,4 +329,16 @@ class NikkeServiceTest {
         verify(nikkeRepository, times(1)).deleteByName("Test")
     }
 
+    @Test
+    @DisplayName("")
+    fun deleteNikkeCase2() {
+
+        val exception = assertThrows<IllegalStateException> {
+            nikkeService.deleteNikke("Test")
+        }
+        assertThat(exception.message).isEqualTo("Nikke not found")
+
+        verify(nikkeRepository, times(1)).findNikkeByName("Test")
+
+    }
 }
