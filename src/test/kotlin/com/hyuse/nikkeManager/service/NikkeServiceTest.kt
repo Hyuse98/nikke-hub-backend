@@ -300,8 +300,8 @@ class NikkeServiceTest {
     }
 
     @Test
-    @DisplayName("")
-    fun deleteNikkeCase1() {
+    @DisplayName("Should delete nikke by name passed")
+    fun deleteNikkeByNameCase1() {
 
         val nikke = Nikke(
             id = 1,
@@ -330,8 +330,8 @@ class NikkeServiceTest {
     }
 
     @Test
-    @DisplayName("")
-    fun deleteNikkeCase2() {
+    @DisplayName("Should fail when delete nikke because not exist")
+    fun deleteNikkeByNameCase2() {
 
         val exception = assertThrows<IllegalStateException> {
             nikkeService.deleteNikke("Test")
@@ -339,6 +339,35 @@ class NikkeServiceTest {
         assertThat(exception.message).isEqualTo("Nikke not found")
 
         verify(nikkeRepository, times(1)).findNikkeByName("Test")
+    }
 
+    @Test
+    @DisplayName("Should delete nikke by id passed")
+    fun deleteNikkeByIdCase1() {
+
+        val nikke = Nikke(
+            id = 1,
+            name = "Test",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        whenever(nikkeRepository.findNikkeById(1)).thenReturn(nikke)
+
+        nikkeService.deleteNikke(1)
+
+        verify(nikkeRepository, times(1)).deleteById(1)
     }
 }
