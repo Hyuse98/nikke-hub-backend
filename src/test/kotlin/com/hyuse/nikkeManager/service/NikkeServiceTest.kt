@@ -370,4 +370,16 @@ class NikkeServiceTest {
 
         verify(nikkeRepository, times(1)).deleteById(1)
     }
+
+    @Test
+    @DisplayName("Should fail when delete nikke by id because not exist")
+    fun deleteNikkeByIdCase2() {
+
+        val exception = assertThrows<IllegalStateException> {
+            nikkeService.deleteNikke(1)
+        }
+        assertThat(exception.message).isEqualTo("Nikke not found")
+
+        verify(nikkeRepository, times(1)).findNikkeById(1)
+    }
 }
