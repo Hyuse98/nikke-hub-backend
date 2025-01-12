@@ -10,10 +10,9 @@ import org.springframework.stereotype.Service
 @Service
 class DollService(val dollRepository: DollRepository) {
 
-    fun addDoll(dollDTO: DollDTO): Doll {
-        val dollExists = dollRepository.findByRarityAndLevel(dollDTO.rarity, dollDTO.level)
-        if (dollExists.isPresent) {
-            throw IllegalStateException("Ja tem")
+    fun createDoll(dollDTO: DollDTO): Doll? {
+        dollRepository.findByRarityAndLevel(dollDTO.rarity, dollDTO.level)?.let {
+            throw IllegalStateException("Doll already registered for rarity ${dollDTO.rarity} and level ${dollDTO.level}")
         }
         return dollRepository.save(dollDTO.toModel())
     }
