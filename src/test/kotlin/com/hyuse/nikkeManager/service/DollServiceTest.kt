@@ -48,4 +48,24 @@ class DollServiceTest {
         verify(dollRepository).findByRarityAndLevel(dollDTO.rarity, dollDTO.level)
         verify(dollRepository).save(isA<Doll>())
     }
+
+    @Test
+    @DisplayName("Should not create doll when it exist")
+
+    fun createDollCase2() {
+        val dollDTO = DollDTO(
+            id = null,
+            rarity = Rarity.R,
+            level = 5
+        )
+
+        whenever(dollRepository.findByRarityAndLevel(Rarity.R, 5)).thenReturn(dollDTO.toModel())
+
+        val exception = assertThrows<IllegalStateException> {
+            dollService.createDoll(dollDTO)
+        }
+        assertThat(exception.message).isEqualTo("Doll already registered for rarity ${dollDTO.rarity} and level ${dollDTO.level}")
+
+        verify(dollRepository).findByRarityAndLevel(dollDTO.rarity, dollDTO.level)
+    }
 }
