@@ -46,6 +46,6 @@ class DollController(val dollRepository: DollRepository, val dollService: DollSe
     )
     @PostMapping
     fun createDoll(@RequestBody @Valid dollDTO: DollDTO): ResponseEntity<Doll> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(dollService.addDoll(dollDTO))
+        return ResponseEntity.status(HttpStatus.CREATED).body(dollService.createDoll(dollDTO))
     }
 }
