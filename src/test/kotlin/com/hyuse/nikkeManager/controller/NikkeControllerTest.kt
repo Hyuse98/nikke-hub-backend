@@ -26,9 +26,6 @@ class NikkeControllerTest {
     @MockkBean
     lateinit var nikkeService: NikkeService
 
-    @MockkBean
-    lateinit var nikkeRepository: NikkeRepository
-
     @Test
     @DisplayName("201")
     fun createNikkeCase1() {
@@ -78,6 +75,39 @@ class NikkeControllerTest {
             .andExpect(jsonPath("$.nikkeClass").value(NikkeClass.SUPPORTER.name))
             .andExpect(jsonPath("$.cube").doesNotExist())
             .andExpect(jsonPath("$.doll").doesNotExist())
+    }
+
+    @Test
+    @DisplayName("400")
+    fun createNikkeCase2() {
+
+        val request = NikkeDTO(
+            id = null,
+            name = "Test1",
+            core = 50,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.MG,
+            nikkeClass = NikkeClass.SUPPORTER,
+            cube = null,
+            doll = null
+        )
+
+        every { nikkeService.createNikke(request) }
+
+        mockMvc.perform(
+            post("/nikke")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(ObjectMapper().writeValueAsString(request))
+        )
+            .andExpect(status().isBadRequest)
     }
 
 }
