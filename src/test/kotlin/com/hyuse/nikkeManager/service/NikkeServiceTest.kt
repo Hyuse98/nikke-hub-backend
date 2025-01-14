@@ -214,7 +214,6 @@ class NikkeServiceTest {
         verify(nikkeRepository, times(0)).save(isA<Nikke>())
     }
 
-    //TODO(fix exception later)
     @Test
     @DisplayName("Should update a nikke by id")
     fun updateNikkeIdCase1() {
