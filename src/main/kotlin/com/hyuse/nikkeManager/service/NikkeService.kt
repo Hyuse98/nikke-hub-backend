@@ -2,6 +2,7 @@ package com.hyuse.nikkeManager.service
 
 import com.hyuse.nikkeManager.dto.NikkeDTO
 import com.hyuse.nikkeManager.enums.*
+import com.hyuse.nikkeManager.exception.NikkeAlreadyExistsException
 import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.NikkeRepository
 import com.hyuse.nikkeManager.repository.specifications.NikkeSpecifications
@@ -15,7 +16,7 @@ class NikkeService(val nikkeRepository: NikkeRepository) {
     fun createNikke(nikkeDTO: NikkeDTO): Nikke {
         val nikkeExist = nikkeRepository.findNikkeByName(nikkeDTO.name)
         if (nikkeExist != null) {
-            throw IllegalStateException("Nikke Already Exist")
+            throw NikkeAlreadyExistsException(nikkeExist.name)
         }
         return nikkeRepository.save(nikkeDTO.toModel())
     }

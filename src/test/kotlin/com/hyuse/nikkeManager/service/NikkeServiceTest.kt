@@ -2,6 +2,7 @@ package com.hyuse.nikkeManager.service
 
 import com.hyuse.nikkeManager.dto.NikkeDTO
 import com.hyuse.nikkeManager.enums.*
+import com.hyuse.nikkeManager.exception.NikkeAlreadyExistsException
 import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.NikkeRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -31,7 +32,7 @@ class NikkeServiceTest {
     fun setup() {
 
     }
-
+    //TODO(fix exception later)
     @Test
     @DisplayName("Should create a nikke with success")
     fun createNikkeCase1() {
@@ -112,15 +113,15 @@ class NikkeServiceTest {
 
         whenever(nikkeRepository.findNikkeByName("Test")).thenReturn(nikke)
 
-        val exception = assertThrows<IllegalStateException> {
+        val exception = assertThrows<NikkeAlreadyExistsException> {
             nikkeService.createNikke(nikkeDTO)
         }
-        assertThat(exception.message).isEqualTo("Nikke Already Exist")
+        assertThat(exception.message).isEqualTo("Nikke with name '${nikke.name}' already exists")
 
         verify(nikkeRepository, times(1)).findNikkeByName("Test")
         verify(nikkeRepository, times(0)).save(isA<Nikke>())
     }
-
+    //TODO(fix exception later)
     @Test
     @DisplayName("Should update a nikke")
     fun updateNikkeCase1() {
@@ -174,7 +175,7 @@ class NikkeServiceTest {
         verify(nikkeRepository, times(1)).findNikkeByName("Test")
         verify(nikkeRepository, times(1)).save(isA<Nikke>())
     }
-
+    //TODO(fix exception later)
     @Test
     @DisplayName("Should not update a nikke due to lack of a nikke with the same name passed as parameter")
     fun updateNikkeCase2() {
@@ -209,7 +210,7 @@ class NikkeServiceTest {
         verify(nikkeRepository, times(1)).findNikkeByName("Test")
         verify(nikkeRepository, times(0)).save(isA<Nikke>())
     }
-
+    //TODO(fix exception later)
     @Test
     @DisplayName("Should update a nikke by id")
     fun updateNikkeIdCase1() {
@@ -263,7 +264,7 @@ class NikkeServiceTest {
         verify(nikkeRepository, times(1)).findNikkeById(1)
         verify(nikkeRepository, times(1)).save(isA<Nikke>())
     }
-
+    //TODO(fix exception later)
     @Test
     @DisplayName("Should not update a nikke by id")
     fun updateNikkeIdCase2() {
@@ -297,7 +298,7 @@ class NikkeServiceTest {
 
         verify(nikkeRepository, times(1)).findNikkeById(1)
     }
-
+    //TODO(fix exception later)
     @Test
     @DisplayName("Should delete nikke by name passed")
     fun deleteNikkeByNameCase1() {
@@ -327,7 +328,7 @@ class NikkeServiceTest {
 
         verify(nikkeRepository, times(1)).deleteByName("Test")
     }
-
+    //TODO(fix exception later)
     @Test
     @DisplayName("Should fail when delete nikke because not exist")
     fun deleteNikkeByNameCase2() {
@@ -339,7 +340,7 @@ class NikkeServiceTest {
 
         verify(nikkeRepository, times(1)).findNikkeByName("Test")
     }
-
+    //TODO(fix exception later)
     @Test
     @DisplayName("Should delete nikke by id passed")
     fun deleteNikkeByIdCase1() {
@@ -369,7 +370,7 @@ class NikkeServiceTest {
 
         verify(nikkeRepository, times(1)).deleteById(1)
     }
-
+    //TODO(fix exception later)
     @Test
     @DisplayName("Should fail when delete nikke by id because not exist")
     fun deleteNikkeByIdCase2() {
@@ -381,7 +382,7 @@ class NikkeServiceTest {
 
         verify(nikkeRepository, times(1)).findNikkeById(1)
     }
-
+    //TODO(fix exception later)
     @Test
     @DisplayName("should list all nikkes when no filters are provided")
     fun listNikkeCase1() {

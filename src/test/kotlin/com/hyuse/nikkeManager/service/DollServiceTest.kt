@@ -28,7 +28,7 @@ class DollServiceTest {
 
     @Test
     @DisplayName("Should create doll when it doesn't exist")
-
+    //TODO(fix exception later)
     fun createDollCase1() {
         val dollDTO = DollDTO(
             id = null,
@@ -48,10 +48,9 @@ class DollServiceTest {
         verify(dollRepository).findByRarityAndLevel(dollDTO.rarity, dollDTO.level)
         verify(dollRepository).save(isA<Doll>())
     }
-
+    //TODO(fix exception later)
     @Test
     @DisplayName("Should not create doll when it exist")
-
     fun createDollCase2() {
         val dollDTO = DollDTO(
             id = null,
