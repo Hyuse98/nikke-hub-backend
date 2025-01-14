@@ -3,6 +3,8 @@ package com.hyuse.nikkeManager.service
 import com.hyuse.nikkeManager.dto.NikkeDTO
 import com.hyuse.nikkeManager.enums.*
 import com.hyuse.nikkeManager.exception.NikkeAlreadyExistsException
+import com.hyuse.nikkeManager.exception.NikkeIdNotFoundException
+import com.hyuse.nikkeManager.exception.NikkeNotFoundException
 import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.NikkeRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -32,7 +34,7 @@ class NikkeServiceTest {
     fun setup() {
 
     }
-    //TODO(fix exception later)
+
     @Test
     @DisplayName("Should create a nikke with success")
     fun createNikkeCase1() {
@@ -121,7 +123,7 @@ class NikkeServiceTest {
         verify(nikkeRepository, times(1)).findNikkeByName("Test")
         verify(nikkeRepository, times(0)).save(isA<Nikke>())
     }
-    //TODO(fix exception later)
+
     @Test
     @DisplayName("Should update a nikke")
     fun updateNikkeCase1() {
@@ -175,14 +177,14 @@ class NikkeServiceTest {
         verify(nikkeRepository, times(1)).findNikkeByName("Test")
         verify(nikkeRepository, times(1)).save(isA<Nikke>())
     }
-    //TODO(fix exception later)
+
     @Test
     @DisplayName("Should not update a nikke due to lack of a nikke with the same name passed as parameter")
     fun updateNikkeCase2() {
 
         val nikkeDTO = NikkeDTO(
             id = null,
-            name = "Test2",
+            name = "Test",
             core = 1,
             attraction = 1,
             skill1Level = 1,
@@ -199,17 +201,19 @@ class NikkeServiceTest {
             doll = null
         )
 
-        whenever(nikkeRepository.findNikkeByName("Test")).thenReturn(null)
-        whenever(nikkeRepository.save(isA<Nikke>())).thenReturn(nikkeDTO.toModel())
+        val name = "Test"
 
-        val exception = assertThrows<IllegalStateException> {
-            nikkeService.updateNikke(nikkeDTO, "Test")
+        whenever(nikkeRepository.findNikkeByName(name)).thenReturn(null)
+
+        val exception = assertThrows<NikkeNotFoundException> {
+            nikkeService.updateNikke(nikkeDTO, name)
         }
-        assertThat(exception.message).isEqualTo("Nikke not found")
+        assertThat(exception.message).isEqualTo("Nikke with name '${name}' not found")
 
         verify(nikkeRepository, times(1)).findNikkeByName("Test")
         verify(nikkeRepository, times(0)).save(isA<Nikke>())
     }
+
     //TODO(fix exception later)
     @Test
     @DisplayName("Should update a nikke by id")
@@ -264,14 +268,14 @@ class NikkeServiceTest {
         verify(nikkeRepository, times(1)).findNikkeById(1)
         verify(nikkeRepository, times(1)).save(isA<Nikke>())
     }
-    //TODO(fix exception later)
+
     @Test
     @DisplayName("Should not update a nikke by id")
     fun updateNikkeIdCase2() {
 
         val nikkeDTO = NikkeDTO(
             id = null,
-            name = "Test2",
+            name = "Test",
             core = 1,
             attraction = 1,
             skill1Level = 1,
@@ -288,17 +292,19 @@ class NikkeServiceTest {
             doll = null
         )
 
-        whenever(nikkeRepository.findNikkeById(1)).thenReturn(null)
+        val id = 1
+
+        whenever(nikkeRepository.findNikkeById(id)).thenReturn(null)
         whenever(nikkeRepository.save(isA<Nikke>())).thenReturn(nikkeDTO.toModel())
 
-        val exception = assertThrows<IllegalStateException> {
-            nikkeService.updateNikke(nikkeDTO, 1)
+        val exception = assertThrows<NikkeIdNotFoundException> {
+            nikkeService.updateNikke(nikkeDTO, id)
         }
-        assertThat(exception.message).isEqualTo("Nikke not found")
+        assertThat(exception.message).isEqualTo("Nikke with id '$id' not found")
 
-        verify(nikkeRepository, times(1)).findNikkeById(1)
+        verify(nikkeRepository, times(1)).findNikkeById(id)
     }
-    //TODO(fix exception later)
+
     @Test
     @DisplayName("Should delete nikke by name passed")
     fun deleteNikkeByNameCase1() {
@@ -328,19 +334,20 @@ class NikkeServiceTest {
 
         verify(nikkeRepository, times(1)).deleteByName("Test")
     }
-    //TODO(fix exception later)
+
     @Test
     @DisplayName("Should fail when delete nikke because not exist")
     fun deleteNikkeByNameCase2() {
 
-        val exception = assertThrows<IllegalStateException> {
-            nikkeService.deleteNikke("Test")
+        val name = "Test"
+        val exception = assertThrows<NikkeNotFoundException> {
+            nikkeService.deleteNikke(name)
         }
-        assertThat(exception.message).isEqualTo("Nikke not found")
+        assertThat(exception.message).isEqualTo("Nikke with name '${name}' not found")
 
-        verify(nikkeRepository, times(1)).findNikkeByName("Test")
+        verify(nikkeRepository, times(1)).findNikkeByName(name)
     }
-    //TODO(fix exception later)
+
     @Test
     @DisplayName("Should delete nikke by id passed")
     fun deleteNikkeByIdCase1() {
@@ -370,19 +377,21 @@ class NikkeServiceTest {
 
         verify(nikkeRepository, times(1)).deleteById(1)
     }
-    //TODO(fix exception later)
+
     @Test
     @DisplayName("Should fail when delete nikke by id because not exist")
     fun deleteNikkeByIdCase2() {
 
-        val exception = assertThrows<IllegalStateException> {
-            nikkeService.deleteNikke(1)
-        }
-        assertThat(exception.message).isEqualTo("Nikke not found")
+        val id = 1
 
-        verify(nikkeRepository, times(1)).findNikkeById(1)
+        val exception = assertThrows<NikkeIdNotFoundException> {
+            nikkeService.deleteNikke(id)
+        }
+        assertThat(exception.message).isEqualTo("Nikke with id '$id' not found")
+
+        verify(nikkeRepository, times(1)).findNikkeById(id)
     }
-    //TODO(fix exception later)
+
     @Test
     @DisplayName("should list all nikkes when no filters are provided")
     fun listNikkeCase1() {

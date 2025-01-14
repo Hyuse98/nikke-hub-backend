@@ -3,6 +3,8 @@ package com.hyuse.nikkeManager.service
 import com.hyuse.nikkeManager.dto.NikkeDTO
 import com.hyuse.nikkeManager.enums.*
 import com.hyuse.nikkeManager.exception.NikkeAlreadyExistsException
+import com.hyuse.nikkeManager.exception.NikkeIdNotFoundException
+import com.hyuse.nikkeManager.exception.NikkeNotFoundException
 import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.NikkeRepository
 import com.hyuse.nikkeManager.repository.specifications.NikkeSpecifications
@@ -23,7 +25,7 @@ class NikkeService(val nikkeRepository: NikkeRepository) {
 
     fun updateNikke(nikkeDTO: NikkeDTO, name: String): Nikke {
         val nikkeExist = nikkeRepository.findNikkeByName(name)
-            ?: throw IllegalStateException("Nikke not found")
+            ?: throw NikkeNotFoundException(name)
 
         val updatedNikke = nikkeDTO.copy(id = nikkeExist.id).toModel()
         return nikkeRepository.save(updatedNikke)
@@ -31,19 +33,19 @@ class NikkeService(val nikkeRepository: NikkeRepository) {
 
     fun updateNikke(nikkeDTO: NikkeDTO, id: Int): Nikke {
         val nikkeExist = nikkeRepository.findNikkeById(id)
-            ?: throw IllegalStateException("Nikke not found")
+            ?: throw NikkeIdNotFoundException("$id")
 
         val nikke: Nikke = nikkeDTO.copy(id = nikkeExist.id).toModel()
         return nikkeRepository.save(nikke)
     }
 
     fun deleteNikke(name: String) {
-        nikkeRepository.findNikkeByName(name) ?: throw IllegalStateException("Nikke not found")
+        nikkeRepository.findNikkeByName(name) ?: throw NikkeNotFoundException(name)
         return nikkeRepository.deleteByName(name)
     }
 
     fun deleteNikke(id: Int) {
-        nikkeRepository.findNikkeById(id) ?: throw IllegalStateException("Nikke not found")
+        nikkeRepository.findNikkeById(id) ?: throw NikkeIdNotFoundException("$id")
 
         return nikkeRepository.deleteById(id)
     }
