@@ -4,12 +4,14 @@ import com.hyuse.nikkeManager.exception.NikkeAlreadyExistsException
 import com.hyuse.nikkeManager.exception.NikkeIdNotFoundException
 import com.hyuse.nikkeManager.exception.NikkeNotFoundException
 import org.springframework.http.HttpStatus
+import org.springframework.validation.FieldError
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
-class GlobalExceptionHandler{
+class GlobalExceptionHandler {
 
     @ExceptionHandler(NikkeAlreadyExistsException::class)
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -22,7 +24,7 @@ class GlobalExceptionHandler{
 
     @ExceptionHandler(NikkeNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    fun handlerNikkeNotFound(ex: NikkeNotFoundException): ExceptionResponse{
+    fun handlerNikkeNotFound(ex: NikkeNotFoundException): ExceptionResponse {
         return ExceptionResponse(
             status = HttpStatus.NOT_FOUND,
             message = ex.message ?: "Nikke Not Found"
@@ -31,10 +33,49 @@ class GlobalExceptionHandler{
 
     @ExceptionHandler(NikkeIdNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    fun handlerNikkeIdNotFound(ex: NikkeIdNotFoundException): ExceptionResponse{
+    fun handlerNikkeIdNotFound(ex: NikkeIdNotFoundException): ExceptionResponse {
         return ExceptionResponse(
             status = HttpStatus.NOT_FOUND,
             message = ex.message ?: "Nikke Not Found"
+        )
+    }
+//    @ExceptionHandler(NikkeInvalidFieldException::class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    fun handlerNikkeInvalidFieldException(ex: NikkeInvalidFieldException): ExceptionResponse{
+//        return ExceptionResponse(
+//            status = HttpStatus.BAD_REQUEST,
+//            message = ex.message ?: "Invalid Fields"
+//        )
+//    }
+
+//    @ExceptionHandler(MethodArgumentNotValidException::class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    fun handlerNikkeMethodArgumentNotValidException(ex: NikkeMethodArgumentNotValidException): ExceptionResponse{
+//        return ExceptionResponse(
+//            status = HttpStatus.BAD_REQUEST,
+//            message = ex.message ?: "No valid fields"
+//        )
+//    }
+
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun handleValidationExceptions(ex: MethodArgumentNotValidException): ExceptionResponse {
+
+        val errorsList = mutableListOf<String>()
+
+        for (errors in ex.bindingResult.allErrors) {
+            val fields = errors as FieldError
+            val fieldNames = fields.field
+            val errorMessage = errors.defaultMessage ?: "Invalid Values"
+            val message = "$fieldNames: $errorMessage"
+            errorsList.add(message)
+        }
+
+        return ExceptionResponse(
+            status = HttpStatus.BAD_REQUEST,
+            message = "Fields Validation Failed",
+            errors = errorsList
         )
     }
 }
