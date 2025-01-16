@@ -2,6 +2,7 @@ package com.hyuse.nikkeManager.service
 
 import com.hyuse.nikkeManager.dto.DollDTO
 import com.hyuse.nikkeManager.enums.Rarity
+import com.hyuse.nikkeManager.exception.DollAlreadyExistsException
 import com.hyuse.nikkeManager.model.Doll
 import com.hyuse.nikkeManager.repository.DollRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -28,7 +29,7 @@ class DollServiceTest {
 
     @Test
     @DisplayName("Should create doll when it doesn't exist")
-    //TODO(fix exception later)
+
     fun createDollCase1() {
         val dollDTO = DollDTO(
             id = null,
@@ -48,7 +49,7 @@ class DollServiceTest {
         verify(dollRepository).findByRarityAndLevel(dollDTO.rarity, dollDTO.level)
         verify(dollRepository).save(isA<Doll>())
     }
-    //TODO(fix exception later)
+
     @Test
     @DisplayName("Should not create doll when it exist")
     fun createDollCase2() {
@@ -60,10 +61,10 @@ class DollServiceTest {
 
         whenever(dollRepository.findByRarityAndLevel(Rarity.R, 5)).thenReturn(dollDTO.toModel())
 
-        val exception = assertThrows<IllegalStateException> {
+        val exception = assertThrows<DollAlreadyExistsException> {
             dollService.createDoll(dollDTO)
         }
-        assertThat(exception.message).isEqualTo("Doll already registered for rarity ${dollDTO.rarity} and level ${dollDTO.level}")
+        assertThat(exception.message).isEqualTo("Doll Rarity: '${dollDTO.rarity}' Level: '${dollDTO.level}' already exists")
 
         verify(dollRepository).findByRarityAndLevel(dollDTO.rarity, dollDTO.level)
     }

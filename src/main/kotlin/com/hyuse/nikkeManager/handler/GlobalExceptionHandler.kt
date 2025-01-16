@@ -1,5 +1,6 @@
 package com.hyuse.nikkeManager.handler
 
+import com.hyuse.nikkeManager.exception.DollAlreadyExistsException
 import com.hyuse.nikkeManager.exception.NikkeAlreadyExistsException
 import com.hyuse.nikkeManager.exception.NikkeIdNotFoundException
 import com.hyuse.nikkeManager.exception.NikkeNotFoundException
@@ -39,24 +40,6 @@ class GlobalExceptionHandler {
             message = ex.message ?: "Nikke Not Found"
         )
     }
-//    @ExceptionHandler(NikkeInvalidFieldException::class)
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    fun handlerNikkeInvalidFieldException(ex: NikkeInvalidFieldException): ExceptionResponse{
-//        return ExceptionResponse(
-//            status = HttpStatus.BAD_REQUEST,
-//            message = ex.message ?: "Invalid Fields"
-//        )
-//    }
-
-//    @ExceptionHandler(MethodArgumentNotValidException::class)
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    fun handlerNikkeMethodArgumentNotValidException(ex: NikkeMethodArgumentNotValidException): ExceptionResponse{
-//        return ExceptionResponse(
-//            status = HttpStatus.BAD_REQUEST,
-//            message = ex.message ?: "No valid fields"
-//        )
-//    }
-
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -76,6 +59,14 @@ class GlobalExceptionHandler {
             status = HttpStatus.BAD_REQUEST,
             message = "Fields Validation Failed",
             errors = errorsList
+        )
+    }
+    @ExceptionHandler(DollAlreadyExistsException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    fun handlerDollAlreadyExistsException(ex: DollAlreadyExistsException): ExceptionResponse{
+        return ExceptionResponse(
+            status = HttpStatus.CONFLICT,
+            message = ex.message ?: "Doll already exist"
         )
     }
 }
