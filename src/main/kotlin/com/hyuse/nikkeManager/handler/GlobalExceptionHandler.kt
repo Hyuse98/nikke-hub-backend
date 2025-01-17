@@ -5,6 +5,7 @@ import com.hyuse.nikkeManager.exception.NikkeAlreadyExistsException
 import com.hyuse.nikkeManager.exception.NikkeIdNotFoundException
 import com.hyuse.nikkeManager.exception.NikkeNotFoundException
 import org.springframework.http.HttpStatus
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -41,6 +42,15 @@ class GlobalExceptionHandler {
         )
     }
 
+    @ExceptionHandler(DollAlreadyExistsException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    fun handlerDollAlreadyExistsException(ex: DollAlreadyExistsException): ExceptionResponse{
+        return ExceptionResponse(
+            status = HttpStatus.CONFLICT,
+            message = ex.message ?: "Doll already exist"
+        )
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleValidationExceptions(ex: MethodArgumentNotValidException): ExceptionResponse {
@@ -61,12 +71,13 @@ class GlobalExceptionHandler {
             errors = errorsList
         )
     }
-    @ExceptionHandler(DollAlreadyExistsException::class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    fun handlerDollAlreadyExistsException(ex: DollAlreadyExistsException): ExceptionResponse{
+
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleHttpMessageNotReadableException(ex: HttpMessageNotReadableException): ExceptionResponse {
         return ExceptionResponse(
-            status = HttpStatus.CONFLICT,
-            message = ex.message ?: "Doll already exist"
+            status = HttpStatus.BAD_REQUEST,
+            message = "Malformed JSON Request",
+            errors = listOf(ex.localizedMessage)
         )
     }
 }
