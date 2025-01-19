@@ -127,7 +127,7 @@ class NikkeControllerTest {
             "skill2Level": 1,
             "burstLevel": 1,
             "rarity": "SR",
-            "ownedStatus": "NOT_O",
+            "ownedStatus": "NOT_OWNED",
             "burstType": "III",
             "company": "PILGRIM",
             "code": "ELECTRIC",
@@ -146,7 +146,7 @@ class NikkeControllerTest {
             .andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.errors").exists())
             .andExpect(jsonPath("$.errors").isArray)
-            .andExpect(jsonPath("$.errors[0].message").value("Invalid type for field 'core'"))
+            .andExpect(jsonPath("$.errors[0]").value("JSON parse error: Cannot deserialize value of type `int` from String \"invalid\": not a valid `int` value"))
     }
 
 }

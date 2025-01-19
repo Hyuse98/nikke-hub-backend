@@ -73,6 +73,7 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleHttpMessageNotReadableException(ex: HttpMessageNotReadableException): ExceptionResponse {
         return ExceptionResponse(
             status = HttpStatus.BAD_REQUEST,
