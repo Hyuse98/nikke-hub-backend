@@ -192,6 +192,41 @@ class NikkeControllerTest {
             .andExpect(jsonPath("$.core").value(nikkeDTO.core))
     }
 
+    @Test
+    @DisplayName("400")
+    fun updateNikkeCase2() {
+
+        val request = NikkeDTO(
+            id = null,
+            name = "name",
+            core = 50,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.MG,
+            nikkeClass = NikkeClass.SUPPORTER,
+            cube = null,
+            doll = null
+        )
+
+        val name = "Rapi"
+
+        every { nikkeService.updateNikke(request, name) }
+
+        mockMvc.perform(
+            put("/nikke/{name}", name)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(ObjectMapper().writeValueAsString(request))
+        )
+            .andExpect(status().isBadRequest)
+    }
+
 
 //TODO(Delete Test)
 
