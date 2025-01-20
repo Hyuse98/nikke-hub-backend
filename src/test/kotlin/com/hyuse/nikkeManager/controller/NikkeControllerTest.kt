@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -25,6 +26,9 @@ class NikkeControllerTest {
 
     @MockkBean
     lateinit var nikkeService: NikkeService
+
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
     @MockkBean
     lateinit var nikkeRepository: NikkeRepository
@@ -113,7 +117,6 @@ class NikkeControllerTest {
             .andExpect(status().isBadRequest)
     }
 
-    //TODO(fix test later)
     @Test
     @DisplayName("400")
     fun createNikkeCase3() {
@@ -149,4 +152,50 @@ class NikkeControllerTest {
             .andExpect(jsonPath("$.errors[0]").value("JSON parse error: Cannot deserialize value of type `int` from String \"invalid\": not a valid `int` value"))
     }
 
+    //TODO(Update Test)
+    @Test
+    @DisplayName("201")
+    fun updateNikkeCase1() {
+
+        val nikkeDTO = NikkeDTO(
+            id = 1,
+            name = "Rapi",
+            core = 0,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.MG,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        val name = "Rapi"
+
+        val updatedNikke = nikkeDTO.toModel()
+
+        every { nikkeService.updateNikke(nikkeDTO, name) } returns updatedNikke
+
+        mockMvc.perform(
+            put("/nikke/{name}", name)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(nikkeDTO))
+        )
+            .andExpect(status().isCreated)
+            .andExpect(jsonPath("$.name").value(nikkeDTO.name))
+            .andExpect(jsonPath("$.core").value(nikkeDTO.core))
+    }
+
+
+//TODO(Delete Test)
+
+//TODO(List Nikkes Test)
+
+//TODO(Get Nikke Test)
 }
