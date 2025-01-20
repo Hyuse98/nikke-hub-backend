@@ -227,6 +227,42 @@ class NikkeControllerTest {
             .andExpect(status().isBadRequest)
     }
 
+    @Test
+    @DisplayName("400")
+    fun updateNikkeCase3() {
+        val invalidRequest = """
+        {
+            "id": null,
+            "name": "Rapi",
+            "core": "invalid",
+            "attraction": 1,
+            "skill1Level": 1,
+            "skill2Level": 1,
+            "burstLevel": 1,
+            "rarity": "SR",
+            "ownedStatus": "NOT_OWNED",
+            "burstType": "III",
+            "company": "PILGRIM",
+            "code": "ELECTRIC",
+            "weapon": "MG",
+            "nikkeClass": "SUPPORTER",
+            "cube": null,
+            "doll": null
+        }
+    """.trimIndent()
+
+        val name = "Rapi"
+
+        mockMvc.perform(
+            put("/nikke/{name}", name)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(invalidRequest)
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.errors").exists())
+            .andExpect(jsonPath("$.errors").isArray)
+            .andExpect(jsonPath("$.errors[0]").value("JSON parse error: Cannot deserialize value of type `int` from String \"invalid\": not a valid `int` value"))
+    }
 
 //TODO(Delete Test)
 
