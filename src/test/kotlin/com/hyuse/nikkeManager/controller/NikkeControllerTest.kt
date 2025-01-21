@@ -280,6 +280,21 @@ class NikkeControllerTest {
 
     }
 
+    @Test
+    @DisplayName("404")
+    fun deleteNikkeCase2() {
+
+        val name = "Rapi"
+
+        every { nikkeService.deleteNikke(name) } throws NikkeNotFoundException(name)
+
+        mockMvc.perform(
+            delete("/nikke/{name}", name)
+        )
+            .andExpect(status().isNotFound)
+            .andExpect(jsonPath("$.message").value("Nikke with name '$name' not found"))
+
+    }
 
 //TODO(List Nikkes Test)
 
