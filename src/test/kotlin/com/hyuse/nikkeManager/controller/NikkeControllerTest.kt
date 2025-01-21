@@ -3,18 +3,19 @@ package com.hyuse.nikkeManager.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.hyuse.nikkeManager.dto.NikkeDTO
 import com.hyuse.nikkeManager.enums.*
+import com.hyuse.nikkeManager.exception.NikkeNotFoundException
 import com.hyuse.nikkeManager.repository.NikkeRepository
 import com.hyuse.nikkeManager.service.NikkeService
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import io.mockk.justRun
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -152,7 +153,6 @@ class NikkeControllerTest {
             .andExpect(jsonPath("$.errors[0]").value("JSON parse error: Cannot deserialize value of type `int` from String \"invalid\": not a valid `int` value"))
     }
 
-    //TODO(Update Test)
     @Test
     @DisplayName("201")
     fun updateNikkeCase1() {
@@ -264,7 +264,22 @@ class NikkeControllerTest {
             .andExpect(jsonPath("$.errors[0]").value("JSON parse error: Cannot deserialize value of type `int` from String \"invalid\": not a valid `int` value"))
     }
 
-//TODO(Delete Test)
+    @Test
+    @DisplayName("200")
+    fun deleteNikkeCase1() {
+
+        val name = "Rapi"
+
+        justRun { nikkeService.deleteNikke(name) }
+
+
+        mockMvc.perform(
+            delete("/nikke/{name}", name)
+        )
+            .andExpect(status().isOk)
+
+    }
+
 
 //TODO(List Nikkes Test)
 
