@@ -3,6 +3,7 @@ package com.hyuse.nikkeManager.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.hyuse.nikkeManager.dto.NikkeDTO
 import com.hyuse.nikkeManager.enums.*
+import com.hyuse.nikkeManager.exception.NikkeIdNotFoundException
 import com.hyuse.nikkeManager.exception.NikkeNotFoundException
 import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.NikkeRepository
@@ -369,6 +370,30 @@ class NikkeControllerTest {
             .andExpect(jsonPath("$[0].name").value(nikke1.name))
             .andExpect(jsonPath("$[1].name").value(nikke2.name))
     }
+
+    @Test
+    @DisplayName("200")
+    fun listNikkesCase2(){
+
+        every { nikkeService.listAllNikke(
+            rarity = any(),
+            ownedStatus = any(),
+            burstType = any(),
+            company = any(),
+            code = any(),
+            weapon = any(),
+            nikkeClass = any(),
+            cube = any()
+        ) } returns emptyList()
+
+        mockMvc.perform(
+            get("/nikke")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$", hasSize<Any>(0)))
+    }
+
 
 //TODO(Get Nikke Test)
 }
