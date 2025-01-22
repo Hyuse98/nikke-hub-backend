@@ -64,4 +64,8 @@ class NikkeService(val nikkeRepository: NikkeRepository) {
             NikkeSpecifications.byFilters(rarity, ownedStatus, burstType, company, code, weapon, nikkeClass, cube)
         return nikkeRepository.findAll(specification)
     }
+
+    fun searchNikke(name: String): Nikke?{
+        return nikkeRepository.findNikkeByName(name)
+    }
 }
