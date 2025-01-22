@@ -396,4 +396,39 @@ class NikkeControllerTest {
 
 
 //TODO(Get Nikke Test)
+
+    @Test
+    @DisplayName("200")
+    fun getNikkesCase1(){
+
+        val nikke = Nikke(
+            id = 1,
+            name = "Rapi",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        val name = "Rapi"
+        every { nikkeService.searchNikke(name) } returns nikke
+
+        mockMvc.perform(
+            get("/nikke/{name}", name)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.name").value(name))
+    }
+
 }
