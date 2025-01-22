@@ -473,4 +473,40 @@ class NikkeServiceTest {
         verify(nikkeRepository).findAll(any<Specification<Nikke>>())
         assertEquals(expectedNikkes, result)
     }
+
+    @Test
+    @DisplayName("should find a nikke by name passed")
+    fun searchNikkeCase1(){
+
+        val nikke = Nikke(
+            id = 1,
+            name = "Rapi",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        val name = "Rapi"
+
+        whenever(nikkeRepository.findNikkeByName(name)).thenReturn(nikke)
+
+        val result = nikkeService.searchNikke(name)
+
+        assertThat(result).isNotNull
+        assertThat(result!!.name).isEqualTo(name)
+
+        verify(nikkeRepository, times(1)).findNikkeByName(name)
+    }
+
 }
