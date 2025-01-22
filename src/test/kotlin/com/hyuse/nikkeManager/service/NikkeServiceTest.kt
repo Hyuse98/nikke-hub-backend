@@ -476,7 +476,7 @@ class NikkeServiceTest {
 
     @Test
     @DisplayName("should find a nikke by name passed")
-    fun searchNikkeCase1(){
+    fun searchNikkeCase1() {
 
         val nikke = Nikke(
             id = 1,
@@ -509,4 +509,18 @@ class NikkeServiceTest {
         verify(nikkeRepository, times(1)).findNikkeByName(name)
     }
 
+    @Test
+    @DisplayName("should not find a nikke by name passed")
+    fun searchNikkeCase2() {
+
+        val name = "Rapi"
+
+        whenever(nikkeRepository.findNikkeByName(name)).thenReturn(null)
+
+        val result = nikkeService.searchNikke(name)
+
+        assertThat(result).isNull()
+
+        verify(nikkeRepository, times(1)).findNikkeByName(name)
+    }
 }
