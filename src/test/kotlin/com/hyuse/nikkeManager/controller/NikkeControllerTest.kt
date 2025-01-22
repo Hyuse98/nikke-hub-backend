@@ -4,18 +4,22 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.hyuse.nikkeManager.dto.NikkeDTO
 import com.hyuse.nikkeManager.enums.*
 import com.hyuse.nikkeManager.exception.NikkeNotFoundException
+import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.NikkeRepository
 import com.hyuse.nikkeManager.service.NikkeService
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.justRun
+import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -297,6 +301,74 @@ class NikkeControllerTest {
     }
 
 //TODO(List Nikkes Test)
+
+    @Test
+    @DisplayName("200")
+    fun listNikkesCase1(){
+
+        val nikke1 = Nikke(
+            id = 1,
+            name = "Test",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        val nikke2 = Nikke(
+            id = 2,
+            name = "Test",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        val expectedNikkes = listOf(
+            nikke1, nikke2
+        )
+
+        every { nikkeService.listAllNikke(
+            rarity = any(),
+            ownedStatus = any(),
+            burstType = any(),
+            company = any(),
+            code = any(),
+            weapon = any(),
+            nikkeClass = any(),
+            cube = any()
+        ) } returns expectedNikkes
+
+        mockMvc.perform(
+            get("/nikke?rarity=SSR")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(ObjectMapper().writeValueAsString(expectedNikkes))
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$", hasSize<Any>(2)))
+            .andExpect(jsonPath("$[0].name").value(nikke1.name))
+            .andExpect(jsonPath("$[1].name").value(nikke2.name))
+    }
 
 //TODO(Get Nikke Test)
 }
