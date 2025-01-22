@@ -431,4 +431,20 @@ class NikkeControllerTest {
             .andExpect(jsonPath("$.name").value(name))
     }
 
+
+    @Test
+    @DisplayName("404")
+    fun getNikkesCase2(){
+
+        val name = "Rapi"
+
+        every { nikkeService.searchNikke(name) } throws NikkeNotFoundException(name)
+
+        mockMvc.perform(
+            get("/nikke/{name}", name)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isNotFound)
+            .andExpect(jsonPath("$.message").value("Nikke with name '$name' not found"))
+    }
 }
