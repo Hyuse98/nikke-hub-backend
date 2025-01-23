@@ -31,6 +31,7 @@ class DollServiceTest {
     @DisplayName("Should create doll when it doesn't exist")
 
     fun createDollCase1() {
+
         val dollDTO = DollDTO(
             id = null,
             rarity = Rarity.R,
@@ -68,4 +69,26 @@ class DollServiceTest {
 
         verify(dollRepository).findByRarityAndLevel(dollDTO.rarity, dollDTO.level)
     }
+
+    @Test
+    @DisplayName("Should find a doll")
+    fun searchDollCase1(){
+
+        val dollDTO = DollDTO(
+            id = null,
+            rarity = Rarity.SR,
+            level = 5
+        )
+
+        whenever(dollRepository.findByRarityAndLevel(Rarity.SR, 5)).thenReturn(dollDTO.toModel())
+
+        val result = dollService.searchDoll(Rarity.SR, 5)
+
+        assertThat(result!!).isNotNull
+        assertThat(dollDTO.toModel().rarity).isEqualTo(result.rarity)
+        assertThat(dollDTO.toModel().level).isEqualTo(result.level)
+
+        verify(dollRepository).findByRarityAndLevel(Rarity.SR, 5)
+    }
+
 }

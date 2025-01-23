@@ -1,6 +1,7 @@
 package com.hyuse.nikkeManager.service
 
 import com.hyuse.nikkeManager.dto.DollDTO
+import com.hyuse.nikkeManager.enums.Rarity
 import com.hyuse.nikkeManager.exception.DollAlreadyExistsException
 import com.hyuse.nikkeManager.model.Doll
 import com.hyuse.nikkeManager.repository.DollRepository
@@ -20,5 +21,9 @@ class DollService(val dollRepository: DollRepository) {
 
     fun listDolls(): List<Doll>{
         return dollRepository.findAll();
+    }
+
+    fun searchDoll(rarity: Rarity, level: Int): Doll?{
+        return dollRepository.findByRarityAndLevel(rarity, level)
     }
 }

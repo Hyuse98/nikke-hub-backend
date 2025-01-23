@@ -1,6 +1,7 @@
 package com.hyuse.nikkeManager.controller
 
 import com.hyuse.nikkeManager.dto.DollDTO
+import com.hyuse.nikkeManager.enums.Rarity
 import com.hyuse.nikkeManager.model.Doll
 import com.hyuse.nikkeManager.repository.DollRepository
 import com.hyuse.nikkeManager.service.DollService
@@ -19,11 +20,6 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/doll")
 class DollController(val dollRepository: DollRepository, val dollService: DollService) {
-
-    @GetMapping
-    fun listDolls(): List<Doll>{
-        return dollService.listDolls()
-    }
 
     @Operation(
         method = "POST",
@@ -47,5 +43,15 @@ class DollController(val dollRepository: DollRepository, val dollService: DollSe
     @PostMapping
     fun createDoll(@RequestBody @Valid dollDTO: DollDTO): ResponseEntity<Doll> {
         return ResponseEntity.status(HttpStatus.CREATED).body(dollService.createDoll(dollDTO))
+    }
+
+    @GetMapping
+    fun listDolls(): List<Doll>{
+        return dollService.listDolls()
+    }
+
+    @GetMapping("?Rarity?level")
+    fun searchDoll(@RequestBody rarity: Rarity, level: Int): ResponseEntity<Doll> {
+        return ResponseEntity.status(HttpStatus.OK).body(dollService.searchDoll(rarity, level))
     }
 }
