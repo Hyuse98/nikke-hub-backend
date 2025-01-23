@@ -1,9 +1,6 @@
 package com.hyuse.nikkeManager.handler
 
-import com.hyuse.nikkeManager.exception.DollAlreadyExistsException
-import com.hyuse.nikkeManager.exception.NikkeAlreadyExistsException
-import com.hyuse.nikkeManager.exception.NikkeIdNotFoundException
-import com.hyuse.nikkeManager.exception.NikkeNotFoundException
+import com.hyuse.nikkeManager.exception.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.FieldError
@@ -51,6 +48,15 @@ class GlobalExceptionHandler {
         )
     }
 
+    @ExceptionHandler(DollNotFoundException::class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun handlerDollNotFoundException(ex: DollNotFoundException): ExceptionResponse{
+        return ExceptionResponse(
+            status = HttpStatus.NOT_FOUND,
+            message = ex.message ?: "Doll not found"
+        )
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleValidationExceptions(ex: MethodArgumentNotValidException): ExceptionResponse {
@@ -81,4 +87,6 @@ class GlobalExceptionHandler {
             errors = listOf(ex.localizedMessage)
         )
     }
+
+
 }
