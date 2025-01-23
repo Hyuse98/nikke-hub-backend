@@ -114,6 +114,17 @@ class DollControllerTest {
             .andExpect(jsonPath("$[1].level").value(doll2.level))
     }
 
+    @Test
+    @DisplayName("200")
+    fun listDollsCase2() {
 
+        every { dollService.listDolls() } returns emptyList()
 
+        mockMvc.perform(
+            get("/doll")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$", hasSize<Any>(0)))
+    }
 }
