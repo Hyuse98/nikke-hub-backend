@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.hyuse.nikkeManager.dto.DollDTO
 import com.hyuse.nikkeManager.enums.Rarity
 import com.hyuse.nikkeManager.exception.DollAlreadyExistsException
+import com.hyuse.nikkeManager.exception.DollNotFoundException
 import com.hyuse.nikkeManager.model.Doll
 import com.hyuse.nikkeManager.repository.DollRepository
 import com.hyuse.nikkeManager.service.DollService
@@ -151,6 +152,17 @@ class DollControllerTest {
     @Test
     @DisplayName("404")
     fun searchDollsCase2(){
-        TODO()
+
+        val rarity = Rarity.SR
+        val level = 5
+
+        every { dollService.searchDoll(rarity, level) } throws DollNotFoundException(rarity, level)
+
+        mockMvc.perform(
+            get("/doll/search?rarity=SR&level=5")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isNotFound)
+            .andExpect(jsonPath("$.message").value("Doll Rarity: '$rarity' Level: '$level' not found"))
     }
 }
