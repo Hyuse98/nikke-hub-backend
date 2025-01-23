@@ -59,6 +59,26 @@ class DollControllerTest {
             .andExpect(jsonPath("$.id").value(1))
     }
 
+    @Test
+    @DisplayName("400")
+    fun createDollCase2() {
+
+        val request = DollDTO(
+            id = null,
+            rarity = Rarity.SSR,
+            level = 2
+        )
+
+        every { dollService.createDoll(request) } throws DollAlreadyExistsException(request.rarity, request.level)
+
+        mockMvc.perform(
+            post("/doll")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(ObjectMapper().writeValueAsString(request))
+        )
+            .andExpect(status().isConflict)
+            .andExpect(jsonPath("$.message").value("Doll Rarity: '${request.rarity}' Level: '${request.level}' already exists"))
+    }
 
 
 }
