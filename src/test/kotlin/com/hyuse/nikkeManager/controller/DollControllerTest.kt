@@ -60,7 +60,7 @@ class DollControllerTest {
     }
 
     @Test
-    @DisplayName("400")
+    @DisplayName("409")
     fun createDollCase2() {
 
         val request = DollDTO(
@@ -126,5 +126,31 @@ class DollControllerTest {
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$", hasSize<Any>(0)))
+    }
+
+    @Test
+    @DisplayName("200")
+    fun searchDollsCase1(){
+
+        val doll= Doll(
+            id = 1,
+            rarity = Rarity.SR,
+            level = 5
+        )
+
+        every { dollService.searchDoll(Rarity.SR, 5) } returns doll
+
+        mockMvc.perform(
+            get("/doll/search?rarity=SR&level=5")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.id").value(doll.id))
+    }
+
+    @Test
+    @DisplayName("404")
+    fun searchDollsCase2(){
+        TODO()
     }
 }

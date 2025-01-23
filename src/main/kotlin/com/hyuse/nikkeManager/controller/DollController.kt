@@ -11,11 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/doll")
@@ -50,8 +46,11 @@ class DollController(val dollRepository: DollRepository, val dollService: DollSe
         return dollService.listDolls()
     }
 
-    @GetMapping("?Rarity?level")
-    fun searchDoll(@RequestBody rarity: Rarity, level: Int): ResponseEntity<Doll> {
-        return ResponseEntity.status(HttpStatus.OK).body(dollService.searchDoll(rarity, level))
+    @GetMapping("/search")
+    fun searchDoll(
+        @RequestParam rarity: Rarity,
+        @RequestParam level: Int
+    ): ResponseEntity<Doll> {
+        return ResponseEntity.ok(dollService.searchDoll(rarity, level))
     }
 }
