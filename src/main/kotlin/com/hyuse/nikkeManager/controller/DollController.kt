@@ -22,7 +22,7 @@ class DollController(val dollRepository: DollRepository, val dollService: DollSe
 
     @GetMapping
     fun listDolls(): List<Doll>{
-        return dollRepository.findAll();
+        return dollService.listDolls()
     }
 
     @Operation(

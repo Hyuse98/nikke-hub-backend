@@ -17,4 +17,8 @@ class DollService(val dollRepository: DollRepository) {
         }
         return dollRepository.save(dollDTO.toModel())
     }
+
+    fun listDolls(): List<Doll>{
+        return dollRepository.findAll();
+    }
 }

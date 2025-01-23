@@ -3,7 +3,6 @@ package com.hyuse.nikkeManager.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.hyuse.nikkeManager.dto.NikkeDTO
 import com.hyuse.nikkeManager.enums.*
-import com.hyuse.nikkeManager.exception.NikkeIdNotFoundException
 import com.hyuse.nikkeManager.exception.NikkeNotFoundException
 import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.NikkeRepository
@@ -16,11 +15,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.data.jpa.domain.Specification
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -301,11 +298,9 @@ class NikkeControllerTest {
 
     }
 
-//TODO(List Nikkes Test)
-
     @Test
     @DisplayName("200")
-    fun listNikkesCase1(){
+    fun listNikkesCase1() {
 
         val nikke1 = Nikke(
             id = 1,
@@ -349,16 +344,18 @@ class NikkeControllerTest {
             nikke1, nikke2
         )
 
-        every { nikkeService.listAllNikke(
-            rarity = any(),
-            ownedStatus = any(),
-            burstType = any(),
-            company = any(),
-            code = any(),
-            weapon = any(),
-            nikkeClass = any(),
-            cube = any()
-        ) } returns expectedNikkes
+        every {
+            nikkeService.listAllNikke(
+                rarity = any(),
+                ownedStatus = any(),
+                burstType = any(),
+                company = any(),
+                code = any(),
+                weapon = any(),
+                nikkeClass = any(),
+                cube = any()
+            )
+        } returns expectedNikkes
 
         mockMvc.perform(
             get("/nikke?rarity=SSR")
@@ -373,18 +370,20 @@ class NikkeControllerTest {
 
     @Test
     @DisplayName("200")
-    fun listNikkesCase2(){
+    fun listNikkesCase2() {
 
-        every { nikkeService.listAllNikke(
-            rarity = any(),
-            ownedStatus = any(),
-            burstType = any(),
-            company = any(),
-            code = any(),
-            weapon = any(),
-            nikkeClass = any(),
-            cube = any()
-        ) } returns emptyList()
+        every {
+            nikkeService.listAllNikke(
+                rarity = any(),
+                ownedStatus = any(),
+                burstType = any(),
+                company = any(),
+                code = any(),
+                weapon = any(),
+                nikkeClass = any(),
+                cube = any()
+            )
+        } returns emptyList()
 
         mockMvc.perform(
             get("/nikke")
@@ -394,12 +393,9 @@ class NikkeControllerTest {
             .andExpect(jsonPath("$", hasSize<Any>(0)))
     }
 
-
-//TODO(Get Nikke Test)
-
     @Test
     @DisplayName("200")
-    fun getNikkesCase1(){
+    fun getNikkesCase1() {
 
         val nikke = Nikke(
             id = 1,
@@ -431,10 +427,9 @@ class NikkeControllerTest {
             .andExpect(jsonPath("$.name").value(name))
     }
 
-
     @Test
     @DisplayName("404")
-    fun getNikkesCase2(){
+    fun getNikkesCase2() {
 
         val name = "Rapi"
 
