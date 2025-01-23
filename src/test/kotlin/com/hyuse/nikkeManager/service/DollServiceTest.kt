@@ -91,4 +91,17 @@ class DollServiceTest {
         verify(dollRepository).findByRarityAndLevel(Rarity.SR, 5)
     }
 
+    @Test
+    @DisplayName("Should not find a doll")
+    fun searchDollCase2(){
+
+        whenever(dollRepository.findByRarityAndLevel(Rarity.SR, 5)).thenReturn(null)
+
+        val result = dollService.searchDoll(Rarity.SR, 5)
+
+        assertThat(result).isNull()
+
+        verify(dollRepository).findByRarityAndLevel(Rarity.SR, 5)
+
+    }
 }
