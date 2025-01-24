@@ -70,6 +70,7 @@ tasks.withType<JacocoReport> {
             fileTree(it).matching {
                 exclude("com/hyuse/nikkeManager/handler/**")
                 exclude("com/hyuse/nikkeManager/exception/**")
+                exclude("com/hyuse/nikkeManager/NikkeManagerApplicationKt.class")
                 exclude("com/hyuse/nikkeManager/NikkeManagerApplication.class")
             }
         })
