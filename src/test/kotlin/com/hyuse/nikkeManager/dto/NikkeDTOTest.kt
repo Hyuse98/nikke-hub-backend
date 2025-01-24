@@ -1,6 +1,7 @@
 package com.hyuse.nikkeManager.dto
 
 import com.hyuse.nikkeManager.enums.*
+import com.hyuse.nikkeManager.model.Doll
 import com.hyuse.nikkeManager.model.Nikke
 import jakarta.validation.Validation
 import jakarta.validation.Validator
@@ -94,8 +95,12 @@ class NikkeDTOTest {
             code = Code.ELECTRIC,
             weapon = Weapon.SR,
             nikkeClass = NikkeClass.ATTACKER,
-            cube = null,
-            doll = null
+            cube = Cubes.ASSAULT,
+            doll = Doll(
+                id = 1,
+                rarity = Rarity.R,
+                level = 0
+            )
         )
 
         val nikkeModel: Nikke = nikkeDTO.toModel()

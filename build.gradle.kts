@@ -59,11 +59,20 @@ jacoco {
     toolVersion = "0.8.10"
 }
 
-tasks.jacocoTestReport {
+tasks.withType<JacocoReport> {
     dependsOn(tasks.test)
     reports {
         xml.required.set(true)
         html.required.set(true)
+    }
+    afterEvaluate {
+        classDirectories.setFrom(classDirectories.files.map {
+            fileTree(it).matching {
+                exclude("com/hyuse/nikkeManager/handler/**")
+                exclude("com/hyuse/nikkeManager/exception/**")
+                exclude("com/hyuse/nikkeManager/NikkeManagerApplication.class")
+            }
+        })
     }
 }
 

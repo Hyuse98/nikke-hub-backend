@@ -4,6 +4,7 @@ import com.hyuse.nikkeManager.dto.DollDTO
 import com.hyuse.nikkeManager.enums.Rarity
 import com.hyuse.nikkeManager.exception.DollAlreadyExistsException
 import com.hyuse.nikkeManager.model.Doll
+import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.DollRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -11,11 +12,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.isA
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.test.context.ActiveProfiles
+import kotlin.test.assertEquals
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -103,5 +107,38 @@ class DollServiceTest {
 
         verify(dollRepository).findByRarityAndLevel(Rarity.SR, 5)
 
+    }
+
+    @Test
+    @DisplayName("Should list all dolls")
+    fun listDollsCase1(){
+
+        val doll1 = Doll(
+            id = 1,
+            rarity = Rarity.SSR,
+            level = 0
+        )
+        val doll2 = Doll(
+            id = 1,
+            rarity = Rarity.SSR,
+            level = 0
+        )
+        val doll3 = Doll(
+            id = 1,
+            rarity = Rarity.SSR,
+            level = 0
+        )
+
+        val expectedDoll = listOf(
+            doll1, doll2, doll3
+        )
+
+        whenever(dollRepository.findAll()).thenReturn(expectedDoll)
+
+
+        val result = dollService.listDolls()
+
+        verify(dollRepository).findAll()
+        assertEquals(expectedDoll, result)
     }
 }
