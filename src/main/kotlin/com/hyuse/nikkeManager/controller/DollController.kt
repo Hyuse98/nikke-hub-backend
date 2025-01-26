@@ -5,52 +5,74 @@ import com.hyuse.nikkeManager.enums.Rarity
 import com.hyuse.nikkeManager.model.Doll
 import com.hyuse.nikkeManager.repository.DollRepository
 import com.hyuse.nikkeManager.service.DollService
-import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.media.Content
-import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
+import org.springframework.hateoas.CollectionModel
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/doll")
-class DollController(val dollRepository: DollRepository, val dollService: DollService) {
-
-    @Operation(
-        method = "POST",
-        summary = "Cria uma Doll",
-        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Created doll object",
-            required = true,
-            content = [Content(
-                schema = Schema(
-                    example = """{
-                    "doll": {
-                        "id": 0,
-                        "rarity": SR,
-                        "level": 0
-                    }
-                }"""
-                )
-            )]
-        )
-    )
+class DollController(
+    val dollRepository: DollRepository,
+    val dollService: DollService
+) {
     @PostMapping
-    fun createDoll(@RequestBody @Valid dollDTO: DollDTO): ResponseEntity<Doll> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(dollService.createDoll(dollDTO))
+    fun createDoll(@RequestBody @Valid dollDTO: DollDTO): ResponseEntity<EntityModel<Doll?>> {
+
+        val doll = dollService.createDoll(dollDTO) ?: throw IllegalStateException()
+
+        val entityModel = EntityModel.of(
+            doll,
+            linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
+            linkTo(methodOn(this::class.java).listDolls()).withRel("Collection")
+        )
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(entityModel)
     }
 
     @GetMapping
-    fun listDolls(): List<Doll>{
-        return dollService.listDolls()
+    fun listDolls(): ResponseEntity<CollectionModel<EntityModel<Doll>>> {
+        val dolls = dollService.listDolls().map { doll ->
+            EntityModel.of(
+                doll,
+                linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel()
+            )
+        }
+
+        val collectionModel = CollectionModel.of(
+            dolls,
+            linkTo(methodOn(this::class.java).listDolls()).withSelfRel()
+        )
+
+        return ResponseEntity.ok(collectionModel)
     }
+
 
     @GetMapping("/search")
     fun searchDoll(
         @RequestParam rarity: Rarity,
         @RequestParam level: Int
-    ): ResponseEntity<Doll> {
-        return ResponseEntity.ok(dollService.searchDoll(rarity, level))
+    ): ResponseEntity<EntityModel<Doll?>> {
+
+        val doll = dollService.searchDoll(rarity, level) ?: throw IllegalStateException()
+        val entityModel = EntityModel.of(
+            doll,
+            linkTo(methodOn(this::class.java).listDolls()).withRel("Collection")
+        )
+        return ResponseEntity.ok(entityModel)
+    }
+
+    @GetMapping("/{id}")
+    fun getDollById(@PathVariable id: Int): ResponseEntity<EntityModel<Doll>> {
+        val doll = dollRepository.findById(id).orElseThrow()
+        val entityModel = EntityModel.of(
+            doll,
+            linkTo(methodOn(this::class.java).listDolls()).withRel("Collection")
+        )
+        return ResponseEntity.ok(entityModel)
     }
 }

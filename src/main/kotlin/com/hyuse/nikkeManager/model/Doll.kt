@@ -2,6 +2,7 @@ package com.hyuse.nikkeManager.model
 
 import com.hyuse.nikkeManager.enums.Rarity
 import jakarta.persistence.*
+import org.springframework.hateoas.RepresentationModel
 
 @Entity
 class Doll(
@@ -16,4 +17,4 @@ class Doll(
 
     @Column(nullable = false)
     val level: Int
-)
+) : RepresentationModel<Doll>()
