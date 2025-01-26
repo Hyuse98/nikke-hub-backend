@@ -108,17 +108,19 @@ class DollControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$", hasSize<Any>(2)))
-            .andExpect(jsonPath("$[0].rarity").value(doll1.rarity.name))
-            .andExpect(jsonPath("$[0].level").value(doll1.level))
-            .andExpect(jsonPath("$[1].rarity").value(doll2.rarity.name))
-            .andExpect(jsonPath("$[1].level").value(doll2.level))
+            .andExpect(jsonPath("$._embedded.dollList", hasSize<Any>(2)))
+            .andExpect(jsonPath("$._embedded.dollList[0].rarity").value(doll1.rarity.name))
+            .andExpect(jsonPath("$._embedded.dollList[0].level").value(doll1.level))
+            .andExpect(jsonPath("$._embedded.dollList[1].rarity").value(doll2.rarity.name))
+            .andExpect(jsonPath("$._embedded.dollList[1].level").value(doll2.level))
+            .andExpect(jsonPath("$._embedded.dollList[0]._links.self.href").value("http://localhost/doll/1"))
+            .andExpect(jsonPath("$._links.self.href").value("http://localhost/doll"))
+
     }
 
     @Test
     @DisplayName("200")
     fun listDollsCase2() {
-
         every { dollService.listDolls() } returns emptyList()
 
         mockMvc.perform(
@@ -126,8 +128,10 @@ class DollControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$", hasSize<Any>(0)))
+            .andExpect(jsonPath("$._embedded.dollList").doesNotExist()) // Lista não está presente
+            .andExpect(jsonPath("$._links.self.href").value("http://localhost/doll")) // Link self está presente
     }
+
 
     @Test
     @DisplayName("200")
