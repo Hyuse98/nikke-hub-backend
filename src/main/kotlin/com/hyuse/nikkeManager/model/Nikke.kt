@@ -62,5 +62,4 @@ class Nikke(
     @ManyToOne
     @JoinColumn(name = "dollId")
     val doll: Doll? = null
-) {
-}
+)

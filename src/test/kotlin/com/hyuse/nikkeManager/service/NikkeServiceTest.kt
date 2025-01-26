@@ -8,7 +8,6 @@ import com.hyuse.nikkeManager.exception.NikkeNotFoundException
 import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.NikkeRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -29,11 +28,6 @@ class NikkeServiceTest {
 
     @Mock
     lateinit var nikkeRepository: NikkeRepository
-
-    @BeforeEach
-    fun setup() {
-
-    }
 
     @Test
     @DisplayName("Should create a nikke with success")
@@ -457,7 +451,6 @@ class NikkeServiceTest {
         )
 
         whenever(nikkeRepository.findAll(any<Specification<Nikke>>())).thenReturn(expectedNikkes)
-
 
         val result = nikkeService.listAllNikke(
             rarity = null,

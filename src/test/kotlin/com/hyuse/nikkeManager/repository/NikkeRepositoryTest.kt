@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.test.context.ActiveProfiles
 
-//@Transactional
 @DataJpaTest
 @ActiveProfiles("test")
 class NikkeRepositoryTest(
@@ -22,7 +21,6 @@ class NikkeRepositoryTest(
     @Autowired
     private lateinit var entityManager: TestEntityManager
 
-    //Find
     @Test
     @DisplayName("Should find a nikke by name")
     fun findNikkeByNameSuccess() {
@@ -67,7 +65,6 @@ class NikkeRepositoryTest(
         assertThat(result).isNull()
     }
 
-    //Delete
     @Test
     @DisplayName("Should delete a nikke by name")
     fun deleteByNameSuccess() {

@@ -122,5 +122,4 @@ class NikkeDTOTest {
         assertThat(nikkeModel.cube).isEqualTo(nikkeDTO.cube)
         assertThat(nikkeModel.doll).isEqualTo(nikkeDTO.doll)
     }
-
 }

@@ -77,5 +77,4 @@ class DollDTOTest {
         assertThat(doll.rarity).isEqualTo(dollDTO.rarity)
         assertThat(doll.level).isEqualTo(dollDTO.level)
     }
-
 }

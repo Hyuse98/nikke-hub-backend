@@ -28,7 +28,7 @@ class NikkeSpecificationsTest {
 
     @BeforeEach
     fun setup() {
-        // Criar dados de teste
+
         nikke1 = Nikke(
             id = null,
             name = "Nikke1",
@@ -113,7 +113,6 @@ class NikkeSpecificationsTest {
         assertThat(result).extracting("rarity")
             .containsOnly(Rarity.SSR)
     }
-
 
     @Test
     @DisplayName("should filter by multiple criteria")
@@ -208,6 +207,4 @@ class NikkeSpecificationsTest {
 
         assertThat(result).isEmpty()
     }
-
-
 }

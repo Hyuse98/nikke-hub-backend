@@ -4,7 +4,6 @@ import com.hyuse.nikkeManager.dto.DollDTO
 import com.hyuse.nikkeManager.enums.Rarity
 import com.hyuse.nikkeManager.exception.DollAlreadyExistsException
 import com.hyuse.nikkeManager.model.Doll
-import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.DollRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -12,12 +11,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.kotlin.any
 import org.mockito.kotlin.isA
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.jpa.domain.Specification
 import org.springframework.test.context.ActiveProfiles
 import kotlin.test.assertEquals
 
@@ -76,7 +73,7 @@ class DollServiceTest {
 
     @Test
     @DisplayName("Should find a doll")
-    fun searchDollCase1(){
+    fun searchDollCase1() {
 
         val dollDTO = DollDTO(
             id = null,
@@ -97,7 +94,7 @@ class DollServiceTest {
 
     @Test
     @DisplayName("Should not find a doll")
-    fun searchDollCase2(){
+    fun searchDollCase2() {
 
         whenever(dollRepository.findByRarityAndLevel(Rarity.SR, 5)).thenReturn(null)
 
@@ -111,7 +108,7 @@ class DollServiceTest {
 
     @Test
     @DisplayName("Should list all dolls")
-    fun listDollsCase1(){
+    fun listDollsCase1() {
 
         val doll1 = Doll(
             id = 1,

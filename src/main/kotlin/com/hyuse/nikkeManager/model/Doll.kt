@@ -16,5 +16,4 @@ class Doll(
 
     @Column(nullable = false)
     val level: Int
-) {
-}
+)
