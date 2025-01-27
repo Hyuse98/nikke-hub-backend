@@ -50,7 +50,9 @@ class NikkeService(val nikkeRepository: NikkeRepository) {
         return nikkeRepository.deleteById(id)
     }
 
-    fun listAllNikke(
+    fun listAllNikke(): List<Nikke> = nikkeRepository.findAll()
+
+    fun listAllNikkeFiltered(
         rarity: Rarity?,
         ownedStatus: OwnedStatus?,
         burstType: BurstType?,

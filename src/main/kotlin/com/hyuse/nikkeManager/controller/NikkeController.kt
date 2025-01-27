@@ -14,6 +14,10 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import jakarta.validation.Valid
+import org.springframework.hateoas.CollectionModel
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -52,8 +56,16 @@ class NikkeController(val nikkeService: NikkeService, val nikkeRepository: Nikke
         )
     )
     @PostMapping
-    fun createNikke(@RequestBody @Valid nikkeDTO: NikkeDTO): ResponseEntity<Nikke> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(nikkeService.createNikke(nikkeDTO))
+    fun createNikke(@RequestBody @Valid nikkeDTO: NikkeDTO): ResponseEntity<EntityModel<Nikke>> {
+
+        val nikke = nikkeService.createNikke(nikkeDTO)
+        val entityModel = EntityModel.of(
+            nikke,
+            linkTo(methodOn(this::class.java).getNikke(nikke.name)).withSelfRel(),
+            linkTo(methodOn(this::class.java).listAllNikke()).withRel("Collection")
+        )
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(entityModel)
     }
 
     @Operation(
@@ -76,7 +88,10 @@ class NikkeController(val nikkeService: NikkeService, val nikkeRepository: Nikke
         )
     )
     @PutMapping("/{name}")
-    fun updateNikke(@RequestBody @Valid nikkeDTO: NikkeDTO, @PathVariable name: String): ResponseEntity<Nikke> {
+    fun updateNikke(
+        @RequestBody @Valid nikkeDTO: NikkeDTO,
+        @PathVariable name: String
+    ): ResponseEntity<Nikke> {
         return ResponseEntity.status(HttpStatus.CREATED).body(nikkeService.updateNikke(nikkeDTO, name))
     }
 
@@ -102,8 +117,8 @@ class NikkeController(val nikkeService: NikkeService, val nikkeRepository: Nikke
             content = [Content(schema = Schema(`$schema` = ""))]
         )]
     )
-    @GetMapping
-    fun listAllNikke(
+    @GetMapping("/filtered")
+    fun listAllNikkeFiltered(
         @RequestParam(required = false) rarity: Rarity?,
         @RequestParam(required = false) ownedStatus: OwnedStatus?,
         @RequestParam(required = false) burstType: BurstType?,
@@ -112,8 +127,48 @@ class NikkeController(val nikkeService: NikkeService, val nikkeRepository: Nikke
         @RequestParam(required = false) weapon: Weapon?,
         @RequestParam(required = false) nikkeClass: NikkeClass?,
         @RequestParam(required = false) cube: Cubes?
-    ): List<Nikke> {
-        return nikkeService.listAllNikke(rarity, ownedStatus, burstType, company, code, weapon, nikkeClass, cube)
+    ): ResponseEntity<CollectionModel<EntityModel<Nikke>>> {
+        val nikkes = nikkeService.listAllNikkeFiltered(rarity, ownedStatus, burstType, company, code, weapon, nikkeClass, cube)
+            .map { nikke ->
+                EntityModel.of(
+                    nikke,
+                    linkTo(methodOn(this::class.java).getNikke(nikke.name)).withSelfRel()
+                )
+            }
+
+        val collectionModel = CollectionModel.of(
+            nikkes,
+            linkTo(methodOn(this::class.java).listAllNikkeFiltered(
+                rarity = rarity,
+                ownedStatus = ownedStatus,
+                burstType = burstType,
+                company = company,
+                code = code,
+                weapon = weapon,
+                nikkeClass = nikkeClass,
+                cube = cube
+            )).withSelfRel()
+        )
+
+        return ResponseEntity.ok(collectionModel)
+    }
+
+    @GetMapping
+    fun listAllNikke(): ResponseEntity<CollectionModel<EntityModel<Nikke>>> {
+        val nikkes = nikkeService.listAllNikke()
+            .map { nikke ->
+                EntityModel.of(
+                    nikke,
+                    linkTo(methodOn(this::class.java).getNikke(nikke.name)).withSelfRel()
+                )
+            }
+
+        val collectionModel = CollectionModel.of(
+            nikkes,
+            linkTo(methodOn(this::class.java).listAllNikke()).withSelfRel()
+        )
+
+        return ResponseEntity.ok(collectionModel)
     }
 
     @Operation(method = "GET", summary = "Search a nikke")
@@ -133,7 +188,13 @@ class NikkeController(val nikkeService: NikkeService, val nikkeRepository: Nikke
         )]
     )
     @GetMapping("/{name}")
-    fun getNikke(@Parameter(description = "Name of nikke to be search") @PathVariable name: String): Nikke? {
-        return nikkeService.searchNikke(name)
+    fun getNikke(@Parameter(description = "Name of nikke to be search") @PathVariable name: String): ResponseEntity<EntityModel<Nikke>> {
+
+        val nikke = nikkeService.searchNikke(name)
+        val entityModel = EntityModel.of(
+            nikke!!,
+            linkTo(methodOn(this::class.java).listAllNikke()).withRel("Collection")
+        )
+        return ResponseEntity.ok(entityModel)
     }
 }

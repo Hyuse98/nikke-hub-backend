@@ -2,6 +2,7 @@ package com.hyuse.nikkeManager.model
 
 import com.hyuse.nikkeManager.enums.*
 import jakarta.persistence.*
+import org.springframework.hateoas.RepresentationModel
 
 @Entity
 class Nikke(
@@ -62,4 +63,4 @@ class Nikke(
     @ManyToOne
     @JoinColumn(name = "dollId")
     val doll: Doll? = null
-)
+) : RepresentationModel<Nikke>()
