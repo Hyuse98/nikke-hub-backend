@@ -8,6 +8,7 @@ import com.hyuse.nikkeManager.service.DollService
 import jakarta.validation.Valid
 import org.springframework.hateoas.CollectionModel
 import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.Link
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
@@ -22,47 +23,46 @@ class DollController(
 ) {
     @PostMapping
     fun createDoll(@RequestBody @Valid dollDTO: DollDTO): ResponseEntity<EntityModel<Doll>> {
-
         val doll = dollService.createDoll(dollDTO) ?: throw IllegalStateException()
-
         val entityModel = EntityModel.of(
             doll,
             linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
-            linkTo(methodOn(this::class.java).listDolls()).withRel("Collection")
-        )
+            linkTo(methodOn(this::class.java).deleteDollById(doll.id)).withRel("Delete"),
+            linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
 
+        )
         return ResponseEntity.status(HttpStatus.CREATED).body(entityModel)
     }
 
     @GetMapping
-    fun listDolls(): ResponseEntity<CollectionModel<EntityModel<Doll>>> {
-        val dolls = dollService.listDolls().map { doll ->
+    fun getListDolls(): ResponseEntity<CollectionModel<EntityModel<Doll>>> {
+        val dolls = dollService.getListDolls().map { doll ->
             EntityModel.of(
                 doll,
                 linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel()
             )
         }
-
         val collectionModel = CollectionModel.of(
             dolls,
-            linkTo(methodOn(this::class.java).listDolls()).withSelfRel()
+            linkTo(methodOn(this::class.java).getListDolls()).withSelfRel()
         )
-
         return ResponseEntity.ok(collectionModel)
     }
 
 
     @GetMapping("/search")
-    fun searchDoll(
+    fun getDollByRarityAndLevel(
         @RequestParam rarity: Rarity,
         @RequestParam level: Int
     ): ResponseEntity<EntityModel<Doll>> {
-
-        val doll = dollService.searchDoll(rarity, level) ?: throw IllegalStateException()
-        val entityModel = EntityModel.of(
-            doll,
-            linkTo(methodOn(this::class.java).listDolls()).withRel("Collection")
-        )
+        val doll = dollService.getDollByRarityAndLevel(rarity, level)
+        val entityModel = doll?.let {
+            EntityModel.of(
+                it,
+                linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
+                linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
+            )
+        }
         return ResponseEntity.ok(entityModel)
     }
 
@@ -71,28 +71,18 @@ class DollController(
         val doll = dollRepository.findById(id).orElseThrow()
         val entityModel = EntityModel.of(
             doll,
-            linkTo(methodOn(this::class.java).listDolls()).withRel("Collection")
+            linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
+            linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
         )
         return ResponseEntity.ok(entityModel)
     }
 
     @DeleteMapping("/{id}")
-    fun deleteDoll(@PathVariable id: Int): ResponseEntity<CollectionModel<EntityModel<Doll>>> {
-
+    fun deleteDollById(@PathVariable id: Int): ResponseEntity<EntityModel<Link>> {
         dollService.deleteDollById(id)
-
-        val remainingDolls = dollService.listDolls().map { doll ->
-            EntityModel.of(
-                doll,
-                linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel()
-            )
-        }
-
-        val collectionModel = CollectionModel.of(
-            remainingDolls,
-            linkTo(methodOn(this::class.java).listDolls()).withSelfRel()
+        val entityModel = EntityModel.of(
+            linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
         )
-
-        return ResponseEntity.ok(collectionModel)
+        return ResponseEntity.ok(entityModel)
     }
 }

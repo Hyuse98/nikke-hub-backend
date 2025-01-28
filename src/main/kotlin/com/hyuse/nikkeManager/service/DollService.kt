@@ -20,17 +20,17 @@ class DollService(val dollRepository: DollRepository) {
         return dollRepository.save(dollDTO.toModel())
     }
 
-    fun listDolls(): List<Doll> {
+    fun getListDolls(): List<Doll> {
         return dollRepository.findAll();
     }
 
-    fun searchDoll(rarity: Rarity, level: Int): Doll? {
-        return dollRepository.findByRarityAndLevel(rarity, level)
+    fun getDollByRarityAndLevel(rarity: Rarity, level: Int): Doll? {
+        val doll = dollRepository.findByRarityAndLevel(rarity, level) ?: throw DollNotFoundException(rarity, level)
+        return doll
     }
 
     fun deleteDollById(id: Int) {
-        val doll = dollRepository.findById(id).orElseThrow { DollNotFoundException(id) }
+        dollRepository.findById(id).orElseThrow { DollNotFoundException(id) }
         dollRepository.deleteById(id)
     }
-
 }

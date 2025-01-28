@@ -83,7 +83,7 @@ class DollControllerTest {
 
     @Test
     @DisplayName("200")
-    fun listDollsCase1() {
+    fun getListDollsCase1() {
 
         val doll1 = Doll(
             id = 1,
@@ -101,7 +101,7 @@ class DollControllerTest {
             doll1, doll2
         )
 
-        every { dollService.listDolls() } returns expectDolls
+        every { dollService.getListDolls() } returns expectDolls
 
         mockMvc.perform(
             get("/doll")
@@ -120,8 +120,8 @@ class DollControllerTest {
 
     @Test
     @DisplayName("200")
-    fun listDollsCase2() {
-        every { dollService.listDolls() } returns emptyList()
+    fun getListDollsCase2() {
+        every { dollService.getListDolls() } returns emptyList()
 
         mockMvc.perform(
             get("/doll")
@@ -135,7 +135,7 @@ class DollControllerTest {
 
     @Test
     @DisplayName("200")
-    fun searchDollsCase1(){
+    fun getDollsCase1ByRarityAndLevel(){
 
         val doll= Doll(
             id = 1,
@@ -143,7 +143,7 @@ class DollControllerTest {
             level = 5
         )
 
-        every { dollService.searchDoll(Rarity.SR, 5) } returns doll
+        every { dollService.getDollByRarityAndLevel(Rarity.SR, 5) } returns doll
 
         mockMvc.perform(
             get("/doll/search?rarity=SR&level=5")
@@ -155,12 +155,12 @@ class DollControllerTest {
 
     @Test
     @DisplayName("404")
-    fun searchDollsCase2(){
+    fun getDollsCase2ByRarityAndLevel(){
 
         val rarity = Rarity.SR
         val level = 5
 
-        every { dollService.searchDoll(rarity, level) } throws DollNotFoundException(rarity, level)
+        every { dollService.getDollByRarityAndLevel(rarity, level) } throws DollNotFoundException(rarity, level)
 
         mockMvc.perform(
             get("/doll/search?rarity=SR&level=5")

@@ -73,7 +73,7 @@ class DollServiceTest {
 
     @Test
     @DisplayName("Should find a doll")
-    fun searchDollCase1() {
+    fun getDollByRarityAndLevelCase1() {
 
         val dollDTO = DollDTO(
             id = null,
@@ -83,7 +83,7 @@ class DollServiceTest {
 
         whenever(dollRepository.findByRarityAndLevel(Rarity.SR, 5)).thenReturn(dollDTO.toModel())
 
-        val result = dollService.searchDoll(Rarity.SR, 5)
+        val result = dollService.getDollByRarityAndLevel(Rarity.SR, 5)
 
         assertThat(result!!).isNotNull
         assertThat(dollDTO.toModel().rarity).isEqualTo(result.rarity)
@@ -94,11 +94,11 @@ class DollServiceTest {
 
     @Test
     @DisplayName("Should not find a doll")
-    fun searchDollCase2() {
+    fun getDollByRarityAndLevelCase2() {
 
         whenever(dollRepository.findByRarityAndLevel(Rarity.SR, 5)).thenReturn(null)
 
-        val result = dollService.searchDoll(Rarity.SR, 5)
+        val result = dollService.getDollByRarityAndLevel(Rarity.SR, 5)
 
         assertThat(result).isNull()
 
@@ -108,7 +108,7 @@ class DollServiceTest {
 
     @Test
     @DisplayName("Should list all dolls")
-    fun listDollsCase1() {
+    fun getListDollsCase1() {
 
         val doll1 = Doll(
             id = 1,
@@ -133,7 +133,7 @@ class DollServiceTest {
         whenever(dollRepository.findAll()).thenReturn(expectedDoll)
 
 
-        val result = dollService.listDolls()
+        val result = dollService.getListDolls()
 
         verify(dollRepository).findAll()
         assertEquals(expectedDoll, result)
