@@ -21,7 +21,7 @@ class DollController(
     val dollService: DollService
 ) {
     @PostMapping
-    fun createDoll(@RequestBody @Valid dollDTO: DollDTO): ResponseEntity<EntityModel<Doll?>> {
+    fun createDoll(@RequestBody @Valid dollDTO: DollDTO): ResponseEntity<EntityModel<Doll>> {
 
         val doll = dollService.createDoll(dollDTO) ?: throw IllegalStateException()
 
@@ -56,7 +56,7 @@ class DollController(
     fun searchDoll(
         @RequestParam rarity: Rarity,
         @RequestParam level: Int
-    ): ResponseEntity<EntityModel<Doll?>> {
+    ): ResponseEntity<EntityModel<Doll>> {
 
         val doll = dollService.searchDoll(rarity, level) ?: throw IllegalStateException()
         val entityModel = EntityModel.of(
@@ -74,5 +74,25 @@ class DollController(
             linkTo(methodOn(this::class.java).listDolls()).withRel("Collection")
         )
         return ResponseEntity.ok(entityModel)
+    }
+
+    @DeleteMapping("/{id}")
+    fun deleteDoll(@PathVariable id: Int): ResponseEntity<CollectionModel<EntityModel<Doll>>> {
+
+        dollService.deleteDollById(id)
+
+        val remainingDolls = dollService.listDolls().map { doll ->
+            EntityModel.of(
+                doll,
+                linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel()
+            )
+        }
+
+        val collectionModel = CollectionModel.of(
+            remainingDolls,
+            linkTo(methodOn(this::class.java).listDolls()).withSelfRel()
+        )
+
+        return ResponseEntity.ok(collectionModel)
     }
 }
