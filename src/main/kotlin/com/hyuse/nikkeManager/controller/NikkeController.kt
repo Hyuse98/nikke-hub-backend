@@ -8,11 +8,8 @@ import com.hyuse.nikkeManager.repository.NikkeRepository
 import com.hyuse.nikkeManager.service.NikkeService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
-import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
-import io.swagger.v3.oas.annotations.responses.ApiResponse
-import io.swagger.v3.oas.annotations.responses.ApiResponses
 import jakarta.validation.Valid
 import org.springframework.hateoas.CollectionModel
 import org.springframework.hateoas.EntityModel
@@ -26,11 +23,21 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody as SwaggerRequestBod
 
 @RestController
 @RequestMapping("/nikke")
-class NikkeController(val nikkeService: NikkeService, val nikkeRepository: NikkeRepository) {
+class NikkeController(
+    val nikkeService: NikkeService,
+    val nikkeRepository: NikkeRepository
+) {
 
     @Operation(
-        method = "POST", summary = "Cria uma nikke", requestBody = SwaggerRequestBody(
-            description = "Created user object", required = false, content = [Content(
+        method = "POST",
+        summary = "Create New Nikke",
+        description = "This endpoint created nikke on database",
+        tags = ["Nikke"],
+        requestBody = SwaggerRequestBody(
+            description = "Created new nikke",
+            required = true,
+            content = [Content(
+                mediaType = "application/json",
                 schema = Schema(
                     example = """{
                     "name": "string",
@@ -40,7 +47,7 @@ class NikkeController(val nikkeService: NikkeService, val nikkeRepository: Nikke
                     "skill2Level": 0,
                     "burstLevel": 0,
                     "rarity": "R",
-                    "ownedStatus": "OWNED",
+                    "ownedStatus": "NOT_OWNED",
                     "burstType": "I",
                     "company": "ELYSION",
                     "code": "FIRE",
@@ -57,20 +64,25 @@ class NikkeController(val nikkeService: NikkeService, val nikkeRepository: Nikke
     )
     @PostMapping
     fun createNikke(@RequestBody @Valid nikkeDTO: NikkeDTO): ResponseEntity<EntityModel<Nikke>> {
-
         val nikke = nikkeService.createNikke(nikkeDTO)
         val entityModel = EntityModel.of(
             nikke,
             linkTo(methodOn(this::class.java).getNikke(nikke.name)).withSelfRel(),
             linkTo(methodOn(this::class.java).listAllNikke()).withRel("Collection")
         )
-
         return ResponseEntity.status(HttpStatus.CREATED).body(entityModel)
     }
 
     @Operation(
-        method = "PUT", summary = "Atualiza uma nikke", description = "", requestBody = SwaggerRequestBody(
-            description = "Created user object", required = true, content = [Content(
+        method = "PUT",
+        summary = "Update a Nikke by Name",
+        description = "This endpoint update exist nikke data on database, match name passed on path variable",
+        tags = ["Nikke"],
+        requestBody = SwaggerRequestBody(
+            description = "Update a nikke object",
+            required = true,
+            content = [Content(
+                mediaType = "application/json",
                 schema = Schema(
                     example = """{
                     "core": 0,
@@ -95,27 +107,22 @@ class NikkeController(val nikkeService: NikkeService, val nikkeRepository: Nikke
         return ResponseEntity.status(HttpStatus.CREATED).body(nikkeService.updateNikke(nikkeDTO, name))
     }
 
-    @Operation(method = "DELETE", summary = "Apaga uma nikke")
+    @Operation(
+        method = "DELETE",
+        summary = "Delete a Nikke by Name",
+        description = "This endpoint delete a nikke by his name on path variable",
+        tags = ["Nikke"],
+    )
     @DeleteMapping("/{name}")
     fun deleteNikke(@PathVariable name: String) {
         return nikkeService.deleteNikke(name)
     }
 
-    @Operation(method = "GET", summary = "List all Nikkes", description = "Return a list of all nikkes")
-    @ApiResponses(
-        value = [ApiResponse(
-            responseCode = "200",
-            description = "OK",
-            content = [Content(array = ArraySchema(schema = Schema(implementation = NikkeDTO::class)))]
-        ), ApiResponse(
-            responseCode = "404",
-            description = "Not Found",
-            content = [Content(schema = Schema(`$schema` = ""))]
-        ), ApiResponse(
-            responseCode = "5XX",
-            description = "Internal Server Error",
-            content = [Content(schema = Schema(`$schema` = ""))]
-        )]
+    @Operation(
+        method = "GET",
+        summary = "List all Nikkes Filtered",
+        description = "This endpoint will return a list of all nikkes available on database with filters applied",
+        tags = ["Nikke"],
     )
     @GetMapping("/filtered")
     fun listAllNikkeFiltered(
@@ -128,31 +135,38 @@ class NikkeController(val nikkeService: NikkeService, val nikkeRepository: Nikke
         @RequestParam(required = false) nikkeClass: NikkeClass?,
         @RequestParam(required = false) cube: Cubes?
     ): ResponseEntity<CollectionModel<EntityModel<Nikke>>> {
-        val nikkes = nikkeService.listAllNikkeFiltered(rarity, ownedStatus, burstType, company, code, weapon, nikkeClass, cube)
-            .map { nikke ->
-                EntityModel.of(
-                    nikke,
-                    linkTo(methodOn(this::class.java).getNikke(nikke.name)).withSelfRel()
-                )
-            }
-
+        val nikkes =
+            nikkeService.listAllNikkeFiltered(rarity, ownedStatus, burstType, company, code, weapon, nikkeClass, cube)
+                .map { nikke ->
+                    EntityModel.of(
+                        nikke,
+                        linkTo(methodOn(this::class.java).getNikke(nikke.name)).withSelfRel()
+                    )
+                }
         val collectionModel = CollectionModel.of(
             nikkes,
-            linkTo(methodOn(this::class.java).listAllNikkeFiltered(
-                rarity = rarity,
-                ownedStatus = ownedStatus,
-                burstType = burstType,
-                company = company,
-                code = code,
-                weapon = weapon,
-                nikkeClass = nikkeClass,
-                cube = cube
-            )).withSelfRel()
+            linkTo(
+                methodOn(this::class.java).listAllNikkeFiltered(
+                    rarity = rarity,
+                    ownedStatus = ownedStatus,
+                    burstType = burstType,
+                    company = company,
+                    code = code,
+                    weapon = weapon,
+                    nikkeClass = nikkeClass,
+                    cube = cube
+                )
+            ).withSelfRel()
         )
-
         return ResponseEntity.ok(collectionModel)
     }
 
+    @Operation(
+        method = "GET",
+        summary = "List all Nikkes no Filter",
+        description = "This endpoint will return a list of all nikkes available on database without filters applied",
+        tags = ["Nikke"],
+    )
     @GetMapping
     fun listAllNikke(): ResponseEntity<CollectionModel<EntityModel<Nikke>>> {
         val nikkes = nikkeService.listAllNikke()
@@ -162,30 +176,18 @@ class NikkeController(val nikkeService: NikkeService, val nikkeRepository: Nikke
                     linkTo(methodOn(this::class.java).getNikke(nikke.name)).withSelfRel()
                 )
             }
-
         val collectionModel = CollectionModel.of(
             nikkes,
             linkTo(methodOn(this::class.java).listAllNikke()).withSelfRel()
         )
-
         return ResponseEntity.ok(collectionModel)
     }
 
-    @Operation(method = "GET", summary = "Search a nikke")
-    @ApiResponses(
-        value = [ApiResponse(
-            responseCode = "200",
-            description = "OK",
-            content = [Content(schema = Schema(implementation = NikkeDTO::class))]
-        ), ApiResponse(
-            responseCode = "404",
-            description = "Not Found",
-            content = [Content(schema = Schema(`$schema` = ""))]
-        ), ApiResponse(
-            responseCode = "5XX",
-            description = "Internal Server Error",
-            content = [Content(schema = Schema(`$schema` = ""))]
-        )]
+    @Operation(
+        method = "GET",
+        summary = "Search a nikke",
+        description = "This endpoint will return a nikke that match with name passed on path variable",
+        tags = ["Nikke"],
     )
     @GetMapping("/{name}")
     fun getNikke(@Parameter(description = "Name of nikke to be search") @PathVariable name: String): ResponseEntity<EntityModel<Nikke>> {
