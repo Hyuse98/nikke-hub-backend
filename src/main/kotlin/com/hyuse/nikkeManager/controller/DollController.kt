@@ -5,6 +5,9 @@ import com.hyuse.nikkeManager.enums.Rarity
 import com.hyuse.nikkeManager.model.Doll
 import com.hyuse.nikkeManager.repository.DollRepository
 import com.hyuse.nikkeManager.service.DollService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
 import org.springframework.hateoas.CollectionModel
 import org.springframework.hateoas.EntityModel
@@ -14,6 +17,7 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import io.swagger.v3.oas.annotations.parameters.RequestBody as SwaggerRequestBody
 
 @RestController
 @RequestMapping("/doll")
@@ -21,6 +25,26 @@ class DollController(
     val dollRepository: DollRepository,
     val dollService: DollService
 ) {
+
+    @Operation(
+        method = "POST",
+        summary = "Create a new doll",
+        description = "This endpoint create a doll on database",
+        tags = ["Doll"],
+        requestBody = SwaggerRequestBody(
+            description = "Create doll object",
+            required = true,
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(
+                    example ="""{
+                        "rarity" SSR,
+                        "level" 15
+                    }"""
+                )
+            )]
+        )
+    )
     @PostMapping
     fun createDoll(@RequestBody @Valid dollDTO: DollDTO): ResponseEntity<EntityModel<Doll>> {
         val doll = dollService.createDoll(dollDTO) ?: throw IllegalStateException()
@@ -34,6 +58,12 @@ class DollController(
         return ResponseEntity.status(HttpStatus.CREATED).body(entityModel)
     }
 
+    @Operation(
+        method = "GET",
+        summary = "List all dolls",
+        description = "This endpoint will list all dolls on database",
+        tags = ["Doll"]
+    )
     @GetMapping
     fun getListDolls(): ResponseEntity<CollectionModel<EntityModel<Doll>>> {
         val dolls = dollService.getListDolls().map { doll ->
@@ -49,7 +79,12 @@ class DollController(
         return ResponseEntity.ok(collectionModel)
     }
 
-
+    @Operation(
+        method = "GET",
+        summary = "Get a doll",
+        description = "This endpoint will search a doll on database that match ratity and level passed was paramater",
+        tags = ["Doll"]
+    )
     @GetMapping("/search")
     fun getDollByRarityAndLevel(
         @RequestParam rarity: Rarity,
@@ -66,6 +101,12 @@ class DollController(
         return ResponseEntity.ok(entityModel)
     }
 
+    @Operation(
+        method = "GET",
+        summary = "Get a doll",
+        description = "This endpoint will search a doll on database that match id passed was paramater",
+        tags = ["Doll"]
+    )
     @GetMapping("/{id}")
     fun getDollById(@PathVariable id: Int): ResponseEntity<EntityModel<Doll>> {
         val doll = dollRepository.findById(id).orElseThrow()
@@ -77,6 +118,12 @@ class DollController(
         return ResponseEntity.ok(entityModel)
     }
 
+    @Operation(
+        method = "DELETE",
+        summary = "Delete a doll",
+        description = "This endpoint will delete a doll on database that match id passed was paramater",
+        tags = ["Doll"]
+    )
     @DeleteMapping("/{id}")
     fun deleteDollById(@PathVariable id: Int): ResponseEntity<EntityModel<Link>> {
         dollService.deleteDollById(id)
