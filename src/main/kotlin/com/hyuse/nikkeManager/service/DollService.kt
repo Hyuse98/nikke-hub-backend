@@ -7,6 +7,8 @@ import com.hyuse.nikkeManager.exception.DollNotFoundException
 import com.hyuse.nikkeManager.model.Doll
 import com.hyuse.nikkeManager.repository.DollRepository
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Transactional
@@ -20,8 +22,8 @@ class DollService(val dollRepository: DollRepository) {
         return dollRepository.save(dollDTO.toModel())
     }
 
-    fun getListDolls(): List<Doll> {
-        return dollRepository.findAll();
+    fun getListDolls(pageable: Pageable): Page<Doll> {
+        return dollRepository.findAll(pageable);
     }
 
     fun getDollByRarityAndLevel(rarity: Rarity, level: Int): Doll? {

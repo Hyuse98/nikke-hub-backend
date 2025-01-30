@@ -9,9 +9,11 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
-import org.springframework.hateoas.CollectionModel
+import org.springdoc.core.annotations.ParameterObject
+import org.springframework.data.domain.Pageable
 import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.Link
+import org.springframework.hateoas.PagedModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
@@ -37,7 +39,7 @@ class DollController(
             content = [Content(
                 mediaType = "application/json",
                 schema = Schema(
-                    example ="""{
+                    example = """{
                         "rarity" SSR,
                         "level" 15
                     }"""
@@ -52,7 +54,7 @@ class DollController(
             doll,
             linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
             linkTo(methodOn(this::class.java).deleteDollById(doll.id)).withRel("Delete"),
-            linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
+            linkTo(methodOn(this::class.java).getListDolls(pageable = Pageable.unpaged())).withRel("Collection")
 
         )
         return ResponseEntity.status(HttpStatus.CREATED).body(entityModel)
@@ -65,19 +67,27 @@ class DollController(
         tags = ["Doll"]
     )
     @GetMapping
-    fun getListDolls(): ResponseEntity<CollectionModel<EntityModel<Doll>>> {
-        val dolls = dollService.getListDolls().map { doll ->
+    fun getListDolls(@ParameterObject pageable: Pageable): ResponseEntity<PagedModel<EntityModel<Doll>>> {
+        val dollsPage = dollService.getListDolls(pageable)
+        val dolls = dollsPage.content.map { doll ->
             EntityModel.of(
                 doll,
                 linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel()
             )
         }
-        val collectionModel = CollectionModel.of(
+        val pagedModel = PagedModel.of(
             dolls,
-            linkTo(methodOn(this::class.java).getListDolls()).withSelfRel()
+            PagedModel.PageMetadata(
+                dollsPage.size.toLong(),
+                dollsPage.number.toLong(),
+                dollsPage.totalElements,
+                dollsPage.totalPages.toLong()
+            ),
+            linkTo(methodOn(this::class.java).getListDolls(pageable)).withSelfRel()
         )
-        return ResponseEntity.ok(collectionModel)
+        return ResponseEntity.ok(pagedModel)
     }
+
 
     @Operation(
         method = "GET",
@@ -95,7 +105,7 @@ class DollController(
             EntityModel.of(
                 it,
                 linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
-                linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
+                linkTo(methodOn(this::class.java).getListDolls(pageable = Pageable.unpaged())).withRel("Collection")
             )
         }
         return ResponseEntity.ok(entityModel)
@@ -113,7 +123,7 @@ class DollController(
         val entityModel = EntityModel.of(
             doll,
             linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
-            linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
+            linkTo(methodOn(this::class.java).getListDolls(pageable = Pageable.unpaged())).withRel("Collection")
         )
         return ResponseEntity.ok(entityModel)
     }
@@ -128,7 +138,7 @@ class DollController(
     fun deleteDollById(@PathVariable id: Int): ResponseEntity<EntityModel<Link>> {
         dollService.deleteDollById(id)
         val entityModel = EntityModel.of(
-            linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
+            linkTo(methodOn(this::class.java).getListDolls(pageable = Pageable.unpaged())).withRel("Collection")
         )
         return ResponseEntity.ok(entityModel)
     }
