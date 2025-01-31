@@ -1,3 +1,5 @@
+.env
+.dockerignore
 HELP.md
 .gradle
 build/
