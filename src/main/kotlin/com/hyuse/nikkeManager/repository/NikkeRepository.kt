@@ -1,6 +1,8 @@
 package com.hyuse.nikkeManager.repository
 
 import com.hyuse.nikkeManager.model.Nikke
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Modifying
@@ -20,6 +22,8 @@ interface NikkeRepository : JpaRepository<Nikke, Int>, JpaSpecificationExecutor<
     @Modifying
     @Query("DELETE FROM Nikke n WHERE n.name = :name")
     fun deleteByName(@Param("name") name: String)
+
+    override fun findAll(pageable: Pageable): Page<Nikke>
 
 //    @Modifying
 //    @Query("""

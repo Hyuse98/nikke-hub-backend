@@ -8,6 +8,8 @@ import com.hyuse.nikkeManager.exception.NikkeNotFoundException
 import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.NikkeRepository
 import com.hyuse.nikkeManager.repository.specifications.NikkeSpecifications
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -50,7 +52,7 @@ class NikkeService(val nikkeRepository: NikkeRepository) {
         return nikkeRepository.deleteById(id)
     }
 
-    fun listAllNikke(): List<Nikke> = nikkeRepository.findAll()
+    fun listAllNikke(pageable: Pageable): Page<Nikke> = nikkeRepository.findAll(pageable)
 
     fun listAllNikkeFiltered(
         rarity: Rarity?,
@@ -60,11 +62,12 @@ class NikkeService(val nikkeRepository: NikkeRepository) {
         code: Code?,
         weapon: Weapon?,
         nikkeClass: NikkeClass?,
-        cube: Cubes?
-    ): List<Nikke> {
+        cube: Cubes?,
+        pageable: Pageable
+    ): Page<Nikke> {
         val specification =
             NikkeSpecifications.byFilters(rarity, ownedStatus, burstType, company, code, weapon, nikkeClass, cube)
-        return nikkeRepository.findAll(specification)
+        return nikkeRepository.findAll(specification, pageable)
     }
 
     fun searchNikke(name: String): Nikke?{

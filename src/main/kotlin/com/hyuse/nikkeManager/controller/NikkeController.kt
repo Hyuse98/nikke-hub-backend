@@ -11,8 +11,11 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
+import org.springdoc.core.annotations.ParameterObject
+import org.springframework.data.domain.Pageable
 import org.springframework.hateoas.CollectionModel
 import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
@@ -68,7 +71,7 @@ class NikkeController(
         val entityModel = EntityModel.of(
             nikke,
             linkTo(methodOn(this::class.java).getNikke(nikke.name)).withSelfRel(),
-            linkTo(methodOn(this::class.java).listAllNikke()).withRel("Collection")
+            linkTo(methodOn(this::class.java).listAllNikke(pageable = Pageable.unpaged())).withRel("Collection")
         )
         return ResponseEntity.status(HttpStatus.CREATED).body(entityModel)
     }
@@ -133,32 +136,31 @@ class NikkeController(
         @RequestParam(required = false) code: Code?,
         @RequestParam(required = false) weapon: Weapon?,
         @RequestParam(required = false) nikkeClass: NikkeClass?,
-        @RequestParam(required = false) cube: Cubes?
-    ): ResponseEntity<CollectionModel<EntityModel<Nikke>>> {
-        val nikkes =
-            nikkeService.listAllNikkeFiltered(rarity, ownedStatus, burstType, company, code, weapon, nikkeClass, cube)
-                .map { nikke ->
-                    EntityModel.of(
-                        nikke,
-                        linkTo(methodOn(this::class.java).getNikke(nikke.name)).withSelfRel()
-                    )
-                }
-        val collectionModel = CollectionModel.of(
-            nikkes,
-            linkTo(
-                methodOn(this::class.java).listAllNikkeFiltered(
-                    rarity = rarity,
-                    ownedStatus = ownedStatus,
-                    burstType = burstType,
-                    company = company,
-                    code = code,
-                    weapon = weapon,
-                    nikkeClass = nikkeClass,
-                    cube = cube
-                )
-            ).withSelfRel()
+        @RequestParam(required = false) cube: Cubes?,
+        @ParameterObject pageable: Pageable
+    ): ResponseEntity<PagedModel<EntityModel<Nikke>>> {
+
+        val nikkesPage = nikkeService.listAllNikkeFiltered(
+            rarity, ownedStatus, burstType, company, code, weapon, nikkeClass, cube, pageable
         )
-        return ResponseEntity.ok(collectionModel)
+
+        val nikkes = nikkesPage.content.map { nikke ->
+            EntityModel.of(
+                nikke,
+                linkTo(methodOn(this::class.java).getNikke(nikke.name)).withSelfRel()
+            )
+        }
+
+        val pagedModel = PagedModel.of(
+            nikkes,
+            PagedModel.PageMetadata(
+                nikkesPage.size.toLong(),
+                nikkesPage.number.toLong(),
+                nikkesPage.totalElements,
+                nikkesPage.totalPages.toLong()
+            )
+        )
+        return ResponseEntity.ok(pagedModel)
     }
 
     @Operation(
@@ -168,19 +170,28 @@ class NikkeController(
         tags = ["Nikke"],
     )
     @GetMapping
-    fun listAllNikke(): ResponseEntity<CollectionModel<EntityModel<Nikke>>> {
-        val nikkes = nikkeService.listAllNikke()
-            .map { nikke ->
-                EntityModel.of(
-                    nikke,
-                    linkTo(methodOn(this::class.java).getNikke(nikke.name)).withSelfRel()
-                )
-            }
-        val collectionModel = CollectionModel.of(
+    fun listAllNikke(@ParameterObject pageable: Pageable): ResponseEntity<PagedModel<EntityModel<Nikke>>> {
+
+        val nikkesPage = nikkeService.listAllNikke(pageable)
+
+        val nikkes = nikkesPage.content.map { nikke ->
+            EntityModel.of(
+                nikke,
+                linkTo(methodOn(this::class.java).getNikke(nikke.name)).withSelfRel()
+            )
+        }
+
+        val pagedModel = PagedModel.of(
             nikkes,
-            linkTo(methodOn(this::class.java).listAllNikke()).withSelfRel()
+            PagedModel.PageMetadata(
+                nikkesPage.size.toLong(),
+                nikkesPage.number.toLong(),
+                nikkesPage.totalElements,
+                nikkesPage.totalPages.toLong()
+            ),
+            linkTo(methodOn(this::class.java).listAllNikke(pageable)).withSelfRel()
         )
-        return ResponseEntity.ok(collectionModel)
+        return ResponseEntity.ok(pagedModel)
     }
 
     @Operation(
@@ -195,7 +206,7 @@ class NikkeController(
         val nikke = nikkeService.searchNikke(name)
         val entityModel = EntityModel.of(
             nikke!!,
-            linkTo(methodOn(this::class.java).listAllNikke()).withRel("Collection")
+            linkTo(methodOn(this::class.java).listAllNikke(pageable = Pageable.unpaged())).withRel("Collection")
         )
         return ResponseEntity.ok(entityModel)
     }
