@@ -58,6 +58,7 @@ class DollServiceTest {
     @Test
     @DisplayName("Should not create doll when it exist")
     fun createDollCase2() {
+
         val dollDTO = DollDTO(
             id = null,
             rarity = Rarity.R,
@@ -162,4 +163,16 @@ class DollServiceTest {
         verify(dollRepository, times(1)).findDollById(1)
     }
 
+    @Test
+    @DisplayName("Should not delete a doll by id due missing")
+    fun deleteDollByIdCase2(){
+
+        whenever(dollRepository.findDollById(1)) doThrow DollNotFoundException(1)
+
+        val exception = assertThrows<DollNotFoundException> {
+            dollService.deleteDollById(1)
+        }
+
+        assertThat(exception.message).isEqualTo("Doll with ID '1' not found")
+    }
 }
