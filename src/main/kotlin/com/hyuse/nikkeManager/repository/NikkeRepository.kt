@@ -25,6 +25,8 @@ interface NikkeRepository : JpaRepository<Nikke, Int>, JpaSpecificationExecutor<
 
     override fun findAll(pageable: Pageable): Page<Nikke>
 
+    //TODO(DO THIS LATER, NO PRIORITY)
+
 //    @Modifying
 //    @Query("""
 //        UPDATE Nikke n SET

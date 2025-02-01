@@ -87,6 +87,4 @@ class GlobalExceptionHandler {
             errors = listOf(ex.localizedMessage)
         )
     }
-
-
 }
