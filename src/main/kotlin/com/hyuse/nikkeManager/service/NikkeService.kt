@@ -8,6 +8,8 @@ import com.hyuse.nikkeManager.exception.NikkeNotFoundException
 import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.NikkeRepository
 import com.hyuse.nikkeManager.repository.specifications.NikkeSpecifications
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class NikkeService(val nikkeRepository: NikkeRepository) {
 
+    @CacheEvict(value = ["nikkes"], allEntries = true)
     fun createNikke(nikkeDTO: NikkeDTO): Nikke {
         val nikkeExist = nikkeRepository.findNikkeByName(nikkeDTO.name)
         if (nikkeExist != null) {
@@ -25,6 +28,7 @@ class NikkeService(val nikkeRepository: NikkeRepository) {
         return nikkeRepository.save(nikkeDTO.toModel())
     }
 
+    @CacheEvict(value = ["nikkes"], allEntries = true)
     fun updateNikke(nikkeDTO: NikkeDTO, name: String): Nikke {
         val nikkeExist = nikkeRepository.findNikkeByName(name)
             ?: throw NikkeNotFoundException(name)
@@ -33,6 +37,7 @@ class NikkeService(val nikkeRepository: NikkeRepository) {
         return nikkeRepository.save(updatedNikke)
     }
 
+    @CacheEvict(value = ["nikkes"], allEntries = true)
     fun updateNikke(nikkeDTO: NikkeDTO, id: Int): Nikke {
         val nikkeExist = nikkeRepository.findNikkeById(id)
             ?: throw NikkeIdNotFoundException("$id")
@@ -41,19 +46,23 @@ class NikkeService(val nikkeRepository: NikkeRepository) {
         return nikkeRepository.save(nikke)
     }
 
+    @CacheEvict(value = ["nikkes"], allEntries = true)
     fun deleteNikke(name: String) {
         nikkeRepository.findNikkeByName(name) ?: throw NikkeNotFoundException(name)
         return nikkeRepository.deleteByName(name)
     }
 
+    @CacheEvict(value = ["nikkes"], allEntries = true)
     fun deleteNikke(id: Int) {
         nikkeRepository.findNikkeById(id) ?: throw NikkeIdNotFoundException("$id")
 
         return nikkeRepository.deleteById(id)
     }
 
+    @Cacheable("nikkes")
     fun listAllNikke(pageable: Pageable): Page<Nikke> = nikkeRepository.findAll(pageable)
 
+    @Cacheable("nikkes")
     fun listAllNikkeFiltered(
         rarity: Rarity?,
         ownedStatus: OwnedStatus?,

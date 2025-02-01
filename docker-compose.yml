@@ -10,8 +10,13 @@ services:
       - SPRING_DATASOURCE_USERNAME=user
       - SPRING_DATASOURCE_PASSWORD=pass
       - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     volumes:
       - ./build/libs/nikkeManager-0.0.1-SNAPSHOT.jar:/app/app.jar
 
@@ -31,5 +36,15 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+
 volumes:
   postgres_data:
+  redis_data:
