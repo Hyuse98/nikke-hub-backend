@@ -13,14 +13,14 @@ services:
       - SPRING_REDIS_HOST=redis
       - SPRING_REDIS_PORT=6379
     depends_on:
-      db:
+      postgres:
         condition: service_healthy
       redis:
         condition: service_started
     volumes:
       - ./build/libs/nikkeManager-0.0.1-SNAPSHOT.jar:/app/app.jar
 
-  db:
+  postgres:
     image: postgres:latest
     environment:
       POSTGRES_DB: outpost
