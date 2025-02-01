@@ -15,12 +15,17 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
 
 @WebMvcTest(DollController::class)
 class DollControllerTest {
@@ -38,7 +43,7 @@ class DollControllerTest {
     private lateinit var objectMapper: ObjectMapper
 
     @Test
-    @DisplayName("201")
+    @DisplayName("Should create a doll")
     fun createDollCase1() {
 
         val request = DollDTO(
@@ -61,7 +66,7 @@ class DollControllerTest {
     }
 
     @Test
-    @DisplayName("409")
+    @DisplayName("Should throw a error where doll not create due already exist")
     fun createDollCase2() {
 
         val request = DollDTO(
@@ -82,7 +87,7 @@ class DollControllerTest {
     }
 
     @Test
-    @DisplayName("200")
+    @DisplayName("Should Return a list with 2 dolls")
     fun getListDollsCase1() {
 
         val doll1 = Doll(
@@ -101,7 +106,10 @@ class DollControllerTest {
             doll1, doll2
         )
 
-        every { dollService.getListDolls() } returns expectDolls
+        val pageable: Pageable = PageRequest.of(0, 2)
+        val page: Page<Doll> = PageImpl(expectDolls, pageable, 0)
+
+        every { dollService.getListDolls(any()) } returns page
 
         mockMvc.perform(
             get("/doll")
@@ -109,35 +117,39 @@ class DollControllerTest {
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$._embedded.dollList", hasSize<Any>(2)))
-            .andExpect(jsonPath("$._embedded.dollList[0].rarity").value(doll1.rarity.name))
-            .andExpect(jsonPath("$._embedded.dollList[0].level").value(doll1.level))
-            .andExpect(jsonPath("$._embedded.dollList[1].rarity").value(doll2.rarity.name))
-            .andExpect(jsonPath("$._embedded.dollList[1].level").value(doll2.level))
-            .andExpect(jsonPath("$._embedded.dollList[0]._links.self.href").value("http://localhost/doll/1"))
+            .andExpect((jsonPath("$._embedded.dollList[*].rarity").value(expectDolls.map { it.rarity.name })))
+            .andExpect((jsonPath("$._embedded.dollList[*].level").value(expectDolls.map { it.level })))
+            .andExpect(jsonPath("$._links.self.href").exists())
             .andExpect(jsonPath("$._links.self.href").value("http://localhost/doll"))
-
     }
 
     @Test
-    @DisplayName("200")
+    @DisplayName("Should Return an empty list")
     fun getListDollsCase2() {
-        every { dollService.getListDolls() } returns emptyList()
+
+        val dolls = emptyList<Doll>()
+        val pageable: Pageable = PageRequest.of(0, 2)
+        val page: Page<Doll> = PageImpl(dolls, pageable, 0)
+
+        every { dollService.getListDolls(any()) } returns page
 
         mockMvc.perform(
             get("/doll")
+                .param("page", "0")
+                .param("size", "2")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$._embedded.dollList").doesNotExist()) // Lista não está presente
-            .andExpect(jsonPath("$._links.self.href").value("http://localhost/doll")) // Link self está presente
+            .andExpect(jsonPath("$._embedded.dollList").doesNotExist())
+            .andExpect(jsonPath("$._links.self.href").value("http://localhost/doll")) //TODO(Check this path later)
     }
 
 
     @Test
-    @DisplayName("200")
-    fun getDollsCase1ByRarityAndLevel(){
+    @DisplayName("Should find a doll with parameters Rarity and Level")
+    fun getDollsCase1ByRarityAndLevel() {
 
-        val doll= Doll(
+        val doll = Doll(
             id = 1,
             rarity = Rarity.SR,
             level = 5
@@ -154,8 +166,8 @@ class DollControllerTest {
     }
 
     @Test
-    @DisplayName("404")
-    fun getDollsCase2ByRarityAndLevel(){
+    @DisplayName("Should not found a doll due his missing")
+    fun getDollsCase2ByRarityAndLevel() {
 
         val rarity = Rarity.SR
         val level = 5

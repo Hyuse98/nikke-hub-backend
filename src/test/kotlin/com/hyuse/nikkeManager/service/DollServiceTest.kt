@@ -3,20 +3,26 @@ package com.hyuse.nikkeManager.service
 import com.hyuse.nikkeManager.dto.DollDTO
 import com.hyuse.nikkeManager.enums.Rarity
 import com.hyuse.nikkeManager.exception.DollAlreadyExistsException
+import com.hyuse.nikkeManager.exception.DollNotFoundException
 import com.hyuse.nikkeManager.model.Doll
 import com.hyuse.nikkeManager.repository.DollRepository
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.isA
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.test.context.ActiveProfiles
-import kotlin.test.assertEquals
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -98,13 +104,16 @@ class DollServiceTest {
 
         whenever(dollRepository.findByRarityAndLevel(Rarity.SR, 5)).thenReturn(null)
 
-        val result = dollService.getDollByRarityAndLevel(Rarity.SR, 5)
+        val exception = assertThrows<DollNotFoundException> {
+            dollService.getDollByRarityAndLevel(Rarity.SR, 5)
+        }
 
-        assertThat(result).isNull()
+        assertThat(exception.message).isEqualTo("Doll Rarity: 'SR' Level: '5' not found")
 
         verify(dollRepository).findByRarityAndLevel(Rarity.SR, 5)
 
     }
+//TODO(FIX)
 
     @Test
     @DisplayName("Should list all dolls")
@@ -116,26 +125,27 @@ class DollServiceTest {
             level = 0
         )
         val doll2 = Doll(
-            id = 1,
+            id = 2,
             rarity = Rarity.SSR,
             level = 0
         )
         val doll3 = Doll(
-            id = 1,
+            id = 3,
             rarity = Rarity.SSR,
             level = 0
         )
 
-        val expectedDoll = listOf(
-            doll1, doll2, doll3
-        )
+        val expectedDoll = listOf(doll1, doll2, doll3)
 
-        whenever(dollRepository.findAll()).thenReturn(expectedDoll)
+        val pageable: Pageable = PageRequest.of(0, 3)
+        val page: Page<Doll> = PageImpl(expectedDoll, pageable, expectedDoll.size.toLong())
 
+        whenever(dollRepository.findAll(any<Pageable>())).thenReturn(page)
 
-        val result = dollService.getListDolls()
+        val result = dollService.getListDolls(pageable)
 
-        verify(dollRepository).findAll()
-        assertEquals(expectedDoll, result)
+        verify(dollRepository).findAll(any<Pageable>())
+
+        assertEquals(expectedDoll, result.content)
     }
 }
