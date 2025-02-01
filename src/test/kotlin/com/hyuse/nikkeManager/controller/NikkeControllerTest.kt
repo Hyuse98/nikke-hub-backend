@@ -15,6 +15,10 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
@@ -152,7 +156,7 @@ class NikkeControllerTest {
             .andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.errors").exists())
             .andExpect(jsonPath("$.errors").isArray)
-            .andExpect(jsonPath("$.errors[0]").value("JSON parse error: Cannot deserialize value of type `int` from String \"invalid\": not a valid `int` value"))
+            .andExpect(jsonPath("$.errors[*]").value("JSON parse error: Cannot deserialize value of type `int` from String \"invalid\": not a valid `int` value"))
     }
 
     @Test
@@ -263,7 +267,7 @@ class NikkeControllerTest {
             .andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.errors").exists())
             .andExpect(jsonPath("$.errors").isArray)
-            .andExpect(jsonPath("$.errors[0]").value("JSON parse error: Cannot deserialize value of type `int` from String \"invalid\": not a valid `int` value"))
+            .andExpect(jsonPath("$.errors[*]").value("JSON parse error: Cannot deserialize value of type `int` from String \"invalid\": not a valid `int` value"))
     }
 
     @Test
@@ -344,53 +348,43 @@ class NikkeControllerTest {
             nikke1, nikke2
         )
 
-        every {
-            nikkeService.listAllNikke(
-                rarity = any(),
-                ownedStatus = any(),
-                burstType = any(),
-                company = any(),
-                code = any(),
-                weapon = any(),
-                nikkeClass = any(),
-                cube = any()
-            )
-        } returns expectedNikkes
+        val pageable: Pageable = PageRequest.of(0, 2)
+        val page: Page<Nikke> = PageImpl(expectedNikkes, pageable, expectedNikkes.size.toLong())
+
+        every { nikkeService.listAllNikke(any()) } returns page
 
         mockMvc.perform(
-            get("/nikke?rarity=SSR")
+            get("/nikke")
+                .param("rarity", "SSR")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(ObjectMapper().writeValueAsString(expectedNikkes))
         )
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$", hasSize<Any>(2)))
-            .andExpect(jsonPath("$[0].name").value(nikke1.name))
-            .andExpect(jsonPath("$[1].name").value(nikke2.name))
+            .andExpect(jsonPath("$._embedded.nikkeList", hasSize<Any>(2)))
+            .andExpect(jsonPath("$._embedded.nikkeList[*].name").value(expectedNikkes.map { it.name }))
+            .andExpect(jsonPath("$._links.self.href").exists())
     }
+
+//TODO(FIX)
 
     @Test
     @DisplayName("200")
     fun listNikkesCase2() {
 
+        val expectedNikkes = emptyList<Nikke>()
+
+        val pageable: Pageable = PageRequest.of(0, 2)
+        val page: Page<Nikke> = PageImpl(expectedNikkes, pageable, 0)
+
         every {
-            nikkeService.listAllNikke(
-                rarity = any(),
-                ownedStatus = any(),
-                burstType = any(),
-                company = any(),
-                code = any(),
-                weapon = any(),
-                nikkeClass = any(),
-                cube = any()
-            )
-        } returns emptyList()
+            nikkeService.listAllNikke(pageable = any())
+        } returns page
 
         mockMvc.perform(
             get("/nikke")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$", hasSize<Any>(0)))
+            .andExpect(jsonPath("$._embedded").doesNotExist())
     }
 
     @Test
