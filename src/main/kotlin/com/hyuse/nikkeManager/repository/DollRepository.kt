@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface DollRepository : JpaRepository<Doll, Int> {
+
+    fun findDollById(id: Int): Doll?
     fun findByRarityAndLevel(rarity: Rarity, level: Int): Doll?
     override fun findAll(pageable: Pageable): Page<Doll>
 }

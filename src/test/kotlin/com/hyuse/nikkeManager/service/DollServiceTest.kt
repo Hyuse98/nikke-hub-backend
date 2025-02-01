@@ -13,10 +13,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.kotlin.any
-import org.mockito.kotlin.isA
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
+import org.mockito.kotlin.*
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -113,7 +110,6 @@ class DollServiceTest {
         verify(dollRepository).findByRarityAndLevel(Rarity.SR, 5)
 
     }
-//TODO(FIX)
 
     @Test
     @DisplayName("Should list all dolls")
@@ -148,4 +144,22 @@ class DollServiceTest {
 
         assertEquals(expectedDoll, result.content)
     }
+
+    @Test
+    @DisplayName("Should delete a doll by id")
+    fun deleteDollByIdCase1(){
+
+        val doll1 = Doll(
+            id = 1,
+            rarity = Rarity.SSR,
+            level = 0
+        )
+
+        whenever(dollRepository.findDollById(1)).thenReturn(doll1)
+
+        dollService.deleteDollById(1)
+
+        verify(dollRepository, times(1)).findDollById(1)
+    }
+
 }
