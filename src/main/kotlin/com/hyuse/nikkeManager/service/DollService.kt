@@ -32,7 +32,7 @@ class DollService(val dollRepository: DollRepository) {
     }
 
     fun deleteDollById(id: Int) {
-        dollRepository.findDollById(id)?: { DollNotFoundException(id) }
+        dollRepository.findDollById(id) ?: throw DollNotFoundException(id)
         dollRepository.deleteById(id)
     }
 }

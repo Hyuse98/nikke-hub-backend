@@ -167,7 +167,7 @@ class DollServiceTest {
     @DisplayName("Should not delete a doll by id due missing")
     fun deleteDollByIdCase2(){
 
-        whenever(dollRepository.findDollById(1)) doThrow DollNotFoundException(1)
+        whenever(dollRepository.findDollById(1)).thenReturn(null)
 
         val exception = assertThrows<DollNotFoundException> {
             dollService.deleteDollById(1)

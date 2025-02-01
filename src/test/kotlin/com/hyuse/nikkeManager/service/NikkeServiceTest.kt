@@ -15,6 +15,10 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.kotlin.*
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.test.context.ActiveProfiles
 import kotlin.test.assertEquals
@@ -384,89 +388,130 @@ class NikkeServiceTest {
 
         verify(nikkeRepository, times(1)).findNikkeById(id)
     }
-    //TODO(FIX)
 
-//    @Test
-//    @DisplayName("should list all nikkes when no filters are provided")
-//    fun listNikkeCase1() {
-//
-//        val nikke1 = Nikke(
-//            id = 1,
-//            name = "Test",
-//            core = 1,
-//            attraction = 1,
-//            skill1Level = 1,
-//            skill2Level = 1,
-//            burstLevel = 1,
-//            rarity = Rarity.SSR,
-//            ownedStatus = OwnedStatus.NOT_OWNED,
-//            burstType = BurstType.III,
-//            company = Company.PILGRIM,
-//            code = Code.ELECTRIC,
-//            weapon = Weapon.SR,
-//            nikkeClass = NikkeClass.ATTACKER,
-//            cube = null,
-//            doll = null
-//        )
-//
-//        val nikke2 = Nikke(
-//            id = 2,
-//            name = "Test",
-//            core = 1,
-//            attraction = 1,
-//            skill1Level = 1,
-//            skill2Level = 1,
-//            burstLevel = 1,
-//            rarity = Rarity.SSR,
-//            ownedStatus = OwnedStatus.NOT_OWNED,
-//            burstType = BurstType.III,
-//            company = Company.PILGRIM,
-//            code = Code.ELECTRIC,
-//            weapon = Weapon.SR,
-//            nikkeClass = NikkeClass.ATTACKER,
-//            cube = null,
-//            doll = null
-//        )
-//
-//        val nikke3 = Nikke(
-//            id = 3,
-//            name = "Test",
-//            core = 1,
-//            attraction = 1,
-//            skill1Level = 1,
-//            skill2Level = 1,
-//            burstLevel = 1,
-//            rarity = Rarity.SSR,
-//            ownedStatus = OwnedStatus.NOT_OWNED,
-//            burstType = BurstType.III,
-//            company = Company.PILGRIM,
-//            code = Code.ELECTRIC,
-//            weapon = Weapon.SR,
-//            nikkeClass = NikkeClass.ATTACKER,
-//            cube = null,
-//            doll = null
-//        )
-//
-//        val expectedNikkes = listOf(
-//            nikke1, nikke2, nikke3
-//        )
-//
-//        whenever(nikkeRepository.findAll(any<Specification<Nikke>>())).thenReturn(expectedNikkes)
-//
-//        val result = nikkeService.listAllNikke(
-//            rarity = null,
-//            ownedStatus = null,
-//            burstType = null,
-//            company = null,
-//            code = null,
-//            weapon = null,
-//            nikkeClass = null,
-//            cube = null
-//        )
-//
-//        verify(nikkeRepository).findAll(any<Specification<Nikke>>())
-//        assertEquals(expectedNikkes, result)
-//    }
+    @Test
+    @DisplayName("should list all nikkes when no filters are provided")
+    fun listNikkeCase1() {
+
+        val nikke1 = Nikke(
+            id = 1,
+            name = "Test",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        val nikke2 = Nikke(
+            id = 2,
+            name = "Test",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        val nikke3 = Nikke(
+            id = 3,
+            name = "Test",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        val expectedNikkes = listOf(
+            nikke1, nikke2, nikke3
+        )
+
+        val pageable: Pageable = PageRequest.of(0, 3)
+        val page: Page<Nikke> = PageImpl(expectedNikkes, pageable, expectedNikkes.size.toLong())
+
+        whenever(nikkeRepository.findAll(any<Pageable>())).thenReturn(page)
+
+        val result = nikkeService.listAllNikke(pageable)
+
+        verify(nikkeRepository).findAll(any<Pageable>())
+        assertEquals(expectedNikkes, result.content)
+    }
+
+    @Test
+    @DisplayName("should list all nikkes when filters are provided")
+    fun listNikkeCase2() {
+
+        val nikke1 = Nikke(
+            id = 1,
+            name = "Rapi",
+            core = 1,
+            attraction = 1,
+            skill1Level = 1,
+            skill2Level = 1,
+            burstLevel = 1,
+            rarity = Rarity.SSR,
+            ownedStatus = OwnedStatus.NOT_OWNED,
+            burstType = BurstType.III,
+            company = Company.PILGRIM,
+            code = Code.ELECTRIC,
+            weapon = Weapon.SR,
+            nikkeClass = NikkeClass.ATTACKER,
+            cube = null,
+            doll = null
+        )
+
+        val expectedNikkes = listOf(nikke1)
+
+        val pageable: Pageable = PageRequest.of(0, 3)
+        val page: Page<Nikke> = PageImpl(expectedNikkes, pageable, expectedNikkes.size.toLong())
+
+        val nikkeRepository: NikkeRepository = mock()
+        val nikkeService = NikkeService(nikkeRepository)
+
+        val specificationCaptor = argumentCaptor<Specification<Nikke>>()
+
+        whenever(nikkeRepository.findAll(specificationCaptor.capture(), eq(pageable))).thenReturn(page)
+
+        val result = nikkeService.listAllNikkeFiltered(
+            Rarity.SSR, null, null, null,
+            null, null, null, null,
+            pageable
+        )
+
+        verify(nikkeRepository).findAll(specificationCaptor.capture(), eq(pageable))
+
+        assertEquals(1, result.content.size)
+        assertEquals(nikke1, result.content.first())
+    }
+
 
     @Test
     @DisplayName("should find a nikke by name passed")
