@@ -40,4 +40,4 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: hyuse98/nikke-manager:beta
+          tags: usuario/repo:latest, usuario/repo:${{ github.sha }}
