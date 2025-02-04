@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nikke-manager-config
+data:
+  SPRING_REDIS_HOST: "redis-service"
+  SPRING_REDIS_PORT: "6379"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres-service:5432/outpost"
+  POSTGRES_DB: "outpost"

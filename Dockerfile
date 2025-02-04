@@ -1,12 +1,10 @@
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17.0.14_7-jre-jammy
+
+#FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
-RUN pwd && ls -l
-
 COPY build/libs/nikkeManager-0.0.1-SNAPSHOT.jar /app/app.jar
-
-RUN ls -l /app
 
 EXPOSE 8080
 
