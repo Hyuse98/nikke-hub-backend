@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: nikke-manager
-          image: hyuse98/nikke-manager-backend:test-v4
+          image: hyuse98/nikke-manager-backend:test-v7
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

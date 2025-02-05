@@ -18,26 +18,34 @@ spec:
           image: postgres:15-alpine
           ports:
             - containerPort: 5432
-          envFrom:
-            - configMapRef:
-                name: nikke-manager-config
-            - secretRef:
-                name: nikke-manager-secrets
+          env:
+            - name: POSTGRES_DB
+              value: "outpost"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: nikke-manager-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nikke-manager-secrets
+                  key: POSTGRES_PASSWORD
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
-            - name: postgres-init
+            - name: init-script
               mountPath: /docker-entrypoint-initdb.d
           readinessProbe:
             exec:
               command:
                 - /bin/sh
                 - -c
-                - pg_isready -U hyuse98  # hardcoded username instead of variable
-            initialDelaySeconds: 15  # increased delay
+                - pg_isready -U user -d outpost
+            initialDelaySeconds: 30
             periodSeconds: 10
       volumes:
-        - name: postgres-init
+        - name: init-script
           configMap:
             name: postgres-init
             defaultMode: 0755
