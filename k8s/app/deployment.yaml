@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nikke-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nikke-manager
+  template:
+    metadata:
+      labels:
+        app: nikke-manager
+    spec:
+      containers:
+        - name: nikke-manager
+          image: hyuse98/nikke-manager-backend:test-v7
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: nikke-manager-config
+            - secretRef:
+                name: nikke-manager-secrets
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
