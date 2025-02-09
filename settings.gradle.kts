@@ -1,1 +1,1 @@
-rootProject.name = "nikkeManager"
+rootProject.name = "Nikke-Hub-Backend"

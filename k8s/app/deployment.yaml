@@ -1,40 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nikke-manager
+  name: nikke-hub-backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nikke-manager
+      app: nikke-hub-backend
   template:
     metadata:
       labels:
-        app: nikke-manager
+        app: nikke-hub-backend
     spec:
       containers:
-        - name: nikke-manager
-          image: hyuse98/nikke-manager-backend:test-v7
+        - name: nikke-hub-backend
+          image: hyuse98/nikke-hub-backend:latest
           imagePullPolicy: IfNotPresent
+
           ports:
-            - containerPort: 8080
+            - containerPort: 8081
+
           envFrom:
             - configMapRef:
-                name: nikke-manager-config
+                name: nikke-hub-backend-config
             - secretRef:
-                name: nikke-manager-secrets
+                name: nikke-hub-backend-secrets
+
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: 8080
+              port: 8081
             initialDelaySeconds: 15
             periodSeconds: 5
+
           livenessProbe:
             httpGet:
               path: /actuator/health
-              port: 8080
+              port: 8081
             initialDelaySeconds: 30
             periodSeconds: 10
+
           resources:
             requests:
               memory: "512Mi"

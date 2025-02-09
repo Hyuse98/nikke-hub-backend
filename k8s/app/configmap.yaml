@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nikke-manager-config
+  name: nikke-hub-backend-config
 data:
   SPRING_REDIS_HOST: "redis-service"
   SPRING_REDIS_PORT: "6379"
