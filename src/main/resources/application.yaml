@@ -1,24 +1,23 @@
 server:
-  port: 8081
+  port: ${BACKEND_SERVER_PORT}
 
 spring:
   application:
     name: nikke-hub-backend
 
   datasource:
-    driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://postgres-service:5432/outpost
-    # url: ${SPRING_DATASOURCE_URL}
+    driverClassName: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
+    url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
 
   jpa:
-    generate-ddl: false
+    generate-ddl: ${SPRING_JPA_GENERATE_DDL}
     hibernate:
-      ddl-auto: validate
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT}
         transaction:
           coordinator_class: jdbc
     sql:
@@ -26,15 +25,14 @@ spring:
         mode: never
 
   flyway:
-    enabled: true
-    baseline-on-migrate: true
-    baseline-version: 0
+    enabled: ${SPRING_FLYWAY_ENABLED}
+    baseline-on-migrate: ${SPRING_FLYWAY_BASELINE_ON_MIGRATE}
+    baseline-version: ${SPRING_FLYWAY_BASELINE_VERSION}
     user: ${SPRING_FLYWAY_USER}
     password: ${SPRING_FLYWAY_PASSWORD}
 
   cache:
     type: redis
-
   data:
     redis:
       host: ${SPRING_REDIS_HOST}
@@ -50,9 +48,11 @@ management:
       enabled: true
 
 eureka:
+  instance:
+    preferIpAddress: ${EUREKA_INSTANCE_PREFER_IP_ADDRESS}
   client:
+    register-with-eureka: ${EUREKA_CLIENT_REGISTER_WITH_EUREKA}
+    fetch-registry: ${EUREKA_CLIENT_FETCH_REGISTRY}
+    enabled: ${EUREKA_CLIENT_ENABLED}
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
-      register-with-eureka: true
-      fetch-registry: true
-      enabled: true
+      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE}
