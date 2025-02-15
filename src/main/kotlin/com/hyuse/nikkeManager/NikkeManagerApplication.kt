@@ -8,7 +8,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient
 
 @OpenAPIDefinition(info = Info(title = "Nikke Manager", version = "Beta", description = "API to manage Nikkes"))
 @SpringBootApplication
-@EnableDiscoveryClient
 class NikkeManagerApplication
 
 fun main(args: Array<String>) {

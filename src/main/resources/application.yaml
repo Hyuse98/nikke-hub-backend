@@ -1,9 +1,9 @@
 server:
-  port: ${BACKEND_SERVER_PORT}
+  port: 8081
 
 spring:
   application:
-    name: nikke-hub-backend
+    name: nikke-hub-backend-service
 
   datasource:
     driverClassName: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
@@ -50,9 +50,9 @@ management:
 eureka:
   instance:
     preferIpAddress: ${EUREKA_INSTANCE_PREFER_IP_ADDRESS}
+    instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
   client:
     register-with-eureka: ${EUREKA_CLIENT_REGISTER_WITH_EUREKA}
     fetch-registry: ${EUREKA_CLIENT_FETCH_REGISTRY}
-    enabled: ${EUREKA_CLIENT_ENABLED}
     serviceUrl:
       defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE}
