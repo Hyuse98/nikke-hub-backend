@@ -2,29 +2,40 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nikke-hub-backend
+
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: nikke-hub-backend
+
   template:
     metadata:
       labels:
         app: nikke-hub-backend
+
     spec:
       containers:
         - name: nikke-hub-backend
           image: hyuse98/nikke-hub-backend:latest
           imagePullPolicy: IfNotPresent
 
-          ports:
-            - containerPort: 8081
-
           envFrom:
             - configMapRef:
                 name: nikke-hub-backend-config
             - secretRef:
-                name: nikke-hub-backend-secrets
+                name: secrets
+
+          ports:
+            - containerPort: 8081
+
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
 
           readinessProbe:
             httpGet:
@@ -39,11 +50,3 @@ spec:
               port: 8081
             initialDelaySeconds: 30
             periodSeconds: 10
-
-          resources:
-            requests:
-              memory: "512Mi"
-              cpu: "250m"
-            limits:
-              memory: "1Gi"
-              cpu: "500m"
