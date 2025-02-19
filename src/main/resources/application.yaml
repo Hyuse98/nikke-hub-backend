@@ -1,9 +1,9 @@
 server:
-  port: 8081
+  port: ${BACKEND_SERVER_PORT}
 
 spring:
   application:
-    name: nikke-hub-backend-service
+    name: nikke-hub-backend
 
   datasource:
     driverClassName: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
