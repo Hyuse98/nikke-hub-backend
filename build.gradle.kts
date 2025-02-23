@@ -35,7 +35,10 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+    implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
+    implementation("org.springframework.cloud:spring-cloud-starter-config")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -83,7 +86,7 @@ tasks.withType<JacocoReport> {
         classDirectories.setFrom(classDirectories.files.map {
             fileTree(it).matching {
                 exclude("com/hyuse/nikkeManager/handler/**")
-                exclude("com/hyuse/nikkeManager/exception/**")
+                exclude("com/hyuse/nikkeManager/exceptions/**")
                 exclude("com/hyuse/nikkeManager/NikkeManagerApplicationKt.class")
                 exclude("com/hyuse/nikkeManager/NikkeManagerApplication.class")
             }
