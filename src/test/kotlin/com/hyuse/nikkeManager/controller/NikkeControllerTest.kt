@@ -3,7 +3,7 @@ package com.hyuse.nikkeManager.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.hyuse.nikkeManager.dto.NikkeDTO
 import com.hyuse.nikkeManager.enums.*
-import com.hyuse.nikkeManager.exception.NikkeNotFoundException
+import com.hyuse.nikkeManager.exceptions.NikkeNotFoundException
 import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.NikkeRepository
 import com.hyuse.nikkeManager.service.NikkeService

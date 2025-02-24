@@ -2,9 +2,9 @@ package com.hyuse.nikkeManager.service
 
 import com.hyuse.nikkeManager.dto.NikkeDTO
 import com.hyuse.nikkeManager.enums.*
-import com.hyuse.nikkeManager.exception.NikkeAlreadyExistsException
-import com.hyuse.nikkeManager.exception.NikkeIdNotFoundException
-import com.hyuse.nikkeManager.exception.NikkeNotFoundException
+import com.hyuse.nikkeManager.exceptions.NikkeAlreadyExistsException
+import com.hyuse.nikkeManager.exceptions.NikkeIdNotFoundException
+import com.hyuse.nikkeManager.exceptions.NikkeNotFoundException
 import com.hyuse.nikkeManager.model.Nikke
 import com.hyuse.nikkeManager.repository.NikkeRepository
 import com.hyuse.nikkeManager.repository.specifications.NikkeSpecifications

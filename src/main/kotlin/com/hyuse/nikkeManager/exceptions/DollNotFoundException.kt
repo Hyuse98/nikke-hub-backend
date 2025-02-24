@@ -1,4 +1,4 @@
-package com.hyuse.nikkeManager.exception
+package com.hyuse.nikkeManager.exceptions
 
 import com.hyuse.nikkeManager.enums.Rarity
 

@@ -1,6 +1,6 @@
 package com.hyuse.nikkeManager.handler
 
-import com.hyuse.nikkeManager.exception.*
+import com.hyuse.nikkeManager.exceptions.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.FieldError
