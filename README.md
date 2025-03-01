@@ -10,6 +10,10 @@ Falando sobre o projeto, o intuiro dele é facilitar a visualização e acompanh
 - Framework: Spring Boot, Spring Cloud, Spring Data, Hibernate
 - Banco de dados: PostgreSQL, MongoDB, Redis
 - Ferramentas: Docker, Kubernetes
+
+## Arquitetura
+![img.png](src/main/resources/images/img.png)
+
 ## Requisitos
 
 ```
