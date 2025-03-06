@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot") version "3.4.2"
+    id("org.springframework.boot") version "3.4.3"
     id("io.spring.dependency-management") version "1.1.7"
     id("jacoco")
     kotlin("plugin.jpa") version "1.9.25"
@@ -23,27 +23,54 @@ repositories {
 extra["springCloudVersion"] = "2024.0.0"
 
 dependencies {
-
+    // Servlet e Desenvolvimento
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
-
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
+    // Kotlin e Serialização
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.postgresql:postgresql")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    // Banco de Dados e Migração
+    implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-database-postgresql")
     implementation("org.flywaydb:flyway-core")
 
+    // Documentação e OpenAPI
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
 
-    implementation("io.micrometer:micrometer-tracing-bridge-brave")
-    implementation("io.micrometer:micrometer-registry-prometheus")
-    implementation("io.zipkin.reporter2:zipkin-reporter-brave")
+    // Logging e Observabilidade
+    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
+    implementation("org.springframework.boot:spring-boot-starter-logging")
 
+    // Brave e Zipkin
+    //implementation("io.zipkin.brave:brave-instrumentation-http")
+    //implementation("io.zipkin.brave:brave-instrumentation-spring-web")
+    //implementation("io.zipkin.reporter2:zipkin-reporter-brave")
+    //implementation("io.zipkin.reporter2:zipkin-sender-okhttp3")
+
+    // Métricas e Tracing
+    implementation("io.micrometer:micrometer-observation")
+    implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter")
+    implementation ("io.micrometer:micrometer-tracing-bridge-otel")
+    implementation("io.micrometer:micrometer-registry-otlp")
+    implementation("io.opentelemetry:opentelemetry-exporter-zipkin")
+
+    implementation("io.opentelemetry:opentelemetry-api")
+    implementation("io.opentelemetry:opentelemetry-sdk")
+    implementation ("io.opentelemetry:opentelemetry-exporter-otlp")
+    implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations")
+    //implementation("io.opentelemetry:opentelemetry-instrumentation-spring-boot-3.0")
+    implementation("io.micrometer:micrometer-tracing")
+    //implementation("io.micrometer:micrometer-tracing-reporter-zipkin")
+
+    // Service Discovery e Configuração Distribuída
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
     implementation("org.springframework.cloud:spring-cloud-starter-config")
 
+    // Spring Boot Starters - Core
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-hateoas")
@@ -52,6 +79,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
+    // Testes
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("com.h2database:h2:2.3.232")
@@ -63,6 +91,7 @@ dependencies {
 dependencyManagement {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+        mavenBom("io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:2.13.3")
     }
 }
 
