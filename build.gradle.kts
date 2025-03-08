@@ -43,27 +43,19 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:7.4")
     implementation("org.springframework.boot:spring-boot-starter-logging")
 
-    // Brave e Zipkin
-    //implementation("io.zipkin.brave:brave-instrumentation-http")
-    //implementation("io.zipkin.brave:brave-instrumentation-spring-web")
-    //implementation("io.zipkin.reporter2:zipkin-reporter-brave")
-    //implementation("io.zipkin.reporter2:zipkin-sender-okhttp3")
-
     // Métricas e Tracing
     implementation("io.micrometer:micrometer-observation")
     implementation("io.micrometer:micrometer-registry-prometheus")
-    implementation("io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter")
-    implementation ("io.micrometer:micrometer-tracing-bridge-otel")
     implementation("io.micrometer:micrometer-registry-otlp")
-    implementation("io.opentelemetry:opentelemetry-exporter-zipkin")
+    implementation("io.micrometer:micrometer-tracing-bridge-otel")
+    implementation("io.micrometer:micrometer-tracing")
 
+    implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations")
+    implementation("io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter")
     implementation("io.opentelemetry:opentelemetry-api")
     implementation("io.opentelemetry:opentelemetry-sdk")
-    implementation ("io.opentelemetry:opentelemetry-exporter-otlp")
-    implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations")
-    //implementation("io.opentelemetry:opentelemetry-instrumentation-spring-boot-3.0")
-    implementation("io.micrometer:micrometer-tracing")
-    //implementation("io.micrometer:micrometer-tracing-reporter-zipkin")
+    implementation("io.opentelemetry:opentelemetry-exporter-zipkin")
+    implementation("io.opentelemetry:opentelemetry-exporter-otlp")
 
     // Service Discovery e Configuração Distribuída
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
