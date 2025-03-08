@@ -1,23 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init
+  namespace: nikke-hub
+  labels:
+    app: nikke-hub
+data:
+  init.sh: |
+    #!/bin/bash
+    set -e
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
+      CREATE DATABASE outpost;
+    EOSQL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: nikke-hub
+  labels:
+    app: nikke-hub
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres
+  namespace: nikke-hub
+  labels:
+    app: nikke-hub
+
 spec:
   serviceName: postgres-service
   replicas: 1
   selector:
     matchLabels:
       app: postgres
+
   template:
     metadata:
       labels:
         app: postgres
+
     spec:
       containers:
         - name: postgres
           image: postgres:15-alpine
+
           ports:
             - containerPort: 5432
+
           env:
             - name: POSTGRES_DB
               value: "outpost"
@@ -31,11 +68,13 @@ spec:
                 secretKeyRef:
                   name: secrets
                   key: POSTGRES_PASSWORD
+
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
             - name: init-script
               mountPath: /docker-entrypoint-initdb.d
+
           readinessProbe:
             exec:
               command:
@@ -44,11 +83,13 @@ spec:
                 - pg_isready -U user -d outpost
             initialDelaySeconds: 30
             periodSeconds: 10
+
       volumes:
         - name: init-script
           configMap:
             name: postgres-init
             defaultMode: 0755
+            
   volumeClaimTemplates:
     - metadata:
         name: postgres-storage
