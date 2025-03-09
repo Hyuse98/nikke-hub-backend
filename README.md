@@ -1,36 +1,36 @@
 # Nikke Hub
 
-Nikke Hub é um projeto pessoal de estudo feito com proposito de botar em pratica varios conceitos 
-que aprendi na minha graduação em ciencias da computação.
+Nikke Hub is a personal study project created with the purpose of putting into practice various concepts
+that I learned during my degree in Computer Science, because that everything here is overengineering.
 
-Falando sobre o projeto, o intuiro dele é facilitar a visualização e acompanhamento dos personagens 
-de um jogo gacha chamado **GODDESS OF VICTORY: NIKKE**, onde sera é possivel (porque eu ainda não fiz :p) 
-adicionar os personagens a sua coleção e assim conseguir fazer as operações de atualizar os dados delas, 
-leveis de skills, equipamentos e etc, e ainda não tem uma interface por enquanto. 
+Speaking about the project, its goal is to facilitate the visualization and tracking of characters
+from a gacha game called **GODDESS OF VICTORY: NIKKE**, where it will be possible (since I haven't done it yet :p)
+to add characters to your collection and thus be able to perform operations to update their data,
+skill levels, equipment, and so on. Currently, there is no user interface.
 
-## Tecnologias Utilizadas
+## Technologies Used
 
-- **Linguagem**: Kotlin
+- **Language**: Kotlin
 - **Framework**: Spring Boot, Spring Cloud, Spring Data, Hibernate
-- **Banco de dados**: PostgreSQL, MongoDB, Redis
-- **Ferramentas**: Docker, Kubernetes, Zipkin, Prometheus, Grafana, OpenTelemetry
+- **Database**: PostgreSQL, MongoDB, Redis
+- **Tools**: Docker, Kubernetes, Zipkin, Prometheus, Grafana, OpenTelemetry
 
-## Arquitetura
+## Architecture
 
-- **Client**: Quem vai consumir o sistema geralmente um Frontend, mas aqui esta sendo Curl e Postman
-- **Ingress Nginx**: Um LoadBalancer que vai distribuir a cargar entre varios pods e unico ponto de entrada para o sistema no kubernetes
-- **Gateway**: Responsavel por rotear para APIs e fornecer preocupações transversais a elas, como: segurança, monitoramento/métricas e resiliência
-- **Service Discovery**: Serviço responsavel por registro de serviços, permitindo que um serviço conheça os outro dinamicamente
-- **Config Server**: Serviço que armazena e distribui configuração para os serviços
-- **OpenTelemetry Collector**: Coleta Tracing, Metricas e Logs dos serviços e distribui para as ferramentas necessarias para o processamento
-- **Zipkin**: Ferramenta responsavel por fornecer os Traces e Spans emitidos por um serviço em tempo real
-- **Prometheus**: Ferramenta responsavel por fornecer as Metricas de um serviço em tempo real
-- **Grafana**: Plataforma para integrar ferramentas de metricas como Zipkin e Prometheus, para exibição do dados em dashboards
+- **Client**: The system consumer, generally a frontend, but currently, it is Curl and Postman
+- **Ingress Nginx**: A LoadBalancer that will distribute the load among several pods and serve as the single entry point for the system in Kubernetes
+- **Gateway**: Responsible for routing to APIs and providing cross-cutting concerns such as security, monitoring/metrics, and resilience
+- **Service Discovery**: Service responsible for service registration, allowing dynamic service-to-service communication
+- **Config Server**: Service that stores and distributes configuration to other services
+- **OpenTelemetry Collector**: Collects Tracing, Metrics, and Logs from services and distributes them to the necessary tools for processing
+- **Zipkin**: Tool responsible for providing Traces and Spans emitted by a service in real-time
+- **Prometheus**: Tool responsible for providing service metrics in real-time
+- **Grafana**: Platform for integrating metric tools like Zipkin and Prometheus, displaying data in dashboards
 
-### Diagramas
+### Diagrams
 ![Arch.png](src/main/resources/images/Arch.png)
 
-## Observabilidade
+## Observability
 
 ### Grafana
 ![Grafana.png](src/main/resources/images/Grafana.png)
@@ -38,7 +38,7 @@ leveis de skills, equipamentos e etc, e ainda não tem uma interface por enquant
 ### Zipkin
 ![Zipkin.png](src/main/resources/images/Zipkin.png)
 
-## Requisitos
+## Requirements
 
 ```
 Java 17
@@ -47,6 +47,7 @@ Spring 3.4.2
 Spring Cloud 2024.0.0
 Docker
 Kubernetes
+OpenTelemetry Collector
 ```
 
 ## Build
@@ -68,82 +69,82 @@ git clone https://github.com/Hyuse98/Nikke-Hub-Backend.git
 git clone https://github.com/Hyuse98/Nikke-Hub-Gateway.git
 ```
 ```bash
-# Fazer uma build limpa do projeto
+# Perform a clean build of the project
 ./gradlew clean build
 ```
 ```bash
-# Construir a imagem Docker
+# Build the Docker image
 docker image build -t user/reponame:tag .
 ```
 ```bash
-# Subir a imagem Docker para o Registry
+# Push the Docker image to the registry
 docker image push user/reponame:tag
 ```
 
-## Configuração
+## Configuration
 
-### variáveis de ambiente
+### Environment Variables
 
-As variaveis de ambiente estão sendo injetadas pelos manifestos kubernetes,
-caso queira rodar localmente crie um arquivo .env na raiz e copie todas as variaveis dos manifestos
+The environment variables are being injected by Kubernetes manifests.
+If you want to run it locally, create a .env file at the root and copy all the variables from the manifests.
 
-## Executando o Projeto
+## Running the Project
 
 ```bash
-# Ir para o diretorio do kubernetes
+# Navigate to the Kubernetes directory
 cd k8s
 ```
 ```bash
-# Adicionar as secrets
+# Add the Secrets
 kubectl apply -f Secrets.yaml
 ```
 ```bash
-# Iniciar o PostgreSQL
+# Start PostgreSQL
 kubectl apply -f Postgres.yaml
 ```
 ```bash
-# Iniciar o Redis
+# Start Redis
 kubectl apply -f Redis.yaml
 ```
 ```bash
-# Iniciar o Eureka Server
+# Start Eureka Server
 kubectl apply -f Eureka.yaml
 ```
 ```bash
-# Iniciar o Config Server
+# Start Config Server
 kubectl apply -f Config.yaml
 ```
 ```bash
-# Iniciar o Gateway
+# Start Gateway
 kubectl apply -f Gateway.yaml
 ```
 ```bash
-# Iniciar o Otel Colector
+# Start Otel Colector
 kubectl apply -f Otel.yaml
 ```
 ```bash
-# Iniciar o Ingress
+# Start Ingress
 kubectl apply -f Ingress.yaml
 ```
 ```bash
-# Iniciar o Zipkin
+# Start Zipkin
 kubectl apply -f Zipkin.yaml
 ```
 ```bash
-# Iniciar o Prometheus
+# Start Prometheus
 kubectl apply -f Prometheus.yaml
 ```
 ```bash
-# Iniciar o Grafana
+# Start Grafana
 kubectl apply -f Grafana.yaml
 ```
 ```bash
-# Esperar tudo estar pronto
-# Iniciar o Backend
+# Wait until everything is ready
+# Start the Backend
 kubectl apply -f Backend.yaml
 ```
 
-## Estrutura do Projeto
+## Project Structure
 
 ```
 ├── k8s/
@@ -151,59 +152,62 @@ kubectl apply -f Backend.yaml
     ├── Postgres.yaml                           # Postgres Kubernetes Manifest
     ├── Redis.yaml                              # Redis Kubernetes Manifest
     └── Secrets.yaml                            # Secrets Kubernetes Manifest
-├── src/
+└── src/
     ├── main/
         └── kotlin/...
-            ┬── config/                         # Configurações
-            ├── controller/                     # Controller Rest
-            ├── dto/                            # Classes de Dados
-            ├── enums                           # Classes de Enumeradores
-            ├── exceptions                      # Classes de Exceções Custons
-            ├── handler/                        # Classes de Manipulação de Exceções
-            ├── model/                          # Classes Modelos e Entidades
-            ├── repository/                     # Classes Responsaveis pela Persistencia
-            ├── services/                       # Classes de Regras de Negocios
-            └── NikkeManagerApplication.kt      # Arquivo principal
+            ┬── config/                         # Configurations
+            ├── controller/                     # Rest Controller
+            ├── dto/                            # Data Classes
+            ├── enums                           # Enums Classes
+            ├── exceptions                      # Custom Exception Classes
+            ├── handler/                        # Exception Handling Classes
+            ├── model/                          # Model and Entity Classes
+            ├── repository/                     # Persistence Classes
+            ├── services/                       # Business Logic Classes
+            └── NikkeManagerApplication.kt      # Main Application File
         └── resources/
-            └── db/migration/                   # Diretorio das Migration Flyway 
-                └── V0__A.sql                   # Arquivo Migration
+            └── db/migration/                   # Flyway Migration Directory
+                └── V0__A.sql                   # Migration File
                 └── ...
-            └── bootstrap.yaml                  # Arquivo de configuração Spring
-    ├── test/                                   # Diretorio de Testes
-    ├── build.gradle.kts                        # Gerenciador de dependencias
-    └── Dockerfile                              # Arquivo docker para build de imagem
+            └── bootstrap.yaml                  # Spring Configuration File
+    ├── test/                                   # Test Directory
+    ├── build.gradle.kts                        # Dependency Manager
+    └── Dockerfile                              # Docker Image Build File
 ```
 
-## Endpoints API
+## API Endpoints
 
 ### Nikkes
-- `POST /api/nikke`             - Cria uma nova nikke
-- `GET /api/nikke`              - Lista todas as nikkes
-- `GET /api/nikke/filtered`     - Lista todos as nikkes filtrados com parametros
-- `GET /api/nikke/:name`        - Retorna uma nikke específica
-- `PUT /api/nikke/:name`        - Atualiza dados de uma nikke
-- `DELETE /api/nikke/:name`     - Remove uma nikke
+
+- `POST /api/nikke`             - Creates a new Nikke
+- `GET /api/nikke`              - Lists all Nikkes
+- `GET /api/nikke/filtered`     - Lists all Nikkes filtered by parameters
+- `GET /api/nikke/:name`        - Returns a specific Nikke
+- `PUT /api/nikke/:name`        - Updates a Nikke's data
+- `DELETE /api/nikke/:name`     - Removes a Nikke
 
 ![Nikkes_Swagger.png](src/main/resources/images/Nikkes_Swagger.png)
 
 ### Dolls
-- `POST /api/doll`              - Cria uma nova Doll
-- `GET /api/doll`               - Lista todas as Dolls
-- `GET /api/doll/search`        - Retorna uma Doll que corresponde aos parametros passados
-- `GET /api/doll/:id`           - Retorna uma Doll dado o id
-- `DELETE /api/doll/:id`        - Remove uma Doll
+
+- `POST /api/doll`              - Creates a new Doll
+- `GET /api/doll`               - Lists all Dolls
+- `GET /api/doll/search`        - Returns a Doll matching the given parameters
+- `GET /api/doll/:id`           - Returns a Doll by its ID
+- `DELETE /api/doll/:id`        - Removes a Doll
 
 ![Dolls_Swagger.png](src/main/resources/images/Dolls_Swagger.png)
 
 ## Testes
 
-Para executar os testes em CLI
+To run the tests via CLI
 
-Esta adicionado o plugin jacoco para exibir relatorio e acompanha a cobertura de teste que esta configurado para 80%
+The JaCoCo plugin is added to generate reports and track test coverage, which is configured to 80%
+
 ```bash
 ./gradlew test
 ```
 
 ## Licença
 
-Este projeto está licenciado sob a [GNU General Public License v3.0](LICENSE.md).
+This project is licensed under the [GNU General Public License v3.0](LICENSE.md).
