@@ -1,0 +1,146 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: otel-collector
+  namespace: nikke-hub
+  labels:
+    app: otel-collector
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: otel-collector-role
+  labels:
+    app: otel-collector
+rules:
+- apiGroups: [""]
+  resources: ["pods", "nodes", "nodes/proxy", "services", "endpoints", "namespaces"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets", "statefulsets", "daemonsets"]
+  verbs: ["get", "list", "watch"]
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: otel-collector-role-binding
+  labels:
+    app: otel-collector
+subjects:
+- kind: ServiceAccount
+  name: otel-collector
+  namespace: nikke-hub  # Corrigido o namespace aqui!
+roleRef:
+  kind: ClusterRole
+  name: otel-collector-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-config
+  namespace: nikke-hub
+  labels:
+    app: otel-collector
+data:
+  otel-collector-config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: "0.0.0.0:4317"
+          http:
+            endpoint: "0.0.0.0:4318"
+
+    processors:
+      batch:
+
+    exporters:
+      logging:
+        loglevel: debug
+      zipkin:
+        endpoint: "http://zipkin-service.nikke-hub.svc.cluster.local:9411/api/v2/spans"
+      prometheus:
+        endpoint: "0.0.0.0:9464"
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [logging, zipkin]
+        metrics:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [prometheus]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: otel-collector-service
+  namespace: nikke-hub
+  labels:
+    app: otel-collector
+spec:
+  ports:
+    - port: 4317
+      targetPort: 4317
+      name: otlp-grpc
+    - port: 4318
+      targetPort: 4318
+      name: otlp-http
+    - port: 9464
+      targetPort: 9464
+      name: prometheus
+    - port: 9411
+      targetPort: 9411
+      name: zipkin
+  selector:
+    app: otel-collector
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-collector
+  namespace: nikke-hub
+  labels:
+    app: otel-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otel-collector
+  template:
+    metadata:
+      labels:
+        app: otel-collector
+    spec:
+      serviceAccountName: otel-collector
+      containers:
+        - name: otel-collector
+          image: otel/opentelemetry-collector:0.83.0
+          args: ["--config=/etc/otel-collector-config.yaml"]
+          ports:
+            - containerPort: 4317
+              name: otlp-grpc
+            - containerPort: 4318
+              name: otlp-http
+            - containerPort: 9464
+              name: prometheus
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+          volumeMounts:
+            - name: otel-config-volume
+              mountPath: /etc/otel-collector-config.yaml
+              subPath: otel-collector-config.yaml
+      volumes:
+        - name: otel-config-volume
+          configMap:
+            name: otel-collector-config

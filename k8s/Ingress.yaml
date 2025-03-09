@@ -1,0 +1,59 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nikke-hub-ingress
+  namespace: nikke-hub
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: nikke.hub.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: gateway-service
+            port:
+              number: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nikke-hub-monitoring-ingress
+  namespace: nikke-hub
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: zipkin.nikke-hub.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: zipkin-service
+            port:
+              number: 9411
+  - host: prometheus.nikke-hub.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prometheus-service
+            port:
+              number: 9090
+  - host: grafana.nikke-hub.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana-service
+            port:
+              number: 3000

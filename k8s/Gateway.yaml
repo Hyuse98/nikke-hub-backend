@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+  namespace: nikke-hub
+  labels:
+    app: nikke-hub
+    
+data:
+
+  GATEWAY_SERVER_PORT: "8000"
+
+  URI_BACKEND_SERVICE: http://nikke-hub-backend-service.nikke-hub.svc.cluster.local:8082
+  URI_EUREKA_SERVICE: http://nikke-hub-eureka-server-service.nikke-hub.svc.cluster.local:8761
+  URI_CONFIG_SERVICE: http://nikke-hub-config-server-service.nikke-hub.svc.cluster.local:8888
+  URI_GRAFANA: http://grafana-service.nikke-hub.svc.cluster.local:3000
+  URI_ZIPKIN: http://zipkin-service.nikke-hub.svc.cluster.local:9411
+  URI_PROMETHEUS: http://prometheus-service.nikke-hub.svc.cluster.local:9090
+  #URI_KIBANA: http://kibana-service.default.svc.cluster.local:5601
+  #URI_ELASTICSEARCH: http://elasticsearch-service.default.svc.cluster.local:9200
+  #URI_LOGSTASH: http://logstash-service.default.svc.cluster.local:9600
+  #URI_KAFKA: http://kafka-service.default.svc.cluster.local:9092
+
+  EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE: "http://nikke-hub-eureka-server-service:8761/eureka/"
+  EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+  EUREKA_CLIENT_REGISTER_WITH_EUREKA: "true"
+  EUREKA_CLIENT_FETCH_REGISTRY: "true"
+
+  SPRING_CLOUD_GATEWAY_DISCOVERY_LOCATOR_ENABLED: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-service
+  namespace: nikke-hub
+  labels:
+    app: nikke-hub
+
+spec:
+  type: ClusterIP
+  selector:
+    app: nikke-hub-gateway
+  ports:
+    - port: 8000
+      targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nikke-hub-gateway
+  namespace: nikke-hub
+  labels:
+    app: nikke-hub
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nikke-hub-gateway
+
+  template:
+    metadata:
+      labels:
+        app: nikke-hub-gateway
+
+    spec:
+      containers:
+      - name: nikke-hub-gateway
+        image: hyuse98/nikke-hub-gateway:latest
+        imagePullPolicy: Always #IfNotPresent
+
+        envFrom:
+            - configMapRef:
+                name: gateway-config
+
+        ports:
+        - containerPort: 8000
+
+        resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
