@@ -1,18 +1,42 @@
 # Nikke Hub
 
-Nikke Hub é um projeto pessoal de estudo feito com proposito de botar em pratica varios conceitos que aprendi na minha graduação em ciencias da computação.
+Nikke Hub é um projeto pessoal de estudo feito com proposito de botar em pratica varios conceitos 
+que aprendi na minha graduação em ciencias da computação.
 
-Falando sobre o projeto, o intuiro dele é facilitar a visualização e acompanhamento dos personagens de um jogo gacha chamado GODDESS OF VICTORY: NIKKE, onde sera é possivel (porque eu ainda não fiz :p) adicionar os personagens a sua coleção e assim conseguir fazer as operações de atualizar os dados delas, leveis de skills, equipamentos e etc, e ainda não tem uma interface por enquanto. 
+Falando sobre o projeto, o intuiro dele é facilitar a visualização e acompanhamento dos personagens 
+de um jogo gacha chamado **GODDESS OF VICTORY: NIKKE**, onde sera é possivel (porque eu ainda não fiz :p) 
+adicionar os personagens a sua coleção e assim conseguir fazer as operações de atualizar os dados delas, 
+leveis de skills, equipamentos e etc, e ainda não tem uma interface por enquanto. 
 
 ## Tecnologias Utilizadas
 
-- Linguagem principal: Kotlin
-- Framework: Spring Boot, Spring Cloud, Spring Data, Hibernate
-- Banco de dados: PostgreSQL, MongoDB, Redis
-- Ferramentas: Docker, Kubernetes
+- **Linguagem**: Kotlin
+- **Framework**: Spring Boot, Spring Cloud, Spring Data, Hibernate
+- **Banco de dados**: PostgreSQL, MongoDB, Redis
+- **Ferramentas**: Docker, Kubernetes, Zipkin, Prometheus, Grafana, OpenTelemetry
 
 ## Arquitetura
-![img.png](src/main/resources/images/img.png)
+
+- **Client**: Quem vai consumir o sistema geralmente um Frontend, mas aqui esta sendo Curl e Postman
+- **Ingress Nginx**: Um LoadBalancer que vai distribuir a cargar entre varios pods e unico ponto de entrada para o sistema no kubernetes
+- **Gateway**: Responsavel por rotear para APIs e fornecer preocupações transversais a elas, como: segurança, monitoramento/métricas e resiliência
+- **Service Discovery**: Serviço responsavel por registro de serviços, permitindo que um serviço conheça os outro dinamicamente
+- **Config Server**: Serviço que armazena e distribui configuração para os serviços
+- **OpenTelemetry Collector**: Coleta Tracing, Metricas e Logs dos serviços e distribui para as ferramentas necessarias para o processamento
+- **Zipkin**: Ferramenta responsavel por fornecer os Traces e Spans emitidos por um serviço em tempo real
+- **Prometheus**: Ferramenta responsavel por fornecer as Metricas de um serviço em tempo real
+- **Grafana**: Plataforma para integrar ferramentas de metricas como Zipkin e Prometheus, para exibição do dados em dashboards
+
+### Diagramas
+![Arch.png](src/main/resources/images/Arch.png)
+
+## Observabilidade
+
+### Grafana
+![Grafana.png](src/main/resources/images/Grafana.png)
+
+### Zipkin
+![Zipkin.png](src/main/resources/images/Zipkin.png)
 
 ## Requisitos
 
@@ -25,87 +49,134 @@ Docker
 Kubernetes
 ```
 
-## Instalação
+## Build
 
 ```bash
 # Spring Cloud Netflix Eureka Server
 git clone https://github.com/Hyuse98/Nikke-Hub-Service-Registry.git
-
-# Inicie Container PostgreSQL
-
-# Inicie Container Redis
-
+```
+```bash
 # Spring Cloud Config Server
 git clone https://github.com/Hyuse98/Nikke-Hub-Config-Server.git
-
+```
+```bash
 # Nikke Hub Backend
 git clone https://github.com/Hyuse98/Nikke-Hub-Backend.git
-
+```
+```bash
 # Spring Cloud Gateway
 git clone https://github.com/Hyuse98/Nikke-Hub-Gateway.git
+```
+```bash
+# Fazer uma build limpa do projeto
+./gradlew clean build
+```
+```bash
+# Construir a imagem Docker
+docker image build -t user/reponame:tag .
+```
+```bash
+# Subir a imagem Docker para o Registry
+docker image push user/reponame:tag
 ```
 
 ## Configuração
 
 ### variáveis de ambiente
 
-As variáveis de ambiente estão sendo gerenciadas pelo kubernetes, com os arquivos presentes no diretorio 'k8s' respectivos de cada micro serviço
+As variaveis de ambiente estão sendo injetadas pelos manifestos kubernetes,
+caso queira rodar localmente crie um arquivo .env na raiz e copie todas as variaveis dos manifestos
 
 ## Executando o Projeto
 
 ```bash
-# Fazer uma build limpa do projeto
-./gradlew clean build
-
-# Construir a imagem Docker
-docker image build -t user/reponame:tag .
-
-# Subir a imagem Docker para o Registry
-docker image push user/reponame:tag
-
 # Ir para o diretorio do kubernetes
 cd k8s
-
+```
+```bash
 # Adicionar as secrets
-kubectl apply -f secret.yaml
-
+kubectl apply -f Secrets.yaml
+```
+```bash
 # Iniciar o PostgreSQL
-kubectl apply -f postgres-init-script.yaml
-kubectl apply -f postgres-statefulset.yaml
-kubectl apply -f postgres-service.yaml
-
+kubectl apply -f Postgres.yaml
+```
+```bash
 # Iniciar o Redis
-kubectl apply -f redis-pvc.yaml
-kubectl apply -f redis-deployment.yaml
- kubectl apply -fredis-service.yaml
-
+kubectl apply -f Redis.yaml
+```
+```bash
+# Iniciar o Eureka Server
+kubectl apply -f Eureka.yaml
+```
+```bash
+# Iniciar o Config Server
+kubectl apply -f Config.yaml
+```
+```bash
+# Iniciar o Gateway
+kubectl apply -f Gateway.yaml
+```
+```bash
+# Iniciar o Otel Colector
+kubectl apply -f Otel.yaml
+```
+```bash
+# Iniciar o Ingress
+kubectl apply -f Ingress.yaml
+```
+```bash
+# Iniciar o Zipkin
+kubectl apply -f Zipkin.yaml
+```
+```bash
+# Iniciar o Prometheus
+kubectl apply -f Prometheus.yaml
+```
+```bash
+# Iniciar o Grafana
+kubectl apply -f Grafana.yaml
+```
+```bash
 # Esperar tudo estar pronto
 # Iniciar o Backend
-kubectl apply -f backend-configmap.yaml
-kubectl apply -f backend-deployment.yaml
-kubectl apply -f backend-service.yaml
+kubectl apply -f Backend.yaml
 ```
 
 ## Estrutura do Projeto
 
 ```
-src/
-├── config/                             # Configurações
-├── controller/                         # Controller Rest
-├── dto/                                # Classes de Dados
-├── enums                               # Classes de Enumeradores
-├── exceptions                          # Classes de Exceções Custons
-├── handler/                            # Classes de Manipulação de Exceções
-├── model/                              # Classes Modelos e Entidades
-├── repository/                         # Classes Responsaveis pela Persistencia
-├── services/                           # Classes de Regras de Negocios
-└── NikkeManagerApplication.kt          # Arquivo principal
+├── k8s/
+    ┬── Backend.yaml                            # Backend Kubernetes Manifest
+    ├── Postgres.yaml                           # Postgres Kubernetes Manifest
+    ├── Redis.yaml                              # Redis Kubernetes Manifest
+    └── Secrets.yaml                            # Secrets Kubernetes Manifest
+├── src/
+    ├── main/
+        └── kotlin/...
+            ┬── config/                         # Configurações
+            ├── controller/                     # Controller Rest
+            ├── dto/                            # Classes de Dados
+            ├── enums                           # Classes de Enumeradores
+            ├── exceptions                      # Classes de Exceções Custons
+            ├── handler/                        # Classes de Manipulação de Exceções
+            ├── model/                          # Classes Modelos e Entidades
+            ├── repository/                     # Classes Responsaveis pela Persistencia
+            ├── services/                       # Classes de Regras de Negocios
+            └── NikkeManagerApplication.kt      # Arquivo principal
+        └── resources/
+            └── db/migration/                   # Diretorio das Migration Flyway 
+                └── V0__A.sql                   # Arquivo Migration
+                └── ...
+            └── bootstrap.yaml                  # Arquivo de configuração Spring
+    ├── test/                                   # Diretorio de Testes
+    ├── build.gradle.kts                        # Gerenciador de dependencias
+    └── Dockerfile                              # Arquivo docker para build de imagem
 ```
 
 ## Endpoints API
 
 ### Nikkes
-
 - `POST /api/nikke`             - Cria uma nova nikke
 - `GET /api/nikke`              - Lista todas as nikkes
 - `GET /api/nikke/filtered`     - Lista todos as nikkes filtrados com parametros
@@ -113,13 +184,16 @@ src/
 - `PUT /api/nikke/:name`        - Atualiza dados de uma nikke
 - `DELETE /api/nikke/:name`     - Remove uma nikke
 
-### Dolls
+![Nikkes_Swagger.png](src/main/resources/images/Nikkes_Swagger.png)
 
+### Dolls
 - `POST /api/doll`              - Cria uma nova Doll
 - `GET /api/doll`               - Lista todas as Dolls
 - `GET /api/doll/search`        - Retorna uma Doll que corresponde aos parametros passados
 - `GET /api/doll/:id`           - Retorna uma Doll dado o id
 - `DELETE /api/doll/:id`        - Remove uma Doll
+
+![Dolls_Swagger.png](src/main/resources/images/Dolls_Swagger.png)
 
 ## Testes
 
@@ -129,14 +203,6 @@ Esta adicionado o plugin jacoco para exibir relatorio e acompanha a cobertura de
 ```bash
 ./gradlew test
 ```
-
-## Contribuição
-
-1. Faça o fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
-3. Commit suas mudanças (`git commit -m 'Adicionando nova feature'`)
-4. Faça push para a branch (`git push origin feature/nova-feature`)
-5. Abra um Pull Request
 
 ## Licença
 
