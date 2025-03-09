@@ -37,7 +37,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
 
     // Documentação e OpenAPI
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0")
 
     // Logging e Observabilidade
     implementation("net.logstash.logback:logstash-logback-encoder:7.4")
