@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import io.swagger.v3.oas.annotations.parameters.RequestBody as SwaggerRequestBody
 
 @RestController
-@RequestMapping("/nikke")
+@RequestMapping("/api/nikke")
 class NikkeController(
     val nikkeService: NikkeService,
     val nikkeRepository: NikkeRepository

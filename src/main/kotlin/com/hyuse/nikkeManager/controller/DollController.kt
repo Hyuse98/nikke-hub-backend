@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*
 import io.swagger.v3.oas.annotations.parameters.RequestBody as SwaggerRequestBody
 
 @RestController
-@RequestMapping("/doll")
+@RequestMapping("/api/doll")
 class DollController(
     val dollRepository: DollRepository,
     val dollService: DollService
