@@ -10,6 +10,95 @@ skill levels, equipment, and so on. Currently, there is no user interface.
 
 ## Technologies Used
 
+<div>
+    <img 
+        alt="Kotlin"
+        title="Kotlin"
+        width="40px"
+        style="padding right: 10px"
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kotlin/kotlin-original.svg"
+    />
+    <img 
+        alt="Spring"
+        title="Spring"
+        width="40px"
+        style="padding right: 10px"
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg"
+    />
+    <img 
+        alt="Swagger API"
+        title="Swagger API"
+        width="40px"
+        style="padding right: 10px"
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/swagger/swagger-original.svg" 
+    />
+    <img 
+        alt="Hibernate"
+        title="Hibernate"
+        width="40px"
+        style="padding right: 10px"
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/hibernate/hibernate-original-wordmark.svg" 
+    /> 
+    <img 
+        alt="Junit5"
+        title="Junit5"
+        width="40px"
+        style="padding right: 10px"
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/junit/junit-plain-wordmark.svg"
+    />   
+    <img 
+        alt="PostgreSQL"
+        title="PostgreSQL"
+        width="40px"
+        style="padding right: 10px"
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original-wordmark.svg" 
+    />
+    <img
+        alt="Redis"
+        title="Redis"
+        width="40px"
+        style="padding right: 10px"
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/redis/redis-original.svg" 
+    />    
+</div>
+<div>
+    <img 
+        alt="Docker"
+        title="Docker"
+        width="40px"
+        style="padding right: 10px"
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original-wordmark.svg" 
+    />
+    <img 
+        alt="Kubernets"
+        title="Kubernets"
+        width="40px"
+        style="padding right: 10px"
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-original.svg" 
+    />
+    <img
+        alt="Grafana"
+        title="Grafana"
+        width="40px"
+        style="padding right: 10px"
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/grafana/grafana-original-wordmark.svg" 
+    />
+    <img
+        alt="Prometheus"
+        title="Prometheus"
+        width="40px"
+        style="padding right: 10px"
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/prometheus/prometheus-plain-wordmark.svg" 
+    />
+    <img 
+        alt="Prometheus"
+        title="Prometheus"
+        width="40px"
+        style="padding right: 10px"
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/opentelemetry/opentelemetry-original-wordmark.svg" 
+    />
+</div>
+
 - **Language**: Kotlin
 - **Framework**: Spring Boot, Spring Cloud, Spring Data, Hibernate
 - **Database**: PostgreSQL, MongoDB, Redis
