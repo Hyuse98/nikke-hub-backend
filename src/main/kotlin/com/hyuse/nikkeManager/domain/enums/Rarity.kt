@@ -1,4 +1,4 @@
-package com.hyuse.nikkeManager.enums
+package com.hyuse.nikkeManager.domain.enums
 
 enum class Rarity {
     R,
