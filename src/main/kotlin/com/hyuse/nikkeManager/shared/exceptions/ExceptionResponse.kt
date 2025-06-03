@@ -1,4 +1,4 @@
-package com.hyuse.nikkeManager.handler
+package com.hyuse.nikkeManager.shared.exceptions
 
 import org.springframework.http.HttpStatus
 import java.time.LocalDateTime

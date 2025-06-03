@@ -1,6 +1,10 @@
-package com.hyuse.nikkeManager.handler
+package com.hyuse.nikkeManager.shared.exceptions
 
-import com.hyuse.nikkeManager.exceptions.*
+import com.hyuse.nikkeManager.domain.exceptions.doll.DollAlreadyExistsException
+import com.hyuse.nikkeManager.domain.exceptions.doll.DollNotFoundException
+import com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeAlreadyExistsException
+import com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeIdNotFoundException
+import com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.FieldError
@@ -41,7 +45,7 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(DollAlreadyExistsException::class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    fun handlerDollAlreadyExistsException(ex: DollAlreadyExistsException): ExceptionResponse{
+    fun handlerDollAlreadyExistsException(ex: DollAlreadyExistsException): ExceptionResponse {
         return ExceptionResponse(
             status = HttpStatus.CONFLICT,
             message = ex.message ?: "Doll already exist"
@@ -50,7 +54,7 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(DollNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    fun handlerDollNotFoundException(ex: DollNotFoundException): ExceptionResponse{
+    fun handlerDollNotFoundException(ex: DollNotFoundException): ExceptionResponse {
         return ExceptionResponse(
             status = HttpStatus.NOT_FOUND,
             message = ex.message ?: "Doll not found"
