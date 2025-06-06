@@ -1,7 +1,7 @@
-package com.hyuse.nikkeManager.dto
+package com.hyuse.nikkeManager.infrastructure.web.dto
 
-import com.hyuse.nikkeManager.enums.Rarity
-import com.hyuse.nikkeManager.model.Doll
+import com.hyuse.nikkeManager.domain.entities.Doll
+import com.hyuse.nikkeManager.domain.enums.Rarity
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotNull
