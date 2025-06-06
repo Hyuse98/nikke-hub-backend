@@ -1,7 +1,7 @@
-package com.hyuse.nikkeManager.repository.specifications
+package com.hyuse.nikkeManager.infrastructure.database.jpa.repository.specifications
 
-import com.hyuse.nikkeManager.enums.*
-import com.hyuse.nikkeManager.model.Nikke
+import com.hyuse.nikkeManager.domain.enums.*
+import com.hyuse.nikkeManager.domain.entities.Nikke
 import jakarta.persistence.criteria.Predicate
 import org.springframework.data.jpa.domain.Specification
 
