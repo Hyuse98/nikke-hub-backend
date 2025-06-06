@@ -1,10 +1,9 @@
-package com.hyuse.nikkeManager.controller
+package com.hyuse.nikkeManager.infrastructure.web.controller
 
-import com.hyuse.nikkeManager.dto.DollDTO
-import com.hyuse.nikkeManager.enums.Rarity
-import com.hyuse.nikkeManager.model.Doll
-import com.hyuse.nikkeManager.repository.DollRepository
-import com.hyuse.nikkeManager.service.DollService
+import com.hyuse.nikkeManager.domain.entities.Doll
+import com.hyuse.nikkeManager.infrastructure.web.dto.DollDTO
+import com.hyuse.nikkeManager.domain.enums.Rarity
+import com.hyuse.nikkeManager.infrastructure.database.jpa.repository.DollJpaRepository
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -24,8 +23,8 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody as SwaggerRequestBod
 @RestController
 @RequestMapping("/api/doll")
 class DollController(
-    val dollRepository: DollRepository,
-    val dollService: DollService
+    val dollJpaRepository: DollJpaRepository,
+    val dollService: com.hyuse.nikkeManager.xold.service.DollService
 ) {
 
     @Operation(
@@ -119,7 +118,7 @@ class DollController(
     )
     @GetMapping("/{id}")
     fun getDollById(@PathVariable id: Int): ResponseEntity<EntityModel<Doll>> {
-        val doll = dollRepository.findById(id).orElseThrow()
+        val doll = dollJpaRepository.findById(id).orElseThrow()
         val entityModel = EntityModel.of(
             doll,
             linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),

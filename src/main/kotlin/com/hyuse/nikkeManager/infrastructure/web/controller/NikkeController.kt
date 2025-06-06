@@ -1,11 +1,10 @@
-package com.hyuse.nikkeManager.controller
+package com.hyuse.nikkeManager.infrastructure.web.controller
 
 
-import com.hyuse.nikkeManager.dto.NikkeDTO
-import com.hyuse.nikkeManager.enums.*
-import com.hyuse.nikkeManager.model.Nikke
-import com.hyuse.nikkeManager.repository.NikkeRepository
-import com.hyuse.nikkeManager.service.NikkeService
+import com.hyuse.nikkeManager.domain.entities.Nikke
+import com.hyuse.nikkeManager.domain.enums.*
+import com.hyuse.nikkeManager.domain.usecases.nikke.CreateNikkeCase
+import com.hyuse.nikkeManager.infrastructure.web.dto.NikkeDTO
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
@@ -26,8 +25,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody as SwaggerRequestBod
 @RestController
 @RequestMapping("/api/nikke")
 class NikkeController(
-    val nikkeService: NikkeService,
-    val nikkeRepository: NikkeRepository
+    private val createNikkeCase: CreateNikkeCase
 ) {
 
     @Operation(
@@ -66,12 +64,32 @@ class NikkeController(
     )
     @PostMapping
     fun createNikke(@RequestBody @Valid nikkeDTO: NikkeDTO): ResponseEntity<EntityModel<Nikke>> {
-        val nikke = nikkeService.createNikke(nikkeDTO)
+
+        val useCaseInput = CreateNikkeCase.Input(
+            name = nikkeDTO.name,
+            core = nikkeDTO.core,
+            attraction = nikkeDTO.attraction,
+            skill1 = nikkeDTO.skill1,
+            skill2 = nikkeDTO.skill2,
+            skillBurst = nikkeDTO.skillBurst,
+            rarity = nikkeDTO.rarity,
+            ownedStatus = nikkeDTO.ownedStatus,
+            burstType = nikkeDTO.burstType,
+            company = nikkeDTO.company,
+            code = nikkeDTO.code,
+            weapon = nikkeDTO.weapon,
+            nikkeClass = nikkeDTO.nikkeClass,
+            cube = nikkeDTO.cube
+        )
+
+        val nikke = createNikkeCase.execute(useCaseInput)
+
         val entityModel = EntityModel.of(
             nikke,
             linkTo(methodOn(this::class.java).getNikke(nikke.name)).withSelfRel(),
             linkTo(methodOn(this::class.java).listAllNikke(pageable = Pageable.unpaged())).withRel("Collection")
         )
+
         return ResponseEntity.status(HttpStatus.CREATED).body(entityModel)
     }
 
