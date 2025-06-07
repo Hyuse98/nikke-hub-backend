@@ -3,6 +3,7 @@ package com.hyuse.nikkeManager.infrastructure.web.controller
 import com.hyuse.nikkeManager.domain.entities.Doll
 import com.hyuse.nikkeManager.infrastructure.web.dto.DollDTO
 import com.hyuse.nikkeManager.domain.enums.Rarity
+import com.hyuse.nikkeManager.domain.usecases.doll.*
 import com.hyuse.nikkeManager.infrastructure.database.jpa.repository.DollJpaRepository
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -23,8 +24,12 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody as SwaggerRequestBod
 @RestController
 @RequestMapping("/api/doll")
 class DollController(
-    val dollJpaRepository: DollJpaRepository,
-    val dollService: com.hyuse.nikkeManager.xold.service.DollService
+    private val createDollCase: CreateDollCase,
+    private val updateDollCase: UpdateDollCase,
+    private val deleteDollCase: DeleteDollCase,
+    private val getDollByIdCase: GetDollByIdCase,
+    private val getDollsByRarityCase: GetDollsByRarityCase,
+    private val getAllDollsCase: GetAllDollsCase
 ) {
 
     @Operation(
@@ -48,14 +53,22 @@ class DollController(
     )
     @PostMapping
     fun createDoll(@RequestBody @Valid dollDTO: DollDTO): ResponseEntity<EntityModel<Doll>> {
-        val doll = dollService.createDoll(dollDTO) ?: throw IllegalStateException()
+
+        val useCaseInput = CreateDollCase.Input(
+            id = dollDTO.id,
+            rarity = dollDTO.rarity,
+            level = dollDTO.level
+        )
+
+        val doll = createDollCase.execute(useCaseInput)
+
         val entityModel = EntityModel.of(
             doll,
             linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
             linkTo(methodOn(this::class.java).deleteDollById(doll.id)).withRel("Delete"),
-            linkTo(methodOn(this::class.java).getListDolls(pageable = Pageable.unpaged())).withRel("Collection")
-
+            linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
         )
+
         return ResponseEntity.status(HttpStatus.CREATED).body(entityModel)
     }
 
@@ -66,25 +79,19 @@ class DollController(
         tags = ["Doll"]
     )
     @GetMapping
-    fun getListDolls(@ParameterObject pageable: Pageable): ResponseEntity<PagedModel<EntityModel<Doll>>> {
-        val dollsPage = dollService.getListDolls(pageable)
-        val dolls = dollsPage.content.map { doll ->
+    fun getListDolls(): ResponseEntity<GetAllDollsCase> {
+
+        val dolls = getAllDollsCase
+
+        val entityModel = dolls?.let {
             EntityModel.of(
-                doll,
-                linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel()
+                it,
+//                linkTo(methodOn(this::class.java).getDollById(dolls.id!!)).withSelfRel(),
+                linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
             )
         }
-        val pagedModel = PagedModel.of(
-            dolls,
-            PagedModel.PageMetadata(
-                dollsPage.size.toLong(),
-                dollsPage.number.toLong(),
-                dollsPage.totalElements,
-                dollsPage.totalPages.toLong()
-            ),
-            linkTo(methodOn(this::class.java).getListDolls(pageable)).withSelfRel()
-        )
-        return ResponseEntity.ok(pagedModel)
+
+        return ResponseEntity.ok(dolls)
     }
 
 
@@ -99,14 +106,18 @@ class DollController(
         @RequestParam rarity: Rarity,
         @RequestParam level: Int
     ): ResponseEntity<EntityModel<Doll>> {
-        val doll = dollService.getDollByRarityAndLevel(rarity, level)
+
+        TODO("Not Resources Available yet")
+        val doll = getDollsByRarityCase.execute(rarity)
+
         val entityModel = doll?.let {
             EntityModel.of(
                 it,
                 linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
-                linkTo(methodOn(this::class.java).getListDolls(pageable = Pageable.unpaged())).withRel("Collection")
+                linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
             )
         }
+
         return ResponseEntity.ok(entityModel)
     }
 
@@ -118,12 +129,15 @@ class DollController(
     )
     @GetMapping("/{id}")
     fun getDollById(@PathVariable id: Int): ResponseEntity<EntityModel<Doll>> {
-        val doll = dollJpaRepository.findById(id).orElseThrow()
+
+        val doll = getDollByIdCase.execute(id)
+
         val entityModel = EntityModel.of(
             doll,
             linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
-            linkTo(methodOn(this::class.java).getListDolls(pageable = Pageable.unpaged())).withRel("Collection")
+            linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
         )
+
         return ResponseEntity.ok(entityModel)
     }
 
@@ -135,10 +149,13 @@ class DollController(
     )
     @DeleteMapping("/{id}")
     fun deleteDollById(@PathVariable id: Int): ResponseEntity<EntityModel<Link>> {
-        dollService.deleteDollById(id)
+
+        deleteDollCase.execute(id)
+
         val entityModel = EntityModel.of(
-            linkTo(methodOn(this::class.java).getListDolls(pageable = Pageable.unpaged())).withRel("Collection")
+            linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
         )
+
         return ResponseEntity.ok(entityModel)
     }
 }
