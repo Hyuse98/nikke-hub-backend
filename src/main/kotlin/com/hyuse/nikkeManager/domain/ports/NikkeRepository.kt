@@ -1,6 +1,7 @@
 package com.hyuse.nikkeManager.domain.ports
 
 import com.hyuse.nikkeManager.domain.entities.Nikke
+import java.util.Optional
 
 interface NikkeRepository {
 
@@ -8,8 +9,8 @@ interface NikkeRepository {
     fun update(nikke: Nikke): Nikke
     fun delete(id: Int)
 
-    fun findByName(name: String): Nikke
-    fun findById(id: Int): Nikke
+    fun findByName(name: String): Optional<Nikke>
+    fun findById(id: Int): Optional<Nikke>
 
     fun findAll(): MutableList<Nikke>
 
