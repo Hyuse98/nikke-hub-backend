@@ -8,22 +8,12 @@ class CreateDollCase(
     private val dollRepository: DollRepository
 ) {
 
-    data class Input(
-        val id: Int?,
-        val rarity: Rarity,
-        val level: Int
-    )
+    fun execute(rarity: Rarity, level: Int): Doll {
 
-    fun execute(input: Input): Doll {
+        val newDoll = Doll.create(rarity, level)
 
-        //TODO Guard to check if doll exist looking to Rarity and Level
+        // TODO: dollRepository.findByProperties(rarity, level)?.let { throw Exception(...) }
 
-        val doll = Doll(
-            id = input.id,
-            rarity = input.rarity,
-            level = input.level
-        )
-
-        return dollRepository.save(doll)
+        return dollRepository.save(newDoll)
     }
 }
