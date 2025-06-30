@@ -9,51 +9,42 @@ class CreateNikkeCase(
     private val nikkeRepository: NikkeRepository
 ) {
 
-    data class Input(
-        val id: Int? = null,
-        val name: String,
-        val core: Int,
-        val attraction: Int,
-        val skill1: Int,
-        val skill2: Int,
-        val skillBurst: Int,
-        val rarity: Rarity,
-        val ownedStatus: OwnedStatus,
-        val burstType: BurstType,
-        val company: Company,
-        val code: Code,
-        val weapon: Weapon,
-        val nikkeClass: NikkeClass,
-        val cube: Cubes? = null
-//    val doll: Doll? = null
-    )
+    fun execute(
+        name: String,
+        core: Int,
+        attraction: Int,
+        skill1: Int,
+        skill2: Int,
+        skillBurst: Int,
+        rarity: Rarity,
+        ownedStatus: OwnedStatus,
+        burstType: BurstType,
+        company: Company,
+        code: Code,
+        weapon: Weapon,
+        nikkeClass: NikkeClass
+    ): Nikke {
 
+        val existingNikke = nikkeRepository.existsByName(name)
 
-    fun execute(input: Input): Nikke {
+        if (existingNikke) throw NikkeAlreadyExistsException("Nikke with name $name already exists!")
 
-        val existingNikke = nikkeRepository.existsByName(input.name)
-
-        if (existingNikke) throw NikkeAlreadyExistsException("Nikke with name ${input.name} already exists!")
-
-        val nikke = Nikke(
-            id = null,
-            name = input.name,
-            core = input.core,
-            attraction = input.attraction,
-            skill1 = input.skill1,
-            skill2 = input.skill2,
-            skillBurst = input.skillBurst,
-            rarity = input.rarity,
-            ownedStatus = input.ownedStatus,
-            burstType = input.burstType,
-            company = input.company,
-            code = input.code,
-            weapon = input.weapon,
-            nikkeClass = input.nikkeClass,
-            cube = input.cube
-            // doll = input.doll
+        val newNikke = Nikke.create(
+            name,
+            core,
+            attraction,
+            skill1,
+            skill2,
+            skillBurst,
+            rarity,
+            ownedStatus,
+            burstType,
+            company,
+            code,
+            weapon,
+            nikkeClass
         )
 
-        return nikkeRepository.save(nikke)
+        return nikkeRepository.save(newNikke)
     }
 }

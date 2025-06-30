@@ -5,16 +5,12 @@ import com.hyuse.nikkeManager.domain.ports.DollRepository
 class DeleteDollCase (
     private val dollRepository: DollRepository
 ){
+    fun execute(id: Int): Boolean {
 
-    fun execute(id: Int): Boolean{
+        if (!dollRepository.existById(id)) {
+            throw Exception("Doll with ID $id not found, cannot delete.")
+        }
 
-        val existingDoll = dollRepository.existById(id)
-
-        if(existingDoll) throw Exception("Nikke already Exist")
-
-        val isDone: Boolean = dollRepository.delete(id)
-
-        return isDone
+        return dollRepository.delete(id)
     }
-
 }
