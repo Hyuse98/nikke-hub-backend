@@ -1,6 +1,6 @@
 package com.hyuse.nikkeManager.domain.vo
 
-data class CharacterName private constructor(val value: String) {
+class CharacterName private constructor(val value: String) {
 
     init {
 
@@ -20,5 +20,22 @@ data class CharacterName private constructor(val value: String) {
         fun of(name: String): CharacterName {
             return CharacterName(name)
         }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as CharacterName
+
+        return value == other.value
+    }
+
+    override fun hashCode(): Int {
+        return value.hashCode()
+    }
+
+    override fun toString(): String {
+        return "CharacterName(value='$value')"
     }
 }
