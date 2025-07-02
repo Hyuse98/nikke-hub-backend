@@ -4,6 +4,10 @@ import com.hyuse.nikkeManager.domain.entities.Nikke
 import com.hyuse.nikkeManager.domain.enums.*
 import com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeAlreadyExistsException
 import com.hyuse.nikkeManager.domain.ports.NikkeRepository
+import com.hyuse.nikkeManager.domain.vo.AttractionLevel
+import com.hyuse.nikkeManager.domain.vo.CharacterName
+import com.hyuse.nikkeManager.domain.vo.CoreLevel
+import com.hyuse.nikkeManager.domain.vo.SkillLevel
 
 class CreateNikkeCase(
     private val nikkeRepository: NikkeRepository
@@ -25,17 +29,24 @@ class CreateNikkeCase(
         nikkeClass: NikkeClass
     ): Nikke {
 
+        val characterName = CharacterName.of(name)
+        val coreLevel = CoreLevel.of(core)
+        val attractionLevel = AttractionLevel.of(attraction)
+        val skill1Level = SkillLevel.of(skill1)
+        val skill2Level = SkillLevel.of(skill2)
+        val skillBurstLevel = SkillLevel.of(skillBurst)
+
         val existingNikke = nikkeRepository.existsByName(name)
 
         if (existingNikke) throw NikkeAlreadyExistsException("Nikke with name $name already exists!")
 
         val newNikke = Nikke.create(
-            name,
-            core,
-            attraction,
-            skill1,
-            skill2,
-            skillBurst,
+            characterName,
+            coreLevel,
+            attractionLevel,
+            skill1Level,
+            skill2Level,
+            skillBurstLevel,
             rarity,
             ownedStatus,
             burstType,
