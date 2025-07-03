@@ -1,5 +1,8 @@
 package com.hyuse.nikkeManager.domain.vo
 
+import jakarta.persistence.Embeddable
+
+@Embeddable
 class CharacterName private constructor(val value: String) {
 
     init {

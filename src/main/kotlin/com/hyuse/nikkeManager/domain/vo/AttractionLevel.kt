@@ -1,5 +1,8 @@
 package com.hyuse.nikkeManager.domain.vo
 
+import jakarta.persistence.Embeddable
+
+@Embeddable
 class AttractionLevel private constructor(val value: Int) {
 
     init {
