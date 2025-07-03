@@ -5,6 +5,7 @@ import com.hyuse.nikkeManager.domain.ports.NikkeRepository
 import com.hyuse.nikkeManager.infrastructure.database.jpa.mapper.toJpaEntity
 import com.hyuse.nikkeManager.infrastructure.database.jpa.mapper.toModel
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 class NikkeRepositoryImpl(
@@ -23,12 +24,12 @@ class NikkeRepositoryImpl(
         nikkeJpaRepository.deleteById(id)
     }
 
-    override fun findByName(name: String): Nikke {
-        return nikkeJpaRepository.findByName(name).get()
+    override fun findByName(name: String): Optional<Nikke> {
+        return nikkeJpaRepository.findByName(name)
     }
 
-    override fun findById(id: Int): Nikke {
-        return nikkeJpaRepository.findById(id).get().toModel()
+    override fun findById(id: Int): Optional<Nikke> {
+        return nikkeJpaRepository.findById(id).map { it.toModel() }
     }
 
     override fun findAll(): MutableList<Nikke> {
