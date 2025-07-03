@@ -7,7 +7,7 @@ interface DollRepository {
 
     fun save(doll: Doll): Doll
     fun update(id: Int, doll: Doll): Doll
-    fun delete(id: Int): Boolean
+    fun delete(id: Int)
 
     fun findById(id: Int): Optional<Doll>
 //    fun findByRarity(rarity: Rarity): Optional<Doll>

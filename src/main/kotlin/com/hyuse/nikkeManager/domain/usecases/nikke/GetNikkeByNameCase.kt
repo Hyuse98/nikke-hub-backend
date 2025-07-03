@@ -4,17 +4,16 @@ import com.hyuse.nikkeManager.domain.entities.Nikke
 import com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeNotFoundException
 import com.hyuse.nikkeManager.domain.ports.NikkeRepository
 
-class GetNikkeByNameCase (
+class GetNikkeByNameCase(
     private val nikkeRepository: NikkeRepository
-){
+) {
 
     fun execute(name: String): Nikke {
 
         val existingNikke = nikkeRepository.existsByName(name)
 
-        if(!existingNikke) throw NikkeNotFoundException(name)
+        if (!existingNikke) throw NikkeNotFoundException(name)
 
-        return nikkeRepository.findByName(name)
-
+        return nikkeRepository.findByName(name).get()
     }
 }
