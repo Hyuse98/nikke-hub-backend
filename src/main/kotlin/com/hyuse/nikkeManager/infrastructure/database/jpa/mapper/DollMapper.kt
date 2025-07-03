@@ -5,7 +5,7 @@ import com.hyuse.nikkeManager.infrastructure.database.jpa.entity.DollJpaEntity
 
 fun DollJpaEntity.toModel(): Doll {
 
-    return Doll(
+    return Doll.reconstitute(
         id = this.id,
         rarity = this.rarity,
         level = this.level
