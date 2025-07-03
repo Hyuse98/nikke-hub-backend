@@ -4,7 +4,7 @@ import com.hyuse.nikkeManager.domain.entities.Nikke
 import com.hyuse.nikkeManager.infrastructure.database.jpa.entity.NikkeJpaEntity
 
 fun NikkeJpaEntity.toModel(): Nikke {
-    return Nikke(
+    return Nikke.reconstitute(
         id = this.id,
         name = this.name,
         core = this.core,
