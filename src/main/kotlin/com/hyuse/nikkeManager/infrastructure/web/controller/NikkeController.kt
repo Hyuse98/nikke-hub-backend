@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody as SwaggerRequestBod
 @RequestMapping("/api/nikke")
 class NikkeController(
     private val createNikkeCase: CreateNikkeCase,
-    private val updateNikkeCase: UpdateNikkeCase,
+    private val correctNikkeBaseDataCase: CorrectNikkeBaseDataCase,
     private val deleteNikkeCase: DeleteNikkeCase,
     private val getNikkeByNameCase: GetNikkeByNameCase,
     private val getAllNikkesCase: GetAllNikkesCase
@@ -65,7 +65,7 @@ class NikkeController(
     @PostMapping
     fun createNikke(@RequestBody @Valid nikkeDTO: NikkeDTO): ResponseEntity<EntityModel<Nikke>> {
 
-        val useCaseInput = CreateNikkeCase.Input(
+        val nikke = createNikkeCase.execute(
             name = nikkeDTO.name,
             core = nikkeDTO.core,
             attraction = nikkeDTO.attraction,
@@ -78,15 +78,12 @@ class NikkeController(
             company = nikkeDTO.company,
             code = nikkeDTO.code,
             weapon = nikkeDTO.weapon,
-            nikkeClass = nikkeDTO.nikkeClass,
-            cube = nikkeDTO.cube
+            nikkeClass = nikkeDTO.nikkeClass
         )
-
-        val nikke = createNikkeCase.execute(useCaseInput)
 
         val entityModel = EntityModel.of(
             nikke,
-            linkTo(methodOn(this::class.java).getNikke(nikke.name)).withSelfRel(),
+            linkTo(methodOn(this::class.java).getNikke(nikke.name.value)).withSelfRel(),
             linkTo(methodOn(this::class.java).listAllNikke()).withRel("Collection")
         )
 
@@ -128,29 +125,22 @@ class NikkeController(
         )
     )
     @PutMapping("/{id}")
-    fun updateNikke(
+    fun CorrectNikkeBaseDataCase(
         @RequestBody @Valid nikkeDTO: NikkeDTO,
         @PathVariable id: Int
     ): ResponseEntity<Nikke> {
 
-        val useCaseInput = UpdateNikkeCase.Input(
-            name = nikkeDTO.name,
-            core = nikkeDTO.core,
-            attraction = nikkeDTO.attraction,
-            skill1 = nikkeDTO.skill1,
-            skill2 = nikkeDTO.skill2,
-            skillBurst = nikkeDTO.skillBurst,
-            rarity = nikkeDTO.rarity,
-            ownedStatus = nikkeDTO.ownedStatus,
-            burstType = nikkeDTO.burstType,
-            company = nikkeDTO.company,
-            code = nikkeDTO.code,
-            weapon = nikkeDTO.weapon,
-            nikkeClass = nikkeDTO.nikkeClass,
-            cube = nikkeDTO.cube
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            correctNikkeBaseDataCase.execute(
+                name = nikkeDTO.name,
+                rarity = nikkeDTO.rarity,
+                burstType = nikkeDTO.burstType,
+                company = nikkeDTO.company,
+                code = nikkeDTO.code,
+                weapon = nikkeDTO.weapon,
+                nikkeClass = nikkeDTO.nikkeClass,
+            )
         )
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(updateNikkeCase.execute(id, useCaseInput))
     }
 
     @Operation(
