@@ -2,7 +2,7 @@ package com.hyuse.nikkeManager.domain.usecases.nikke
 
 import com.hyuse.nikkeManager.domain.entities.Nikke
 import com.hyuse.nikkeManager.domain.enums.*
-import com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeCollectionEmptyException
+import com.hyuse.nikkeManager.domain.exceptions.CollectionEmptyException
 import com.hyuse.nikkeManager.domain.ports.NikkeRepository
 import com.hyuse.nikkeManager.domain.vo.AttractionLevel
 import com.hyuse.nikkeManager.domain.vo.CharacterName
@@ -14,8 +14,6 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
 
 class GetAllNikkesCaseTest {
 
@@ -115,7 +113,7 @@ class GetAllNikkesCaseTest {
 
         whenever(nikkeRepository.findAll()).thenReturn(mutableListOf())
 
-        val exception = assertThrows<NikkeCollectionEmptyException> {
+        val exception = assertThrows<CollectionEmptyException> {
             getAllNikkesCase.execute()
         }
 
