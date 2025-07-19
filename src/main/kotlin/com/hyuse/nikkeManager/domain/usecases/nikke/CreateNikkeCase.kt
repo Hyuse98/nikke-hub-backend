@@ -38,7 +38,7 @@ class CreateNikkeCase(
 
         val existingNikke = nikkeRepository.existsByName(name)
 
-        if (existingNikke) throw NikkeAlreadyExistsException("Nikke with name $name already exists!")
+        if (existingNikke) throw NikkeAlreadyExistsException(name)
 
         val newNikke = Nikke.create(
             characterName,

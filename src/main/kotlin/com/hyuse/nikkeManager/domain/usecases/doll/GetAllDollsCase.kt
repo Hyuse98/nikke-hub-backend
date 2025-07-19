@@ -1,6 +1,7 @@
 package com.hyuse.nikkeManager.domain.usecases.doll
 
 import com.hyuse.nikkeManager.domain.entities.Doll
+import com.hyuse.nikkeManager.domain.exceptions.CollectionEmptyException
 import com.hyuse.nikkeManager.domain.ports.DollRepository
 
 class GetAllDollsCase(
@@ -11,7 +12,7 @@ class GetAllDollsCase(
 
         val dolls = dollRepository.findAll()
 
-        if(dolls.isEmpty()) throw Exception("No doll are Registered")
+        if(dolls.isEmpty()) throw CollectionEmptyException()
 
         return dolls
     }

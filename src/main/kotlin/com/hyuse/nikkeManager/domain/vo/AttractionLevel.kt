@@ -3,50 +3,40 @@ package com.hyuse.nikkeManager.domain.vo
 import jakarta.persistence.Embeddable
 
 @Embeddable
-class AttractionLevel private constructor(val value: Int) {
+sealed interface AttractionLevel{
+    val value: Int
 
-    init {
-
-        if (value < ATTRACTION_MIN_LEVEL) {
-            throw IllegalArgumentException("Attraction min level must be $ATTRACTION_MIN_LEVEL")
-        }
-
-        if (value > ATTRACTION_MAX_LEVEL) {
-            throw IllegalArgumentException("Attraction max leve must be $ATTRACTION_MAX_LEVEL")
-        }
-    }
-
-    fun increment(): AttractionLevel {
-
-        if (value >= ATTRACTION_MAX_LEVEL) return this
-
-        return AttractionLevel(value + 1)
-    }
+    fun increment(): AttractionLevel
 
     companion object {
 
-        private const val ATTRACTION_MIN_LEVEL = 1
-        private const val ATTRACTION_MAX_LEVEL = 30
+        const val ATTRACTION_MIN_LEVEL = 1
+        const val ATTRACTION_MAX_LEVEL = 30
 
         fun of(level: Int): AttractionLevel {
-            return AttractionLevel(level)
+            return AttractionLevelImpl(level)
+        }
+    }
+}
+
+private data class AttractionLevelImpl (override val value: Int): AttractionLevel {
+
+    init {
+
+        if (value < AttractionLevel.ATTRACTION_MIN_LEVEL) {
+            throw IllegalArgumentException("Attraction min level must be ${AttractionLevel.ATTRACTION_MIN_LEVEL}")
+        }
+
+        if (value > AttractionLevel.ATTRACTION_MAX_LEVEL) {
+            throw IllegalArgumentException("Attraction max leve must be ${AttractionLevel.ATTRACTION_MAX_LEVEL}")
         }
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+    override fun increment(): AttractionLevel {
 
-        other as AttractionLevel
+        if (value >= AttractionLevel.ATTRACTION_MAX_LEVEL) return this
 
-        return value == other.value
+        return AttractionLevelImpl(value + 1)
     }
 
-    override fun hashCode(): Int {
-        return value
-    }
-
-    override fun toString(): String {
-        return "AttractionLevel(value=$value)"
-    }
 }

@@ -11,6 +11,7 @@ class CorrectNikkeBaseDataCase(
 ) {
 
     fun execute(
+        id: Int,
         name: String,
         rarity: Rarity,
         burstType: BurstType,
@@ -22,9 +23,9 @@ class CorrectNikkeBaseDataCase(
 
         val characterName = CharacterName.of(name)
 
-        val existingNikke = nikkeRepository.findByName(name)
+        val existingNikke = nikkeRepository.findById(id)
 
-        if (existingNikke.isEmpty) throw NikkeNotFoundException("Nikke with name $name not exists!")
+        if (existingNikke.isEmpty) throw NikkeNotFoundException(name)
 
         val updatedNikke = existingNikke.get().correctBaseData(
             characterName,

@@ -12,7 +12,7 @@ class UpgradeNikkeCoreCase(
 
         val existingNikke = nikkeRepository.findById(id)
 
-        if (existingNikke.isEmpty) throw NikkeNotFoundException("Nikke with id $id not exists!")
+        if (existingNikke.isEmpty) throw NikkeNotFoundException(id.toString())
 
         val updatedNikke = existingNikke.get().coreLevelUp()
 

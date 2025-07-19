@@ -11,7 +11,7 @@ class DeleteNikkeCase(
 
         val existingNikke = nikkeRepository.existsById(id)
 
-        if (!existingNikke) throw NikkeIdNotFoundException("$id")
+        if (!existingNikke) throw NikkeIdNotFoundException(id.toString())
 
         nikkeRepository.delete(id)
     }

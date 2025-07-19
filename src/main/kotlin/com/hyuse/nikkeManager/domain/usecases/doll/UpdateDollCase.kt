@@ -16,10 +16,10 @@ class UpdateDollCase(
 
         val existingDoll = dollRepository.findById(id)
 
-        if(existingDoll.isEmpty) throw DollNotFoundException(rarity, level)
+        if(existingDoll.isEmpty) throw DollNotFoundException(id)
 
-        existingDoll.get().correctBaseData(rarity, dollLevel)
+        val doll = existingDoll.get().correctBaseData(rarity, dollLevel)
 
-        return dollRepository.update(id, existingDoll.get())
+        return dollRepository.update(id, doll)
     }
 }
