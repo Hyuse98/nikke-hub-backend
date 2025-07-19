@@ -64,6 +64,6 @@ class IncreaseNikkeAttractionCaseTest {
             increaseNikkeAttractionCase.execute(id)
         }
 
-        assertThat(exception.message).isEqualTo("Nikke with name $id not found")
+        assertThat(exception.message).isEqualTo("Nikke with id $id not found")
     }
 }

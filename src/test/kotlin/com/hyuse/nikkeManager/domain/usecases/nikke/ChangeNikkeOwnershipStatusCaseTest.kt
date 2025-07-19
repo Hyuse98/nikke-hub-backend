@@ -2,6 +2,7 @@ package com.hyuse.nikkeManager.domain.usecases.nikke
 
 import com.hyuse.nikkeManager.domain.entities.Nikke
 import com.hyuse.nikkeManager.domain.enums.*
+import com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeNotFoundException
 import com.hyuse.nikkeManager.domain.ports.NikkeRepository
 import com.hyuse.nikkeManager.domain.vo.AttractionLevel
 import com.hyuse.nikkeManager.domain.vo.CharacterName
@@ -65,7 +66,7 @@ class ChangeNikkeOwnershipStatusCaseTest {
         whenever(nikkeRepository.findById(nikkeId)).thenReturn(Optional.empty())
 
         val exception =
-            org.junit.jupiter.api.assertThrows<com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeIdNotFoundException> {
+            org.junit.jupiter.api.assertThrows<NikkeNotFoundException> {
                 changeNikkeOwnershipStatusCase.execute(nikkeId)
             }
 

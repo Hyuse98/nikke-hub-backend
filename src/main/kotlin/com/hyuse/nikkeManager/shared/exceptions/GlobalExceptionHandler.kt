@@ -3,7 +3,6 @@ package com.hyuse.nikkeManager.shared.exceptions
 import com.hyuse.nikkeManager.domain.exceptions.doll.DollAlreadyExistsException
 import com.hyuse.nikkeManager.domain.exceptions.doll.DollNotFoundException
 import com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeAlreadyExistsException
-import com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeIdNotFoundException
 import com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -28,15 +27,6 @@ class GlobalExceptionHandler {
     @ExceptionHandler(NikkeNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handlerNikkeNotFound(ex: NikkeNotFoundException): ExceptionResponse {
-        return ExceptionResponse(
-            status = HttpStatus.NOT_FOUND,
-            message = ex.message ?: "Nikke Not Found"
-        )
-    }
-
-    @ExceptionHandler(NikkeIdNotFoundException::class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    fun handlerNikkeIdNotFound(ex: NikkeIdNotFoundException): ExceptionResponse {
         return ExceptionResponse(
             status = HttpStatus.NOT_FOUND,
             message = ex.message ?: "Nikke Not Found"

@@ -13,7 +13,7 @@ class IncreaseNikkeAttractionCase (
 
         val existingNikke = nikkeRepository.findById(id)
 
-        if (existingNikke.isEmpty) throw NikkeNotFoundException(id.toString())
+        if (existingNikke.isEmpty) throw NikkeNotFoundException(id)
 
         val updatedNikke = existingNikke.get().attractionIncrement()
 
