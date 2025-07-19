@@ -1,3 +1,8 @@
 package com.hyuse.nikkeManager.domain.exceptions.nikke
 
-class NikkeNotFoundException(name: String): NikkeException("Nikke with name '$name' not found")
+class NikkeNotFoundException : NikkeException {
+    constructor (name: String) :
+            super("Nikke with name $name not found")
+    constructor(id: Int):
+            super("Nikke with id $id not found")
+}
