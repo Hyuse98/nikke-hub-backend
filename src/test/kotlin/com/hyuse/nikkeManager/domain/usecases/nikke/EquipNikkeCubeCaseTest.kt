@@ -2,7 +2,7 @@ package com.hyuse.nikkeManager.domain.usecases.nikke
 
 import com.hyuse.nikkeManager.domain.entities.Nikke
 import com.hyuse.nikkeManager.domain.enums.*
-import com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeIdNotFoundException
+import com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeNotFoundException
 import com.hyuse.nikkeManager.domain.ports.NikkeRepository
 import com.hyuse.nikkeManager.domain.vo.AttractionLevel
 import com.hyuse.nikkeManager.domain.vo.CharacterName
@@ -16,7 +16,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.*
-import kotlin.test.assertEquals
 
 class EquipNikkeCubeCaseTest {
 
@@ -67,15 +66,15 @@ class EquipNikkeCubeCaseTest {
     @Test
     fun `should not equip cube when nikke not found`() {
 
-        val nikkeId = 1
+        val id = 1
         val newCube = Cubes.ASSAULT
 
-        whenever(nikkeRepository.findById(nikkeId)).thenReturn(Optional.empty())
+        whenever(nikkeRepository.findById(id)).thenReturn(Optional.empty())
 
-        val exception = assertThrows<NikkeIdNotFoundException> {
-            equipNikkeCubeCase.execute(nikkeId, newCube)
+        val exception = assertThrows<NikkeNotFoundException> {
+            equipNikkeCubeCase.execute(id, newCube)
         }
 
-        assertThat(exception.message).isEqualTo("Nikke with id 1 not found")
+        assertThat(exception.message).isEqualTo("Nikke with id $id not found")
     }
 }

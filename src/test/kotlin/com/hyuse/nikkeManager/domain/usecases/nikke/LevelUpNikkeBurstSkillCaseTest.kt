@@ -4,7 +4,10 @@ import com.hyuse.nikkeManager.domain.entities.Nikke
 import com.hyuse.nikkeManager.domain.enums.*
 import com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeNotFoundException
 import com.hyuse.nikkeManager.domain.ports.NikkeRepository
-import com.hyuse.nikkeManager.domain.vo.*
+import com.hyuse.nikkeManager.domain.vo.AttractionLevel
+import com.hyuse.nikkeManager.domain.vo.CharacterName
+import com.hyuse.nikkeManager.domain.vo.CoreLevel
+import com.hyuse.nikkeManager.domain.vo.SkillLevel
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -61,6 +64,6 @@ class LevelUpNikkeBurstSkillCaseTest {
             levelUpNikkeBurstSkillCase.execute(id)
         }
 
-        assertThat(exception.message).isEqualTo("Nikke with name $id not found")
+        assertThat(exception.message).isEqualTo("Nikke with id $id not found")
     }
 }

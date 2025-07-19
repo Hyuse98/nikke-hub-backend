@@ -2,7 +2,7 @@ package com.hyuse.nikkeManager.domain.usecases.nikke
 
 import com.hyuse.nikkeManager.domain.entities.Nikke
 import com.hyuse.nikkeManager.domain.enums.*
-import com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeIdNotFoundException
+import com.hyuse.nikkeManager.domain.exceptions.nikke.NikkeNotFoundException
 import com.hyuse.nikkeManager.domain.ports.NikkeRepository
 import com.hyuse.nikkeManager.domain.vo.AttractionLevel
 import com.hyuse.nikkeManager.domain.vo.CharacterName
@@ -53,7 +53,7 @@ class DeleteNikkeCaseTest {
 
         whenever(nikkeRepository.existsById(id)).thenReturn(false)
 
-        val exception = assertThrows<NikkeIdNotFoundException> {
+        val exception = assertThrows<NikkeNotFoundException> {
             deleteNikkeCase.execute(id)
         }
 
