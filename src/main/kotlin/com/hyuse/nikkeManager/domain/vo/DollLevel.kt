@@ -3,50 +3,36 @@ package com.hyuse.nikkeManager.domain.vo
 import jakarta.persistence.Embeddable
 
 @Embeddable
-class DollLevel private constructor(val value: Int) {
+sealed interface DollLevel {
+    val value: Int
+
+    fun levelUp(): DollLevel
+
+    companion object {
+        const val MIN_LEVEL = 0
+        const val MAX_LEVEL = 15
+
+        fun of(level: Int): DollLevel {
+            return DollLevelImpl(level)
+        }
+    }
+}
+
+private data class DollLevelImpl(override val value: Int) : DollLevel {
 
     init {
 
-        if (value < MIN_LEVEL) {
-            throw IllegalArgumentException("Doll min level must be $MIN_LEVEL")
+        if (value < DollLevel.MIN_LEVEL) {
+            throw IllegalArgumentException("Doll min level must be ${DollLevel.MIN_LEVEL}")
         }
 
-        if (value > MAX_LEVEL) {
-            throw IllegalArgumentException("Doll max level must be $MAX_LEVEL")
-        }
-    }
-
-    fun levelUp(): DollLevel {
-
-        if (value >= MIN_LEVEL) return this
-
-        return DollLevel(value + 1)
-    }
-
-    companion object {
-
-        private const val MIN_LEVEL = 0
-        private const val MAX_LEVEL = 15
-
-        fun of(level: Int): DollLevel {
-            return DollLevel(level)
+        if (value > DollLevel.MAX_LEVEL) {
+            throw IllegalArgumentException("Doll max level must be ${DollLevel.MAX_LEVEL}")
         }
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as DollLevel
-
-        return value == other.value
-    }
-
-    override fun hashCode(): Int {
-        return value
-    }
-
-    override fun toString(): String {
-        return "DollLevel(value=$value)"
+    override fun levelUp(): DollLevel {
+        if (value >= DollLevel.MAX_LEVEL) return this
+        return DollLevelImpl(value + 1)
     }
 }

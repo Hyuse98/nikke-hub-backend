@@ -3,50 +3,39 @@ package com.hyuse.nikkeManager.domain.vo
 import jakarta.persistence.Embeddable
 
 @Embeddable
-class CoreLevel private constructor(val value: Int) {
+sealed interface CoreLevel{
+    val value: Int
 
-    init {
-
-        if (value < CORE_MIN_LEVEL) {
-            throw IllegalArgumentException("Core min level must be $CORE_MIN_LEVEL")
-        }
-
-        if (value > CORE_MAX_LEVEL) {
-            throw IllegalArgumentException("Core max level must be $CORE_MAX_LEVEL")
-        }
-    }
-
-    fun levelUp(): CoreLevel {
-
-        if (value >= CORE_MAX_LEVEL) return this
-
-        return CoreLevel(value + 1)
-    }
+    fun levelUp(): CoreLevel
 
     companion object {
 
-        private const val CORE_MIN_LEVEL = 0
-        private const val CORE_MAX_LEVEL = 10
+        const val CORE_MIN_LEVEL = 0
+        const val CORE_MAX_LEVEL = 10
 
         fun of(level: Int): CoreLevel {
-            return CoreLevel(level)
+            return CoreLevelImpl(level)
+        }
+    }
+}
+
+private data class CoreLevelImpl(override val value: Int) : CoreLevel {
+
+    init {
+
+        if (value < CoreLevel.CORE_MIN_LEVEL) {
+            throw IllegalArgumentException("Core min level must be ${CoreLevel.CORE_MIN_LEVEL}")
+        }
+
+        if (value > CoreLevel.CORE_MAX_LEVEL) {
+            throw IllegalArgumentException("Core max level must be ${CoreLevel.CORE_MAX_LEVEL}")
         }
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+    override fun levelUp(): CoreLevel {
 
-        other as CoreLevel
+        if (value >= CoreLevel.CORE_MAX_LEVEL) return this
 
-        return value == other.value
-    }
-
-    override fun hashCode(): Int {
-        return value
-    }
-
-    override fun toString(): String {
-        return "CoreLevel(value=$value)"
+        return CoreLevelImpl(value + 1)
     }
 }

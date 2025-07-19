@@ -9,22 +9,51 @@ import com.hyuse.nikkeManager.domain.vo.SkillLevel
 class Nikke private constructor(
 
     val id: Int? = null,
-    var name: CharacterName,
-    var core: CoreLevel,
-    var attraction: AttractionLevel,
-    var skill1: SkillLevel,
-    var skill2: SkillLevel,
-    var skillBurst: SkillLevel,
-    var rarity: Rarity,
-    var ownedStatus: OwnedStatus,
-    var burstType: BurstType,
-    var company: Company,
-    var code: Code,
-    var weapon: Weapon,
-    var nikkeClass: NikkeClass,
-    var cube: Cubes? = null,
-//    var doll: Doll? = null
+    name: CharacterName,
+    core: CoreLevel,
+    attraction: AttractionLevel,
+    skill1: SkillLevel,
+    skill2: SkillLevel,
+    skillBurst: SkillLevel,
+    rarity: Rarity,
+    ownedStatus: OwnedStatus,
+    burstType: BurstType,
+    company: Company,
+    code: Code,
+    weapon: Weapon,
+    nikkeClass: NikkeClass,
+    cube: Cubes? = null,
+//    doll: Doll? = null
 ) {
+
+    var name: CharacterName = name
+        private set
+    var core: CoreLevel = core
+        private set
+    var attraction: AttractionLevel = attraction
+        private set
+    var skill1: SkillLevel = skill1
+        private set
+    var skill2: SkillLevel = skill2
+        private set
+    var skillBurst: SkillLevel = skillBurst
+        private set
+    var rarity: Rarity = rarity
+        private set
+    var ownedStatus: OwnedStatus = ownedStatus
+        private set
+    var burstType: BurstType = burstType
+        private set
+    var company: Company = company
+        private set
+    var code: Code = code
+        private set
+    var weapon: Weapon = weapon
+        private set
+    var nikkeClass: NikkeClass = nikkeClass
+        private set
+    var cube: Cubes? = cube
+        private set
 
     init {
         validate()

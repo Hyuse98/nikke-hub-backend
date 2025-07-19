@@ -1,6 +1,8 @@
 package com.hyuse.nikkeManager.domain.ports
 
 import com.hyuse.nikkeManager.domain.entities.Doll
+import com.hyuse.nikkeManager.domain.enums.Rarity
+import com.hyuse.nikkeManager.domain.vo.DollLevel
 import java.util.*
 
 interface DollRepository {
@@ -9,19 +11,9 @@ interface DollRepository {
     fun update(id: Int, doll: Doll): Doll
     fun delete(id: Int)
 
-    fun findById(id: Int): Optional<Doll>
-//    fun findByRarity(rarity: Rarity): Optional<Doll>
-//    fun findByLevel(level: Int): Doll
-
     fun findAll(): Collection<Doll>
-
-    //TODO Extra use cases
-    /*
-    * existByRarity
-    * existByLevel
-    *
-    */
+    fun findById(id: Int): Optional<Doll>
+    fun findByRarityAndLevel(rarity: Rarity, level: DollLevel): Optional<Doll>
 
     fun existById(id: Int): Boolean
-
 }

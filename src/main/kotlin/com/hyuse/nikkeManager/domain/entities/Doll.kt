@@ -5,9 +5,14 @@ import com.hyuse.nikkeManager.domain.vo.DollLevel
 
 class Doll private constructor(
     val id: Int? = null,
-    var rarity: Rarity,
-    var level: DollLevel
+    rarity: Rarity,
+    level: DollLevel
 ) {
+
+    var rarity = rarity
+        private set
+    var level = level
+        private set
 
     init {
         validate()
@@ -16,9 +21,10 @@ class Doll private constructor(
     fun correctBaseData(
         newRarity: Rarity,
         newLevel: DollLevel
-    ) {
+    ): Doll {
         this.rarity = newRarity
         this.level = newLevel
+        return this
     }
 
     private fun validate() {
