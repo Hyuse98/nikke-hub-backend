@@ -1,4 +1,4 @@
-package com.hyuse.nikkeManager.infrastructure.database.jpa.repository
+package com.hyuse.nikkeManager.infrastructure.database.jpa.repository.nikke
 
 import com.hyuse.nikkeManager.domain.entities.Nikke
 import com.hyuse.nikkeManager.domain.ports.NikkeRepository
@@ -13,11 +13,21 @@ class NikkeRepositoryImpl(
 ) : NikkeRepository {
 
     override fun save(nikke: Nikke): Nikke {
-        return nikkeJpaRepository.save(nikke.toJpaEntity())
+
+        val nikkeJpa = nikke.toJpaEntity()
+
+        val savedEntity = nikkeJpaRepository.save(nikkeJpa)
+
+        return savedEntity.toModel()
     }
 
     override fun update(nikke: Nikke): Nikke {
-        return nikkeJpaRepository.update(nikke.toJpaEntity())
+
+        val nikkeJpa = nikke.toJpaEntity()
+
+        val savedEntity = nikkeJpaRepository.save(nikkeJpa)
+
+        return savedEntity.toModel()
     }
 
     override fun delete(id: Int) {
@@ -25,7 +35,8 @@ class NikkeRepositoryImpl(
     }
 
     override fun findByName(name: String): Optional<Nikke> {
-        return nikkeJpaRepository.findByName(name)
+        val nikkeJpaOptional = nikkeJpaRepository.findByName(name)
+        return nikkeJpaOptional.map { it.toModel() }
     }
 
     override fun findById(id: Int): Optional<Nikke> {
