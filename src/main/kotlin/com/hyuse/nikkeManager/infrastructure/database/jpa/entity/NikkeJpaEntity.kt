@@ -1,10 +1,6 @@
 package com.hyuse.nikkeManager.infrastructure.database.jpa.entity
 
 import com.hyuse.nikkeManager.domain.enums.*
-import com.hyuse.nikkeManager.domain.vo.AttractionLevel
-import com.hyuse.nikkeManager.domain.vo.CharacterName
-import com.hyuse.nikkeManager.domain.vo.CoreLevel
-import com.hyuse.nikkeManager.domain.vo.SkillLevel
 import jakarta.persistence.*
 
 @Entity
@@ -15,29 +11,23 @@ class NikkeJpaEntity(
     @Column(name = "nikke_id")
     val id: Int? = null,
 
-    @Embedded
-    @AttributeOverride(name = "value", column = Column(name = "character_name"))
-    val name: CharacterName,
+    @Column(name = "character_name", unique = true)
+    val name: String,
 
-    @Embedded
-    @AttributeOverride(name = "value", column = Column(name = "core_level"))
-    val core: CoreLevel,
+    @Column(name = "core_level")
+    val core: Int,
 
-    @Embedded
-    @AttributeOverride(name = "value", column = Column(name = "attraction"))
-    val attraction: AttractionLevel,
+    @Column(name = "attraction")
+    val attraction: Int,
 
-    @Embedded
-    @AttributeOverride(name = "value", column = Column(name = "skill_1_level"))
-    val skill1: SkillLevel,
+    @Column(name = "skill_1_level")
+    val skill1: Int,
 
-    @Embedded
-    @AttributeOverride(name = "value", column = Column(name = "skill_2_level"))
-    val skill2: SkillLevel,
+    @Column(name = "skill_2_level")
+    val skill2: Int,
 
-    @Embedded
-    @AttributeOverride(name = "value", column = Column(name = "skill_burst"))
-    val skillBurst: SkillLevel,
+    @Column(name = "skill_burst")
+    val skillBurst: Int,
 
     @Column(name = "nikke_rarity")
     val rarity: Rarity,
@@ -61,11 +51,7 @@ class NikkeJpaEntity(
     val nikkeClass: NikkeClass,
 
     @Column(name = "cube")
-    val cube: Cubes? = null,
-
-//    @Column(name = "doll_id")
-//    @OneToMany
-//    val doll: Doll? = null
+    val cube: Cubes? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
