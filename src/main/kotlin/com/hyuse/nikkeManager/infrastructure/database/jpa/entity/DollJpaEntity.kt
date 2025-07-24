@@ -1,7 +1,6 @@
 package com.hyuse.nikkeManager.infrastructure.database.jpa.entity
 
 import com.hyuse.nikkeManager.domain.enums.Rarity
-import com.hyuse.nikkeManager.domain.vo.DollLevel
 import jakarta.persistence.*
 
 @Entity
@@ -15,9 +14,8 @@ class DollJpaEntity(
     @Column(name = "rarity")
     val rarity: Rarity,
 
-    @Embedded
-    @AttributeOverride(name = "value", column = Column(name = "doll_level"))
-    val level: DollLevel
+    @Column(name = "level")
+    val level: Int
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -25,7 +23,10 @@ class DollJpaEntity(
 
         other as DollJpaEntity
 
-        return id == other.id
+        if (id != other.id) return false
+        if (rarity != other.rarity && level != other.level) return false
+
+        return true
     }
 
     override fun hashCode(): Int {
