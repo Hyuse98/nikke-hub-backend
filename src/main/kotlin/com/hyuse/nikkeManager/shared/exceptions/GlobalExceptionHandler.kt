@@ -81,4 +81,14 @@ class GlobalExceptionHandler {
             errors = listOf(ex.localizedMessage)
         )
     }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun illegalArgumentExceptionException(ex: IllegalArgumentException): ExceptionResponse {
+        return ExceptionResponse(
+            status = HttpStatus.BAD_REQUEST,
+            message = "Malformed JSON Request",
+            errors = listOf(ex.localizedMessage)
+        )
+    }
 }
