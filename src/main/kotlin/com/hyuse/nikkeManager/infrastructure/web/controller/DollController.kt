@@ -24,29 +24,11 @@ class DollController(
     private val updateDollCase: UpdateDollCase,
     private val deleteDollCase: DeleteDollCase,
     private val getDollByIdCase: GetDollByIdCase,
-    private val getDollsByRarityCase: GetDollsByRarityCase,
+//    private val getDollsByRarityCase: GetDollsByRarityCase,
     private val getAllDollsCase: GetAllDollsCase
 ) {
 
-    @Operation(
-        method = "POST",
-        summary = "Create a new doll",
-        description = "This endpoint create a doll on database",
-        tags = ["Doll"],
-        requestBody = SwaggerRequestBody(
-            description = "Create doll object",
-            required = true,
-            content = [Content(
-                mediaType = "application/json",
-                schema = Schema(
-                    example = """{
-                        "rarity" SSR,
-                        "level" 15
-                    }"""
-                )
-            )]
-        )
-    )
+
     @PostMapping
     fun createDoll(@RequestBody @Valid dollDTO: DollDTO): ResponseEntity<EntityModel<Doll>> {
 
@@ -54,34 +36,15 @@ class DollController(
 
         val entityModel = EntityModel.of(
             doll,
-            linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
-            linkTo(methodOn(this::class.java).deleteDollById(doll.id)).withRel("Delete"),
+//            linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
+//            linkTo(methodOn(this::class.java).deleteDollById(doll.id)).withRel("Delete"),
             linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
         )
 
         return ResponseEntity.status(HttpStatus.CREATED).body(entityModel)
     }
 
-    @Operation(
-        method = "PUT",
-        summary = "Update a doll",
-        description = "This endpoint update a doll on database",
-        tags = ["Doll"],
-        requestBody = SwaggerRequestBody(
-            description = "Update doll object",
-            required = true,
-            content = [Content(
-                mediaType = "application/json",
-                schema = Schema(
-                    example = """{
-                        "id" 1,
-                        "rarity" SSR,
-                        "level" 15
-                    }"""
-                )
-            )]
-        )
-    )
+
     @PutMapping
     fun updateDoll(@RequestBody @Valid dollDTO: DollDTO): ResponseEntity<EntityModel<Doll>> {
 
@@ -89,8 +52,8 @@ class DollController(
 
         val entityModel = EntityModel.of(
             doll,
-            linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
-            linkTo(methodOn(this::class.java).deleteDollById(doll.id)).withRel("Delete"),
+//            linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
+//            linkTo(methodOn(this::class.java).deleteDollById(doll.id)).withRel("Delete"),
             linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
         )
 
@@ -98,61 +61,51 @@ class DollController(
     }
 
 
-    @Operation(
-        method = "GET",
-        summary = "List all dolls",
-        description = "This endpoint will list all dolls on database",
-        tags = ["Doll"]
-    )
+
     @GetMapping
     fun getListDolls(): ResponseEntity<Collection<Doll>> {
 
         val dolls = getAllDollsCase.execute()
 
-        val entityModel = dolls?.let {
-            EntityModel.of(
-                it,
-//                linkTo(methodOn(this::class.java).getDollById(dolls.id!!)).withSelfRel(),
-                linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
-            )
-        }
+//        val entityModel = dolls?.let {
+//            EntityModel.of(
+//                it,
+////                linkTo(methodOn(this::class.java).getDollById(dolls.id!!)).withSelfRel(),
+//                linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
+//            )
+//        }
 
         return ResponseEntity.ok(dolls)
     }
 
 
-    @Operation(
-        method = "GET",
-        summary = "Get a doll",
-        description = "This endpoint will search a doll on database that match rarity and level passed was parameter",
-        tags = ["Doll"]
-    )
-    @GetMapping("/search")
-    fun getDollByRarityAndLevel(
-        @RequestParam rarity: Rarity,
-        @RequestParam level: Int
-    ): ResponseEntity<EntityModel<Doll>> {
+//    @Operation(
+//        method = "GET",
+//        summary = "Get a doll",
+//        description = "This endpoint will search a doll on database that match rarity and level passed was parameter",
+//        tags = ["Doll"]
+//    )
+//    @GetMapping("/search")
+//    fun getDollByRarityAndLevel(
+//        @RequestParam rarity: Rarity,
+//        @RequestParam level: Int
+//    ): ResponseEntity<EntityModel<Doll>> {
+//
+//        TODO("Not Resources Available yet")
+//        val doll = getDollsByRarityCase.execute(rarity)
+//
+//        val entityModel = doll?.let {
+//            EntityModel.of(
+//                it,
+//                linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
+//                linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
+//            )
+//        }
+//
+//        return ResponseEntity.ok(entityModel)
+//    }
 
-        TODO("Not Resources Available yet")
-        val doll = getDollsByRarityCase.execute(rarity)
 
-        val entityModel = doll?.let {
-            EntityModel.of(
-                it,
-                linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
-                linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
-            )
-        }
-
-        return ResponseEntity.ok(entityModel)
-    }
-
-    @Operation(
-        method = "GET",
-        summary = "Get a doll",
-        description = "This endpoint will search a doll on database that match id passed was parameter",
-        tags = ["Doll"]
-    )
     @GetMapping("/{id}")
     fun getDollById(@PathVariable id: Int): ResponseEntity<EntityModel<Doll>> {
 
@@ -160,19 +113,14 @@ class DollController(
 
         val entityModel = EntityModel.of(
             doll,
-            linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
+//            linkTo(methodOn(this::class.java).getDollById(doll.id!!)).withSelfRel(),
             linkTo(methodOn(this::class.java).getListDolls()).withRel("Collection")
         )
 
         return ResponseEntity.ok(entityModel)
     }
 
-    @Operation(
-        method = "DELETE",
-        summary = "Delete a doll",
-        description = "This endpoint will delete a doll on database that match id passed was parameter",
-        tags = ["Doll"]
-    )
+
     @DeleteMapping("/{id}")
     fun deleteDollById(@PathVariable id: Int): ResponseEntity<EntityModel<Link>> {
 
