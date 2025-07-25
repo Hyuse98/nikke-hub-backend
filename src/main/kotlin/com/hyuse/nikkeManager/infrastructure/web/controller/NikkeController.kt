@@ -28,40 +28,7 @@ class NikkeController(
     private val getAllNikkesCase: GetAllNikkesCase
 ) {
 
-    @Operation(
-        method = "POST",
-        summary = "Create New Nikke",
-        description = "This endpoint created nikke on database",
-        tags = ["Nikke"],
-        requestBody = SwaggerRequestBody(
-            description = "Created new nikke",
-            required = true,
-            content = [Content(
-                mediaType = "application/json",
-                schema = Schema(
-                    example = """{
-                    "name": "string",
-                    "core": 0,
-                    "attraction": 0,
-                    "skill1Level": 0,
-                    "skill2Level": 0,
-                    "burstLevel": 0,
-                    "rarity": "R",
-                    "ownedStatus": "NOT_OWNED",
-                    "burstType": "I",
-                    "company": "ELYSION",
-                    "code": "FIRE",
-                    "weapon": "AR",
-                    "nikkeClass": "ATTACKER",
-                    "cube": "ASSAULT",
-                    "doll": {
-                        "id": 0
-                    }
-                }"""
-                )
-            )]
-        )
-    )
+
     @PostMapping
     fun createNikke(@RequestBody @Valid nikkeDTO: NikkeDTO): ResponseEntity<EntityModel<Nikke>> {
 
@@ -90,48 +57,15 @@ class NikkeController(
         return ResponseEntity.status(HttpStatus.CREATED).body(entityModel)
     }
 
-    @Operation(
-        method = "PUT",
-        summary = "Update a Nikke by Name",
-        description = "This endpoint update exist nikke data on database, match name passed on path variable",
-        tags = ["Nikke"],
-        requestBody = SwaggerRequestBody(
-            description = "Update a nikke object",
-            required = true,
-            content = [Content(
-                mediaType = "application/json",
-                schema = Schema(
-                    example = """{
-                    "name": "string",
-                    "core": 0,
-                    "attraction": 0,
-                    "skill1Level": 0,
-                    "skill2Level": 0,
-                    "burstLevel": 0,
-                    "rarity": "R",
-                    "ownedStatus": "NOT_OWNED",
-                    "burstType": "I",
-                    "company": "ELYSION",
-                    "code": "FIRE",
-                    "weapon": "AR",
-                    "nikkeClass": "ATTACKER",
-                    "cube": "ASSAULT",
-                    "doll": {
-                        "id": 0
-                    }
-                }"""
-                )
-            )]
-        )
-    )
     @PutMapping("/{id}")
     fun CorrectNikkeBaseDataCase(
         @RequestBody @Valid nikkeDTO: NikkeDTO,
         @PathVariable id: Int
     ): ResponseEntity<Nikke> {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(
+        return ResponseEntity.status(HttpStatus.OK).body(
             correctNikkeBaseDataCase.execute(
+                id = nikkeDTO.id!!,
                 name = nikkeDTO.name,
                 rarity = nikkeDTO.rarity,
                 burstType = nikkeDTO.burstType,
@@ -143,65 +77,11 @@ class NikkeController(
         )
     }
 
-    @Operation(
-        method = "DELETE",
-        summary = "Delete a Nikke by Name",
-        description = "This endpoint delete a nikke by his name on path variable",
-        tags = ["Nikke"],
-    )
     @DeleteMapping("/{id}")
     fun deleteNikke(@PathVariable id: Int) {
         return deleteNikkeCase.execute(id)
     }
 
-//    @Operation(
-//        method = "GET",
-//        summary = "List all Nikkes Filtered",
-//        description = "This endpoint will return a list of all nikkes available on database with filters applied",
-//        tags = ["Nikke"],
-//    )
-//    @GetMapping("/filtered")
-//    fun listAllNikkeFiltered(
-//        @RequestParam(required = false) rarity: Rarity?,
-//        @RequestParam(required = false) ownedStatus: OwnedStatus?,
-//        @RequestParam(required = false) burstType: BurstType?,
-//        @RequestParam(required = false) company: Company?,
-//        @RequestParam(required = false) code: Code?,
-//        @RequestParam(required = false) weapon: Weapon?,
-//        @RequestParam(required = false) nikkeClass: NikkeClass?,
-//        @RequestParam(required = false) cube: Cubes?,
-//        @ParameterObject pageable: Pageable
-//    ): ResponseEntity<PagedModel<EntityModel<Nikke>>> {
-//
-//        val nikkesPage = nikkeService.listAllNikkeFiltered(
-//            rarity, ownedStatus, burstType, company, code, weapon, nikkeClass, cube, pageable
-//        )
-//
-//        val nikkes = nikkesPage.content.map { nikke ->
-//            EntityModel.of(
-//                nikke,
-//                linkTo(methodOn(this::class.java).getNikke(nikke.name)).withSelfRel()
-//            )
-//        }
-//
-//        val pagedModel = PagedModel.of(
-//            nikkes,
-//            PagedModel.PageMetadata(
-//                nikkesPage.size.toLong(),
-//                nikkesPage.number.toLong(),
-//                nikkesPage.totalElements,
-//                nikkesPage.totalPages.toLong()
-//            )
-//        )
-//        return ResponseEntity.ok(pagedModel)
-//    }
-
-    @Operation(
-        method = "GET",
-        summary = "List all Nikkes no Filter",
-        description = "This endpoint will return a list of all nikkes available on database without filters applied",
-        tags = ["Nikke"],
-    )
     @GetMapping
     fun listAllNikke(): ResponseEntity<Collection<Nikke>> {
 
@@ -210,12 +90,6 @@ class NikkeController(
         return ResponseEntity.ok(nikkes)
     }
 
-    @Operation(
-        method = "GET",
-        summary = "Search a nikke",
-        description = "This endpoint will return a nikke that match with name passed on path variable",
-        tags = ["Nikke"],
-    )
     @GetMapping("/{name}")
     fun getNikke(@Parameter(description = "Name of nikke to be search") @PathVariable name: String): ResponseEntity<EntityModel<Nikke>> {
 
