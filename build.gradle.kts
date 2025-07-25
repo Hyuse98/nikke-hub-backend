@@ -39,23 +39,31 @@ dependencies {
     // Documentação e OpenAPI
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0")
 
-    // Logging e Observabilidade
-    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
-    implementation("org.springframework.boot:spring-boot-starter-logging")
+    // Logging, Métricas e Tracing
+//    implementation("org.springframework.boot:spring-boot-starter-logging")
+//    runtimeOnly("io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:2.13.3-alpha")
 
-    // Métricas e Tracing
+//    implementation("ch.qos.logback:logback-core:1.4.11")
+//    implementation("ch.qos.logback:logback-classic:1.4.11")
+//    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
+
+
     implementation("io.micrometer:micrometer-observation")
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("io.micrometer:micrometer-registry-otlp")
     implementation("io.micrometer:micrometer-tracing-bridge-otel")
     implementation("io.micrometer:micrometer-tracing")
 
-    implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations")
     implementation("io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter")
+    implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations")
     implementation("io.opentelemetry:opentelemetry-api")
     implementation("io.opentelemetry:opentelemetry-sdk")
     implementation("io.opentelemetry:opentelemetry-exporter-zipkin")
     implementation("io.opentelemetry:opentelemetry-exporter-otlp")
+//    implementation("io.opentelemetry:opentelemetry-exporter-logging")
+//    implementation("io.opentelemetry:opentelemetry-extension-annotations")
+//    implementation("io.opentelemetry:opentelemetry-semconv")
+//    implementation("io.opentelemetry.instrumentation:opentelemetry-logback-1.0")
 
     // Service Discovery e Configuração Distribuída
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
@@ -110,8 +118,13 @@ tasks.withType<JacocoReport> {
     afterEvaluate {
         classDirectories.setFrom(classDirectories.files.map {
             fileTree(it).matching {
-                exclude("com/hyuse/nikkeManager/handler/**")
-                exclude("com/hyuse/nikkeManager/exceptions/**")
+                exclude("com/hyuse/nikkeManager/domain/enums/**")
+                exclude("com/hyuse/nikkeManager/domain/exceptions/**")
+                exclude("com/hyuse/nikkeManager/infrastructure/database/jpa/mapper/**")
+                exclude("com/hyuse/nikkeManager/infrastructure/config/**")
+                exclude("com/hyuse/nikkeManager/infrastructure/web/dto/**")
+                exclude("com/hyuse/nikkeManager/infrastructure/database/jpa/entity/**")
+                exclude("com/hyuse/nikkeManager/shared/exceptions/**")
                 exclude("com/hyuse/nikkeManager/NikkeManagerApplicationKt.class")
                 exclude("com/hyuse/nikkeManager/NikkeManagerApplication.class")
             }
