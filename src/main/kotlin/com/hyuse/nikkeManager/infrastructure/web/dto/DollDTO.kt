@@ -1,6 +1,5 @@
 package com.hyuse.nikkeManager.infrastructure.web.dto
 
-import com.hyuse.nikkeManager.domain.entities.Doll
 import com.hyuse.nikkeManager.domain.enums.Rarity
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
@@ -16,13 +15,4 @@ data class DollDTO(
     @field:Min(0, message = "level value must be at least 0")
     @field:Max(15, message = "Cant be more than 15")
     val level: Int
-) {
-    fun toModel(): Doll {
-        val doll = Doll(
-            id = this.id,
-            rarity = this.rarity,
-            level = this.level
-        )
-        return doll
-    }
-}
+)
