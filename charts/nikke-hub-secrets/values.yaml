@@ -1,0 +1,18 @@
+# WARNING: It is highly recommended not to save passwords in plain text in this file.
+# Provide passwords during Helm installation using the '--set' flag.
+# If the password is not provided, a random 16-character password will be generated.
+
+namespace: "nikke-hub"
+
+labels:
+  app: nikke-hub
+
+secrets:
+  name: "nikke-hub-secrets"
+  data:
+    postgresUser: ""
+    postgresPassword: ""
+    springDatasourceUsername: ""
+    springDatasourcePassword: ""
+    springFlywayUser: ""
+    springFlywayPassword: ""
