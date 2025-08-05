@@ -1,0 +1,45 @@
+{{- if .Values.application.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.application.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  ingressClassName: {{ .Values.ingressClassName }}
+  rules:
+  - host: {{ .Values.application.host | quote }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.application.service.name }}
+            port:
+              number: {{ .Values.application.service.port }}
+{{- end }}
+---
+{{- if .Values.monitoring.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.monitoring.name }}
+  namespace: {{ .Values.namespace }}
+  annotations:
+    {{- toYaml .Values.monitoring.annotations | nindent 4 }}
+spec:
+  ingressClassName: {{ .Values.ingressClassName }}
+  rules:
+  {{- range .Values.monitoring.hosts }}
+  - host: {{ .host | quote }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .service.name }}
+            port:
+              number: {{ .service.port }}
+  {{- end }}
+{{- end }}
