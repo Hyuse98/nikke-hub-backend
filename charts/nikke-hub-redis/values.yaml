@@ -1,0 +1,30 @@
+namespace: nikke-hub
+name: nikke-hub-redis
+labels:
+  app: nikke-hub-redis
+
+pvc:
+  name: redis-pvc
+  storage: 1Gi
+
+service:
+  name: redis-service
+  port: 6379
+
+statefulset:
+  name: redis
+  replicas: 1
+  image:
+    repository: redis
+    tag: 7-alpine
+
+  port: 6379
+
+resources:
+  requests:
+    memory: 512Mi
+    cpu: 250m
+    
+  limits:
+    memory: 1Gi
+    cpu: 500m
