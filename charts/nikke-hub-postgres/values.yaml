@@ -1,0 +1,27 @@
+enable: true
+
+name: nikke-hub-postgres
+namespace: nikke-hub
+labels:
+  app: nikke-hub-postgres
+
+configMap:
+  name: "postgres-init"
+  databaseName: "nikke_hub"
+
+service:
+  name: "postgres-service"
+  port: 5432
+
+statefulset:
+  name: "postgres"
+  replicas: 1
+  image: "postgres"
+  tag: "15-alpine"
+  port: 5432
+
+persistence:
+  storage: "1Gi"
+
+secrets:
+  name: nikke-hub-secrets
