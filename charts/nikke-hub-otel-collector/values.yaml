@@ -1,0 +1,66 @@
+namespace: "nikke-hub"
+
+labels:
+  app: "otel-collector"
+
+rbac:
+  create: true
+  serviceAccount:
+    name: "otel-collector"
+  clusterRole:
+    name: "otel-collector-role"
+  clusterRoleBinding:
+    name: "otel-collector-role-binding"
+
+configMap:
+  name: "otel-collector-config"
+  config: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: "0.0.0.0:4317"
+          http:
+            endpoint: "0.0.0.0:4318"
+    processors:
+      batch:
+    exporters:
+      logging:
+        loglevel: debug
+      zipkin:
+        endpoint: "http://zipkin-service.nikke-hub.svc.cluster.local:9411/api/v2/spans"
+      prometheus:
+        endpoint: "0.0.0.0:9464"
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [logging, zipkin]
+        metrics:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [prometheus]
+
+service:
+  name: "otel-collector-service"
+  ports:
+    otlpGrpc: 4317
+    otlpHttp: 4318
+    prometheus: 9464
+    zipkin: 9411
+
+deployment:
+  name: "otel-collector"
+  replicas: 1
+  image: "otel/opentelemetry-collector"
+  tag: "0.83.0"
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
