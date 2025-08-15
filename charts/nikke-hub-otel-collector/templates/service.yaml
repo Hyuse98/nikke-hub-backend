@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
+spec:
+  selector:
+    app: {{ .Values.labels.app }}
+  ports:
+    - name: otlp-grpc
+      port: {{ .Values.service.ports.otlpGrpc }}
+      targetPort: {{ .Values.service.ports.otlpGrpc }}
+    - name: otlp-http
+      port: {{ .Values.service.ports.otlpHttp }}
+      targetPort: {{ .Values.service.ports.otlpHttp }}
+    - name: prometheus
+      port: {{ .Values.service.ports.prometheus }}
+      targetPort: {{ .Values.service.ports.prometheus }}
+    - name: zipkin
+      port: {{ .Values.service.ports.zipkin }}
+      targetPort: {{ .Values.service.ports.zipkin }}

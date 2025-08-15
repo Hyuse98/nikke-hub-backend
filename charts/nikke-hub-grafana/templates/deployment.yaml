@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.name }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.deployment.securityContext | nindent 8 }}
+      containers:
+      - name: {{ .Values.deployment.name }}
+        image: "{{ .Values.deployment.image }}:{{ .Values.deployment.tag }}"
+        imagePullPolicy: {{ .Values.deployment.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.deployment.port }}
+          name: {{ .Values.deployment.portName }}
+          protocol: TCP
+        env:
+          {{- range $key, $val := .Values.deployment.env }}
+          - name: {{ $key }}
+            value: {{ $val | quote }}
+          {{- end }}
+        readinessProbe:
+          httpGet:
+            path: /robots.txt
+            port: {{ .Values.deployment.portName }}
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          timeoutSeconds: 2
+          successThreshold: 1
+          failureThreshold: 3
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.deployment.port }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        {{- if .Values.persistence.enabled }}
+        volumeMounts:
+          - mountPath: /var/lib/grafana
+            name: grafana-storage
+        {{- end }}
+      {{- if .Values.persistence.enabled }}
+      volumes:
+        - name: grafana-storage
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.name }}
+      {{- end }}

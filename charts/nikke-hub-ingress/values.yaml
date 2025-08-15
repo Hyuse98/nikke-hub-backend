@@ -1,0 +1,31 @@
+namespace: "nikke-hub"
+
+ingressClassName: "nginx"
+
+application:
+  enabled: true
+  name: "nikke-hub-ingress"
+  host: "nikke.hub.com"
+  service:
+    name: "gateway-service"
+    port: 8000
+
+monitoring:
+  enabled: true
+  name: "nikke-hub-monitoring-ingress"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+
+  hosts:
+    - host: "zipkin.nikke-hub.local"
+      service:
+        name: "zipkin-service"
+        port: 9411
+    - host: "prometheus.nikke-hub.local"
+      service:
+        name: "prometheus-service"
+        port: 9090
+    - host: "grafana.nikke-hub.local"
+      service:
+        name: "grafana-service"
+        port: 3000

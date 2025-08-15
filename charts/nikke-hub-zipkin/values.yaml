@@ -1,0 +1,25 @@
+namespace: "nikke-hub"
+
+labels:
+  app: "zipkin"
+
+service:
+  name: "zipkin-service"
+  port: 9411
+  type: ClusterIP
+
+deployment:
+  name: "zipkin"
+  replicas: 1
+  image: "openzipkin/zipkin"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+  port: 9411
+
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "250m"
+  limits:
+    memory: "1Gi"
+    cpu: "500m"

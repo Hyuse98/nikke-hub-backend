@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.statefulset.name | default "redis" }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
+spec:
+  serviceName: {{ .Values.service.name | default "redis-service" }}
+  replicas: {{ .Values.statefulset.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.statefulset.name | default "redis" }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.statefulset.name | default "redis" }}
+    spec:
+      containers:
+        - name: redis
+          image: "{{ .Values.statefulset.image.repository }}:{{ .Values.statefulset.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.statefulset.port }}
+          args: ["--appendonly", "yes"]
+          volumeMounts:
+            - name: redis-storage
+              mountPath: /data
+          readinessProbe:
+            exec:
+              command: ["redis-cli", "ping"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+              cpu: {{ .Values.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.resources.limits.memory }}
+              cpu: {{ .Values.resources.limits.cpu }}
+      volumes:
+        - name: redis-storage
+          persistentVolumeClaim:
+            claimName: {{ .Values.pvc.name | default "redis-pvc" }}

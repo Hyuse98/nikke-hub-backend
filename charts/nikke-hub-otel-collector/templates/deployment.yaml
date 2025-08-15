@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labels.app }}
+    spec:
+      {{- if .Values.rbac.create }}
+      serviceAccountName: {{ .Values.rbac.serviceAccount.name }}
+      {{- end }}
+      containers:
+        - name: {{ .Values.deployment.name }}
+          image: "{{ .Values.deployment.image }}:{{ .Values.deployment.tag }}"
+          imagePullPolicy: {{ .Values.deployment.pullPolicy }}
+          args: ["--config=/etc/otel-collector-config.yaml"]
+          ports:
+            - name: otlp-grpc
+              containerPort: {{ .Values.service.ports.otlpGrpc }}
+            - name: otlp-http
+              containerPort: {{ .Values.service.ports.otlpHttp }}
+            - name: prometheus
+              containerPort: {{ .Values.service.ports.prometheus }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: otel-config-volume
+              mountPath: /etc/otel-collector-config.yaml
+              subPath: otel-collector-config.yaml
+      volumes:
+        - name: otel-config-volume
+          configMap:
+            name: {{ .Values.configMap.name }}

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name | default "postgres-service" }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
+spec:
+  selector:
+    app: {{ .Values.statefulset.name | default "postgres" }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.statefulset.port }}

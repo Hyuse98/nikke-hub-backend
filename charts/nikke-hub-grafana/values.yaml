@@ -1,0 +1,42 @@
+namespace: "nikke-hub"
+
+labels:
+  app: "grafana"
+
+persistence:
+  enabled: true
+  name: "grafana-pvc"
+  storage: "1Gi"
+
+service:
+  name: "grafana-service"
+  port: 3000
+  type: ClusterIP
+
+deployment:
+  name: "grafana"
+  replicas: 1
+  image: "grafana/grafana"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+  port: 3000
+  portName: http-grafana
+
+  securityContext:
+    fsGroup: 472
+    supplementalGroups:
+      - 0
+
+  env:
+    GF_INSTALL_PLUGINS: "grafana-piechart-panel,grafana-clock-panel"
+    GF_AUTH_ANONYMOUS_ENABLED: "true"
+    GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+    GF_AUTH_DISABLE_LOGIN_FORM: "true"
+
+resources:
+  requests:
+    memory: "750Mi"
+    cpu: "250m"
+  limits:
+    memory: "1Gi"
+    cpu: "500m"
