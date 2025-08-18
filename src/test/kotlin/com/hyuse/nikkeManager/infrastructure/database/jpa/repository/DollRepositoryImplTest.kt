@@ -1,4 +1,4 @@
-package com.hyuse.nikkeManager.infrastructure.database.repository
+package com.hyuse.nikkeManager.infrastructure.database.jpa.repository
 
 import com.hyuse.nikkeManager.domain.entities.Doll
 import com.hyuse.nikkeManager.domain.enums.*
