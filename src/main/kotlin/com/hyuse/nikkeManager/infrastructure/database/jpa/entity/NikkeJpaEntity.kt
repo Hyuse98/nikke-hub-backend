@@ -4,6 +4,7 @@ import com.hyuse.nikkeManager.domain.enums.*
 import jakarta.persistence.*
 
 @Entity
+@Table(name = "nikke")
 class NikkeJpaEntity(
 
     @Id
@@ -30,27 +31,35 @@ class NikkeJpaEntity(
     val skillBurst: Int,
 
     @Column(name = "nikke_rarity")
+    @Enumerated(value = EnumType.STRING)
     val rarity: Rarity,
 
     @Column(name = "owned")
+    @Enumerated(value = EnumType.STRING)
     val ownedStatus: OwnedStatus,
 
     @Column(name = "burst_type")
+    @Enumerated(value = EnumType.STRING)
     val burstType: BurstType,
 
     @Column(name = "company")
+    @Enumerated(value = EnumType.STRING)
     val company: Company,
 
     @Column(name = "code")
+    @Enumerated(value = EnumType.STRING)
     val code: Code,
 
     @Column(name = "weapon")
+    @Enumerated(value = EnumType.STRING)
     val weapon: Weapon,
 
-    @Column(name = "class")
+    @Column(name = "nikke_class")
+    @Enumerated(value = EnumType.STRING)
     val nikkeClass: NikkeClass,
 
     @Column(name = "cube")
+    @Enumerated(value = EnumType.STRING)
     val cube: Cubes? = null
 ) {
     override fun equals(other: Any?): Boolean {

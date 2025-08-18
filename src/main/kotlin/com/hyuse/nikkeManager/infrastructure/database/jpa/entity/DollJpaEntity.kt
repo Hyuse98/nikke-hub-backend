@@ -4,6 +4,7 @@ import com.hyuse.nikkeManager.domain.enums.Rarity
 import jakarta.persistence.*
 
 @Entity
+@Table(name = "doll")
 class DollJpaEntity(
 
     @Id
@@ -12,6 +13,7 @@ class DollJpaEntity(
     val id: Int? = null,
 
     @Column(name = "rarity")
+    @Enumerated(value = EnumType.STRING)
     val rarity: Rarity,
 
     @Column(name = "level")
