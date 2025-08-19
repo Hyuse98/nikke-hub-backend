@@ -47,6 +47,10 @@ class DollRepositoryImpl(
         return dollJpaRepository.findById(id).map { it.toModel() }
     }
 
+    override fun findByRarityAndLevel(rarity: Rarity, level: DollLevel): Optional<Doll> {
+        return dollJpaRepository.findByRarityAndLevel(rarity, level).map { it.toModel() }
+    }
+
     override fun existById(id: Int): Boolean {
 
         return dollJpaRepository.existsById(id)
