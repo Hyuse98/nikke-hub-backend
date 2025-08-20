@@ -42,7 +42,8 @@ configMap:
     EUREKA_CLIENT_FETCH_REGISTRY: "true"
     
     # Config Server
-    CONFIG_SERVER_URL: "http://nikke-hub-config-server-service:8888"
+    SPRING_CONFIG_IMPORT: "configserver:"
+    SPRING_CLOUD_CONFIG_URI: "http://nikke-hub-config-server-service:8888"
 
     # OpenTelemetry Configuration
     OTEL_SERVICE_NAME: "backend-service"
